@@ -133,7 +133,7 @@ resource "aws_lb_listener" "front_end" {
 resource "aws_launch_configuration" "tourna_math_lc" {
   name          = "TournaMaths-LC"
   image_id      = "ami-053b0d53c279acc90"  # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
-  instance_type = "t2.micro"
+  instance_type = "t2.micro"  # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
   security_groups = [aws_security_group.tourna_math_sg.id]
 
   lifecycle {
@@ -169,7 +169,7 @@ resource "aws_db_instance" "tourna_math_db" {
   storage_type         = "gp2"
   engine               = "postgres"
   engine_version       = "15.3"
-  instance_class       = "db.t2.micro"
+  instance_class       = "db.t4g.micro"
   db_name              = "tourna_math_db"
   username             = "admin"
   password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_password"]
