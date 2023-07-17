@@ -168,7 +168,7 @@ resource "aws_lb_listener" "front_end" {
   }
 }
 
-################ Lunch configuration.
+################ Launch configuration.
 resource "aws_launch_configuration" "tourna_math_lc" {
   name          = "TournaMaths-LC"
   image_id      = "ami-053b0d53c279acc90"  # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
