@@ -171,8 +171,8 @@ resource "aws_db_instance" "tourna_math_db" {
   engine_version       = "15.3"
   instance_class       = "db.t4g.micro"
   db_name              = "tourna_math_db"
-  username             = "admin"
-  password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_password"]
+  username             = "admin_user"  # Can't say "admin" here as that's reserved in Postgres.
+  password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_user_password"]
   parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
