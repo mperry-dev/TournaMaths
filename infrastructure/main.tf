@@ -152,12 +152,12 @@ resource "aws_db_instance" "tourna_math_db" {
   allocated_storage    = 20
   storage_type         = "gp2"
   engine               = "postgres"
-  engine_version       = "13.3"
+  engine_version       = "15.3"
   instance_class       = "db.t2.micro"
   name                 = "tourna_math_db"
-  username             = "foo"
-  password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["password"]
-  parameter_group_name = "default.postgres13"
+  username             = "admin"
+  password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_password"]
+  parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.tourna_math_db_subnet_group.name
