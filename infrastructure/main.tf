@@ -14,12 +14,23 @@ resource "aws_vpc" "tourna_math_vpc" {
   }
 }
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "tourna_math_subnet_1a" {
   vpc_id     = aws_vpc.tourna_math_vpc.id
   cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
-    Name = "TournaMaths-Public-Subnet"
+    Name = "TournaMaths-Subnet-1a"
+  }
+}
+
+resource "aws_subnet" "tourna_math_subnet_1b" {
+  vpc_id     = aws_vpc.tourna_math_vpc.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "TournaMaths-Subnet-1b"
   }
 }
 
@@ -44,8 +55,13 @@ resource "aws_route_table" "tourna_math_route_table" {
   }
 }
 
-resource "aws_route_table_association" "tourna_math_route_table_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+resource "aws_route_table_association" "tourna_math_route_table_association_1a" {
+  subnet_id      = aws_subnet.tourna_math_subnet_1a.id
+  route_table_id = aws_route_table.tourna_math_route_table.id
+}
+
+resource "aws_route_table_association" "tourna_math_route_table_association_1b" {
+  subnet_id      = aws_subnet.tourna_math_subnet_1b.id
   route_table_id = aws_route_table.tourna_math_route_table.id
 }
 
@@ -76,7 +92,7 @@ resource "aws_lb" "tourna_math_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.tourna_math_sg.id]
-  subnets            = [aws_subnet.public_subnet.id]
+  subnets            = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   enable_deletion_protection = false
 
@@ -139,7 +155,7 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
   health_check_type        = "EC2"
   force_delete             = true
   launch_configuration     = aws_launch_configuration.tourna_math_lc.name
-  vpc_zone_identifier      = [aws_subnet.public_subnet.id]
+  vpc_zone_identifier      = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   tag {
     key = "Name"
@@ -169,7 +185,7 @@ resource "aws_db_instance" "tourna_math_db" {
 
 resource "aws_db_subnet_group" "tourna_math_db_subnet_group" {
   name       = "tournamaths-db-subnet-group"
-  subnet_ids = [aws_subnet.public_subnet.id]
+  subnet_ids = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   tags = {
     Name = "tournamaths-db-subnet-group"
