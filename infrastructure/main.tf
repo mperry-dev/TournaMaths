@@ -90,6 +90,7 @@ resource "aws_route_table" "tourna_math_route_table" {
   }
 }
 
+# route_table_association to public route table means the linked subnets are public.
 resource "aws_route_table_association" "tourna_math_route_table_association_1a" {
   subnet_id      = aws_subnet.tourna_math_subnet_1a.id
   route_table_id = aws_route_table.tourna_math_route_table.id
