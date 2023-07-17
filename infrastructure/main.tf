@@ -116,7 +116,7 @@ resource "aws_lb_listener" "front_end" {
 
 resource "aws_launch_configuration" "tourna_math_lc" {
   name          = "TournaMaths-LC"
-  image_id      = "ami-0c55b159cbfafe1f0"
+  image_id      = "ami-053b0d53c279acc90"  # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
   instance_type = "t2.micro"
   security_groups = [aws_security_group.tourna_math_sg.id]
 
