@@ -154,7 +154,7 @@ resource "aws_db_instance" "tourna_math_db" {
   engine               = "postgres"
   engine_version       = "15.3"
   instance_class       = "db.t2.micro"
-  name                 = "tourna_math_db"
+  db_name              = "tourna_math_db"
   username             = "admin"
   password             = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_password"]
   parameter_group_name = "default.postgres15"
@@ -168,10 +168,10 @@ resource "aws_db_instance" "tourna_math_db" {
 }
 
 resource "aws_db_subnet_group" "tourna_math_db_subnet_group" {
-  name       = "TournaMaths-DB-Subnet-Group"
+  name       = "tournamaths-db-subnet-group"
   subnet_ids = [aws_subnet.public_subnet.id]
 
   tags = {
-    Name = "TournaMaths-DB-Subnet-Group"
+    Name = "tournamaths-db-subnet-group"
   }
 }
