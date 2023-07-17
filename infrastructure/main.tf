@@ -1,3 +1,4 @@
+################ Database secrets.
 data "aws_secretsmanager_secret" "db_creds_secret" {
   name = "DB_Creds_Secret"
 }
@@ -6,6 +7,7 @@ data "aws_secretsmanager_secret_version" "db_creds" {
   secret_id = data.aws_secretsmanager_secret.db_creds_secret.id
 }
 
+################ VPC.
 resource "aws_vpc" "tourna_math_vpc" {
   cidr_block = "10.0.0.0/16"
 
@@ -14,6 +16,7 @@ resource "aws_vpc" "tourna_math_vpc" {
   }
 }
 
+################ Public subnets for the application's EC2 instances.
 resource "aws_subnet" "tourna_math_subnet_1a" {
   vpc_id     = aws_vpc.tourna_math_vpc.id
   cidr_block = "10.0.1.0/24"
@@ -34,6 +37,37 @@ resource "aws_subnet" "tourna_math_subnet_1b" {
   }
 }
 
+################ Private subnets for database, with a subnet group that the database will be restricted to.
+resource "aws_subnet" "tourna_math_private_subnet_1a" {
+  vpc_id     = aws_vpc.tourna_math_vpc.id
+  cidr_block = "10.0.3.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-1a"
+  }
+}
+
+resource "aws_subnet" "tourna_math_private_subnet_1b" {
+  vpc_id     = aws_vpc.tourna_math_vpc.id
+  cidr_block = "10.0.4.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-1b"
+  }
+}
+
+resource "aws_db_subnet_group" "tourna_math_private_db_subnet_group" {
+  name       = "tournamaths-private-db-subnet-group"
+  subnet_ids = [aws_subnet.tourna_math_private_subnet_1a.id, aws_subnet.tourna_math_private_subnet_1b.id]
+
+  tags = {
+    Name = "tournamaths-private-db-subnet-group"
+  }
+}
+
+################ Internet gateway.
 resource "aws_internet_gateway" "tourna_math_igw" {
   vpc_id = aws_vpc.tourna_math_vpc.id
 
@@ -42,6 +76,7 @@ resource "aws_internet_gateway" "tourna_math_igw" {
   }
 }
 
+################ Route table with associations to subnets.
 resource "aws_route_table" "tourna_math_route_table" {
   vpc_id = aws_vpc.tourna_math_vpc.id
 
@@ -65,6 +100,7 @@ resource "aws_route_table_association" "tourna_math_route_table_association_1b" 
   route_table_id = aws_route_table.tourna_math_route_table.id
 }
 
+################ Security group.
 resource "aws_security_group" "tourna_math_sg" {
   vpc_id = aws_vpc.tourna_math_vpc.id
 
@@ -87,6 +123,7 @@ resource "aws_security_group" "tourna_math_sg" {
   }
 }
 
+################ ALB, Target-Group, Listener.
 resource "aws_lb" "tourna_math_alb" {
   name               = "TournaMaths-ALB"
   internal           = false
@@ -130,6 +167,7 @@ resource "aws_lb_listener" "front_end" {
   }
 }
 
+################ Lunch configuration.
 resource "aws_launch_configuration" "tourna_math_lc" {
   name          = "TournaMaths-LC"
   image_id      = "ami-053b0d53c279acc90"  # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
@@ -147,6 +185,7 @@ resource "aws_launch_configuration" "tourna_math_lc" {
               EOF
 }
 
+################ Autoscaling group for application.
 resource "aws_autoscaling_group" "tourna_math_asg" {
   desired_capacity     = 2
   max_size             = 5
@@ -164,6 +203,7 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
   }
 }
 
+################ Database.
 resource "aws_db_instance" "tourna_math_db" {
   allocated_storage    = 20
   storage_type         = "gp2"
@@ -176,18 +216,9 @@ resource "aws_db_instance" "tourna_math_db" {
   parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
-  db_subnet_group_name   = aws_db_subnet_group.tourna_math_db_subnet_group.name
+  db_subnet_group_name   = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
 
   tags = {
     Name = "TournaMaths-DB"
-  }
-}
-
-resource "aws_db_subnet_group" "tourna_math_db_subnet_group" {
-  name       = "tournamaths-db-subnet-group"
-  subnet_ids = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
-
-  tags = {
-    Name = "tournamaths-db-subnet-group"
   }
 }
