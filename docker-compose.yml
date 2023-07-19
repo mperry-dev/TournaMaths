@@ -1,0 +1,20 @@
+version: '3'
+services:
+  tournamaths-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
+      - SPRING_DATASOURCE_USERNAME=admin_user
+      # For local database, be very nasty with security, as can only be reached locally.
+      - SPRING_DATASOURCE_PASSWORD=password
+  db:
+    image: "postgres:15"
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_DB=mydatabase
+      # For local database, be very nasty with security, as can only be reached locally.
+      - POSTGRES_PASSWORD=password
