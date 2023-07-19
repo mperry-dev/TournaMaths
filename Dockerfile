@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:20-jdk-alpine
 
 # Add Maintainer Info
 LABEL maintainer="info@tournamaths.com"
@@ -11,7 +11,7 @@ VOLUME /tmp
 EXPOSE 8080
 
 # The application's jar file
-ARG JAR_FILE=target/tournamaths-1.0-SNAPSHOT.jar
+ARG JAR_FILE=target/tournamaths-1.0.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} tournamaths.jar
