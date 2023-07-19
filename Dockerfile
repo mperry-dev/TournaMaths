@@ -17,4 +17,4 @@ ARG JAR_FILE=target/tournamaths-1.0.jar
 ADD ${JAR_FILE} tournamaths.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/tournamaths.jar"]
+ENTRYPOINT ["java", "-jar", "/tournamaths.jar"]
