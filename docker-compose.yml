@@ -11,6 +11,15 @@ services:
       - spring.datasource.username=admin_user
       # For local database, be very nasty with security, as can only be reached locally.
       - spring.datasource.password=password
+      - spring.datasource.driver-class-name=org.postgresql.Driver
+      - spring.jpa.hibernate.ddl-auto=update
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+      - spring.jpa.show-sql=true
+      - logging.level.org.springframework=DEBUG
+      - spring.jpa.properties.hibernate.format_sql=true
+      - logging.level.org.hibernate.type=TRACE
+      - logging.level.org.springframework.boot.autoconfigure=DEBUG
+      - debug=true
     profiles:
       - dev
   db:
