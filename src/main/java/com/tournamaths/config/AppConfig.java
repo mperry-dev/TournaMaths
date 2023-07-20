@@ -1,4 +1,4 @@
-package com.tournamaths;
+package com.tournamaths.config;
 
 import java.util.List;
 import org.json.JSONObject;

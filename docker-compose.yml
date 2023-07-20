@@ -1,4 +1,4 @@
-version: '3'
+version: "3.8"
 services:
   tournamaths-app:
     build: .
@@ -7,14 +7,20 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/mydatabase
-      - SPRING_DATASOURCE_USERNAME=admin_user
+      - spring.datasource.url=jdbc:postgresql://db:5432/dev
+      - spring.datasource.username=admin_user
       # For local database, be very nasty with security, as can only be reached locally.
-      - SPRING_DATASOURCE_PASSWORD=password
+      - spring.datasource.password=password
+    profiles:
+      - dev
   db:
-    image: "postgres:15"
+    image: "postgres:15.3"
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=admin_user
-      - POSTGRES_DB=mydatabase
+      - POSTGRES_DB=dev
       # For local database, be very nasty with security, as can only be reached locally.
       - POSTGRES_PASSWORD=password
+    profiles:
+      - dev
