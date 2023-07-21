@@ -2,10 +2,7 @@ package com.tournamaths.repository;
 
 import com.tournamaths.entity.MathQuestion;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-@Repository
-public interface MathQuestionRepository extends JpaRepository<MathQuestion, Long> {
+public interface MathQuestionRepository extends CrudRepository<MathQuestion, Long> {
 }
