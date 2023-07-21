@@ -12,5 +12,15 @@ public class MathQuestion {
     private Long id;
     private String question;
 
-    // getters and setters
+    public MathQuestion(){
+
+    }
+
+    public MathQuestion(String question){
+        this.question = question;
+    }
+
+    public String toString(){
+        return id + ": "+question;
+    }
 }
