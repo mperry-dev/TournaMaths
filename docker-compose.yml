@@ -15,11 +15,15 @@ services:
       - spring.jpa.hibernate.ddl-auto=update
       - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
       - spring.jpa.show-sql=true
-      - logging.level.org.springframework=DEBUG
       - spring.jpa.properties.hibernate.format_sql=true
-      - logging.level.org.hibernate.type=TRACE
-      - logging.level.org.springframework.boot.autoconfigure=DEBUG
-      - debug=true
+      # Potentially useful debugging statements.
+      #- logging.level.org.springframework=DEBUG
+      #- logging.level.org.hibernate.type=TRACE
+      #- logging.level.org.springframework.boot.autoconfigure=DEBUG
+      #- debug=true
+      # Component scan debugging.
+      #- logging.level.org.springframework.core.io.support=DEBUG
+      #- logging.level.org.springframework.context.annotation=DEBUG
     profiles:
       - dev
   db:
