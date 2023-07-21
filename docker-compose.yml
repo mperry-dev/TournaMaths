@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  tournamaths-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    profiles:
+      - dev
+  db:
+    image: "postgres:15.3"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin_user
+      - POSTGRES_DB=dev
+      # For local database, be very nasty with security, as can only be reached locally.
+      - POSTGRES_PASSWORD=password
+    profiles:
+      - dev
