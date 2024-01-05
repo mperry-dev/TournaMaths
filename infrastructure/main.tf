@@ -269,7 +269,7 @@ resource "aws_route53_record" "tournamaths_cert_validation" {
 
 resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
   certificate_arn         = aws_acm_certificate.tournamaths_cert.arn
-  validation_record_fqdns = [for record in aws_route53_record.tournamaths_validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation : record.fqdn]
 }
 
 ################ Database.
