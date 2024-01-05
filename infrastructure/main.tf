@@ -230,6 +230,8 @@ resource "aws_route53_record" "tournamaths_cname_record" {
   records = [aws_lb.tourna_math_alb.dns_name]
 }
 
+# Because certificates have to be validated, might need to run Terraform multiple times if replace certificate
+# https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
 resource "aws_acm_certificate" "tournamaths_cert" {
   domain_name       = "tournamaths.com"
   validation_method = "DNS"
@@ -246,6 +248,28 @@ resource "aws_lb_listener" "https_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tourna_math_tg.arn
   }
+}
+
+# DNS Validation of cerficate
+resource "aws_route53_record" "tournamaths_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.tournamaths_cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
+
+  zone_id = aws_route53_zone.tournamaths_zone.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
+  certificate_arn         = aws_acm_certificate.tournamaths_cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.tournamaths_validation : record.fqdn]
 }
 
 ################ Database.
