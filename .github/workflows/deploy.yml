@@ -13,13 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Only allow deployment from main branch
-        run: |
-          if [[ "${{ github.ref }}" != "ref/heads/main" ]]; then
-            echo "Should only run deployment from main branch, but github.ref=${{ github.ref }}"
-            exit 1
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
 
