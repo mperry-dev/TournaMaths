@@ -7,12 +7,24 @@ concurrency:
   group: deploy
   cancel-in-progress: false
 
+env:
+  TERRAFORM_PATH: 'infrastructure'
+
 jobs:
   deploy:
     name: 'Deploy to prod'
     runs-on: ubuntu-latest
 
     steps:
+      # NOTE - uncomment this if start giving coding access to other people (note have branch protection rule for main)
+      # Have branch protection rule for main branch, so should only allow deployment from that to protect production integrity
+      #- name: Only allow deployment from main branch
+      #  run: |
+      #    if [[ "${{ github.ref }}" != "ref/heads/main" ]]; then
+      #      echo "Should only run deployment from main branch, but github.ref=${{ github.ref }}"
+      #      exit 1
+      #    fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -24,12 +36,15 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Init
+        working-directory: ${{ env.TERRAFORM_PATH }}
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ${{ env.TERRAFORM_PATH }}
         run: terraform plan
 
       - name: Terraform Apply
         # Checking that actor is owner would be better than only allowing my account to run deployments, but this is just a pet project
         if: github.actor == 'mperry-dev'
+        working-directory: ${{ env.TERRAFORM_PATH }}
         run: terraform apply -auto-approve
