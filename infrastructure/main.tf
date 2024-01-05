@@ -251,7 +251,7 @@ resource "aws_lb_listener" "https_listener" {
 }
 
 # DNS Validation of cerficate
-resource "aws_route53_record" "tournamaths_cert_validation" {
+resource "aws_route53_record" "tournamaths_cert_validation_record" {
   for_each = {
     for dvo in aws_acm_certificate.tournamaths_cert.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
@@ -269,7 +269,7 @@ resource "aws_route53_record" "tournamaths_cert_validation" {
 
 resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
   certificate_arn         = aws_acm_certificate.tournamaths_cert.arn
-  validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation : record.fqdn]
+  validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation_record : record.fqdn]
 }
 
 ################ Database.
