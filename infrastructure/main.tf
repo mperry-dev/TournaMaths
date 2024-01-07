@@ -169,21 +169,22 @@ resource "aws_lb_listener" "front_end" {
 }
 
 ################ Launch configuration.
-resource "aws_launch_configuration" "tourna_math_lc" {
-  name            = "TournaMaths-LC"
-  image_id        = "ami-053b0d53c279acc90" # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
-  instance_type   = "t2.micro"              # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
-  security_groups = [aws_security_group.tourna_math_sg.id]
+resource "aws_launch_template" "tourna_math_lt" {
+  name_prefix   = "TournaMaths-LT-"
+  image_id      = "ami-053b0d53c279acc90" # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
+  instance_type = "t2.micro"              # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
 
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello, TournaMaths" > index.html
               nohup busybox httpd -f -p 80 &
               EOF
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################ Autoscaling group for application.
@@ -194,10 +195,14 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
   force_delete              = true
-  launch_configuration      = aws_launch_configuration.tourna_math_lc.name
   vpc_zone_identifier       = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   target_group_arns = [aws_lb_target_group.tourna_math_tg.arn]
+
+  launch_template {
+    id      = aws_launch_template.tourna_math_lt.id
+    version = "$Latest"
+  }
 
   tag {
     key                 = "Name"
