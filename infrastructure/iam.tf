@@ -41,7 +41,7 @@ resource "aws_iam_role" "ec2_codedeploy_role" {
 
 resource "aws_iam_role_policy_attachment" "codedeploy_ec2_attach" {
   role       = aws_iam_role.ec2_codedeploy_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForEC2"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
 }
 
 resource "aws_iam_instance_profile" "ec2_codedeploy_profile" {
