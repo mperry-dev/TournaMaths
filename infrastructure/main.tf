@@ -171,7 +171,7 @@ resource "aws_lb_listener" "front_end" {
 ################ Launch configuration.
 resource "aws_launch_template" "tourna_math_lt" {
   name_prefix   = "TournaMaths-LT-"
-  image_id      = "ami-079db87dc4c10ac91" # Amazon Linux 2023 AMI (chose because optimized for AWS and comes with extra apps).
+  image_id      = "ami-079db87dc4c10ac91" # Amazon Linux 2023 AMI (chose because optimized for AWS and comes with extra apps, also better documented)
   instance_type = "t2.micro"              # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
 
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
@@ -180,29 +180,29 @@ resource "aws_launch_template" "tourna_math_lt" {
               #!/bin/bash
 
               # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
-              #sudo yum update -y
-              #sudo yum install -y ruby
-              #sudo yum install -y wget
-              #cd /home/ubuntu
-              #wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
-              #chmod +x ./install
-              #sudo ./install auto
+              sudo yum update -y
+              sudo yum install -y ruby wget
+              cd /tmp
+              wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
+              chmod +x ./install
+              sudo ./install auto
 
               # Install CloudWatch Agent
-              #sudo yum install -y amazon-cloudwatch-agent
+              sudo yum install -y amazon-cloudwatch-agent
 
-              # Start the CloudWatch Agent
-              #sudo systemctl start amazon-cloudwatch-agent
+              # Start the CodeDeploy and CloudWatch agents
+              sudo service codedeploy-agent start
+              sudo systemctl start amazon-cloudwatch-agent
 
               # Install Java
               sudo apt update
               sudo apt install -y openjdk-20-jdk
 
               # Download Spring Boot application JAR from S3
-              aws s3 cp s3://tournamaths/tournamaths.jar /home/ubuntu/
+              aws s3 cp s3://tournamaths/tournamaths.jar /home/ec2-user/
 
               # Run Spring Boot application
-              java -jar /home/ubuntu/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
+              java -jar /home/ec2-user/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
               EOF
   )
 
