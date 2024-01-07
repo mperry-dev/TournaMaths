@@ -172,12 +172,14 @@ resource "aws_lb_listener" "front_end" {
 resource "aws_launch_template" "tourna_math_lt" {
   name_prefix   = "TournaMaths-LT-"
   image_id      = "ami-079db87dc4c10ac91" # Amazon Linux 2023 AMI (chose because optimized for AWS and comes with extra apps, also better documented)
-  instance_type = "t2.micro"              # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
+  instance_type = "t3.micro"              # A cheap instance which is built on Nitro System, so can connect via EC2 Serial Console.
 
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
 
-  # SSH Key https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#KeyPairs:
-  key_name = "Tournamaths" # TODO = make more secure
+  # Disables T3 Unlimited feature so costs don't go up (not too expensive though https://aws.amazon.com/ec2/instance-types/t3/)
+  credit_specification {
+    cpu_credits = "standard"
+  }
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
