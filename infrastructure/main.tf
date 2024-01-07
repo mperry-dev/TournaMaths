@@ -178,6 +178,16 @@ resource "aws_launch_template" "tourna_math_lt" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
+
+              # Install CodeDeploy Agent
+              sudo yum update -y
+              sudo yum install -y ruby
+              sudo yum install -y wget
+              cd /home/ec2-user
+              wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
+              chmod +x ./install
+              sudo ./install auto
+
               # Install Java
               sudo apt update
               sudo apt install -y openjdk-20-jdk
