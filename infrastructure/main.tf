@@ -178,8 +178,15 @@ resource "aws_launch_template" "tourna_math_lt" {
 
   user_data = base64encode(<<-EOF
               #!/bin/bash
-              echo "Hello, TournaMaths" > index.html
-              nohup busybox httpd -f -p 80 &
+              # Install Java
+              sudo apt update
+              sudo apt install -y openjdk-20-jdk
+
+              # Download Spring Boot application JAR from S3
+              aws s3 cp s3://tournamaths/tournamaths.jar /home/ec2-user/
+
+              # Run Spring Boot application
+              java -jar /home/ec2-user/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
               EOF
   )
 
