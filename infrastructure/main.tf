@@ -266,6 +266,18 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
   validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation_record : record.fqdn]
 }
 
+# Keep registered domain nameservers up-to-date with hosted zone
+# NOTE AWS hosted zones always have 4 name servers
+resource "aws_route53domains_registered_domain" "tournamaths_domain" {
+  domain_name = "tournamaths.com"
+
+  for_each = toset(aws_route53_zone.tournamaths_zone.name_servers)
+
+  name_server {
+    name = each.value
+  }
+}
+
 ################ Database.
 resource "aws_db_instance" "tourna_math_db" {
   allocated_storage      = 20
