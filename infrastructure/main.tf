@@ -176,11 +176,12 @@ resource "aws_launch_template" "tourna_math_lt" {
 
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
 
-  user_data = <<-EOF
+  user_data = base64encode(<<-EOF
               #!/bin/bash
               echo "Hello, TournaMaths" > index.html
               nohup busybox httpd -f -p 80 &
               EOF
+  )
 
   lifecycle {
     create_before_destroy = true
