@@ -186,6 +186,10 @@ resource "aws_launch_template" "tourna_math_lt" {
   lifecycle {
     create_before_destroy = true
   }
+
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.ec2_codedeploy_profile.arn
+  }
 }
 
 ################ Autoscaling group for application.
