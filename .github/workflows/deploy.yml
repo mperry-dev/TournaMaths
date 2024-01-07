@@ -51,6 +51,7 @@ jobs:
         working-directory: ${{ env.TERRAFORM_PATH }}
         run: terraform apply -auto-approve
 
+      # Note need to enable "read and write permissions" in https://github.com/mperry-dev/TournaMaths/settings/actions for this
       - name: Update commit status
         if: always()
         run: |

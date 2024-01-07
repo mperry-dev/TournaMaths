@@ -251,7 +251,7 @@ resource "aws_lb_listener" "https_listener" {
 
 # Keep registered domain nameservers up-to-date with hosted zone
 # NOTE AWS hosted zones always have 4 name servers https://aws.amazon.com/route53/faqs/
-# Doing this statically since if use loop, Terraform creates resources fo each nameserver,
+# Doing this statically since if use loop, Terraform creates resources for each nameserver,
 # replaces them 1-by-1, and then we hit an error that there must be 2 to 6 nameservers for the domain.
 resource "aws_route53domains_registered_domain" "tournamaths_domain" {
   domain_name = "tournamaths.com"
