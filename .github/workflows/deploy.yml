@@ -65,7 +65,8 @@ jobs:
 
     steps:
       # NOTE - uncomment this if start giving coding access to other people (note have branch protection rule for main)
-      # Have branch protection rule for main branch, so should only allow deployment from that to protect production integrity
+      # Have branch protection rule for main branch, so should only allow deployment from that to protect production integrity.
+      # Also, requiring only in main branch reduces chance of accidentally destroying resources we're relying up, that deployed previously from another branch.
       #- name: Only allow deployment from main branch
       #  run: |
       #    if [[ "${{ github.ref }}" != "ref/heads/main" ]]; then
