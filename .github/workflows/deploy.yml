@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-application:
-    name: 'Build application'
+    name: 'Build application and upload JAR to S3'
     runs-on: ubuntu-latest
 
     steps:
@@ -30,11 +30,15 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Upload JAR file as an artifact
-        uses: actions/upload-artifact@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          name: tournamaths-jar
-          path: target/tournamaths-1.0.jar
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: aws s3 cp target/tournamaths-1.0.jar s3://tournamaths/tournamaths.jar
 
       - name: Update commit status
         if: always()
@@ -117,27 +121,13 @@ jobs:
     needs: [build-application, deploy-infrastructure]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download JAR file artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: tournamaths-jar
-          path: target
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-  
-      - name: Upload to S3
-        run: aws s3 cp target/tournamaths-1.0.jar s3://tournamaths/tournamaths.jar
-  
+
       - name: Deploy to AWS CodeDeploy
         run: |
           aws deploy create-deployment \
