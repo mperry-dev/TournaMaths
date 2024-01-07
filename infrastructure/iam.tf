@@ -52,7 +52,7 @@ resource "aws_iam_instance_profile" "ec2_codedeploy_profile" {
 ################ Allow EC2 to interact with S3
 
 resource "aws_iam_policy" "s3_read_access" {
-  name        = "s3-read-access"
+  name = "s3-read-access"
 
   policy = jsonencode({
     Version = "2012-10-17",
