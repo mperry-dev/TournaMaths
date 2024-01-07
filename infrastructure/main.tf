@@ -179,7 +179,7 @@ resource "aws_launch_template" "tourna_math_lt" {
   user_data = base64encode(<<-EOF
               #!/bin/bash
 
-              # Install CodeDeploy Agent
+              # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
               sudo yum update -y
               sudo yum install -y ruby
               sudo yum install -y wget
