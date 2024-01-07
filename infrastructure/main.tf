@@ -183,7 +183,7 @@ resource "aws_launch_template" "tourna_math_lt" {
               sudo yum update -y
               sudo yum install -y ruby
               sudo yum install -y wget
-              cd /home/ec2-user
+              cd /home/ubuntu
               wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
               chmod +x ./install
               sudo ./install auto
@@ -193,10 +193,10 @@ resource "aws_launch_template" "tourna_math_lt" {
               sudo apt install -y openjdk-20-jdk
 
               # Download Spring Boot application JAR from S3
-              aws s3 cp s3://tournamaths/tournamaths.jar /home/ec2-user/
+              aws s3 cp s3://tournamaths/tournamaths.jar /home/ubuntu/
 
               # Run Spring Boot application
-              java -jar /home/ec2-user/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
+              java -jar /home/ubuntu/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
               EOF
   )
 
