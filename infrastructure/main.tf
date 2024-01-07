@@ -243,6 +243,18 @@ resource "aws_lb_listener" "https_listener" {
   }
 }
 
+# Keep registered domain nameservers up-to-date with hosted zone
+# NOTE AWS hosted zones always have 4 name servers
+resource "aws_route53domains_registered_domain" "tournamaths_domain" {
+  domain_name = "tournamaths.com"
+
+  for_each = toset(aws_route53_zone.tournamaths_zone.name_servers)
+
+  name_server {
+    name = each.value
+  }
+}
+
 # DNS Validation of cerficate
 resource "aws_route53_record" "tournamaths_cert_validation_record" {
   for_each = {
@@ -264,18 +276,11 @@ resource "aws_route53_record" "tournamaths_cert_validation_record" {
 resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
   certificate_arn         = aws_acm_certificate.tournamaths_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation_record : record.fqdn]
-}
 
-# Keep registered domain nameservers up-to-date with hosted zone
-# NOTE AWS hosted zones always have 4 name servers
-resource "aws_route53domains_registered_domain" "tournamaths_domain" {
-  domain_name = "tournamaths.com"
-
-  for_each = toset(aws_route53_zone.tournamaths_zone.name_servers)
-
-  name_server {
-    name = each.value
-  }
+  # Certificate validation depends on registered domain nameservers matching hosted zone nameservers
+  depends_on = [
+    aws_route53domains_registered_domain.tournamaths_domain
+  ]
 }
 
 ################ Database.
