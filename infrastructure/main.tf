@@ -176,6 +176,9 @@ resource "aws_launch_template" "tourna_math_lt" {
 
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
 
+  # SSH Key https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#KeyPairs:
+  key_name = "Tournamaths"
+
   user_data = base64encode(<<-EOF
               #!/bin/bash
 
