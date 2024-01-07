@@ -197,6 +197,8 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
   launch_configuration      = aws_launch_configuration.tourna_math_lc.name
   vpc_zone_identifier       = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
+  target_group_arns = [aws_lb_target_group.tourna_math_tg.arn]
+
   tag {
     key                 = "Name"
     value               = "TournaMaths-ASG"
