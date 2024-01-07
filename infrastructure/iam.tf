@@ -50,7 +50,6 @@ resource "aws_iam_instance_profile" "ec2_codedeploy_profile" {
 }
 
 ################ Allow EC2 to interact with S3
-
 resource "aws_iam_policy" "s3_read_access" {
   name = "s3-read-access"
 
@@ -75,4 +74,33 @@ resource "aws_iam_policy" "s3_read_access" {
 resource "aws_iam_role_policy_attachment" "s3_read_access_attach" {
   role       = aws_iam_role.ec2_codedeploy_role.name
   policy_arn = aws_iam_policy.s3_read_access.arn
+}
+
+################ Cloudwatch
+resource "aws_iam_policy" "cloudwatch_agent_policy" {
+  name        = "CloudWatchAgentPolicy"
+  description = "Policy to allow EC2 to send logs and metrics to CloudWatch"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "cloudwatch:PutMetricData",
+          "logs:PutLogEvents",
+          "logs:DescribeLogStreams",
+          "logs:DescribeLogGroups",
+          "logs:CreateLogStream",
+          "logs:CreateLogGroup"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
+  role       = aws_iam_role.ec2_codedeploy_role.name
+  policy_arn = aws_iam_policy.cloudwatch_agent_policy.arn
 }
