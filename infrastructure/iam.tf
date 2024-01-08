@@ -1,4 +1,4 @@
-################ Allow Codedeploy to interact with EC2
+################ Allow Codedeploy to interact with EC2 (being a bit loose with permissions as easier and this is a pet project)
 resource "aws_iam_role" "codedeploy_role" {
   name = "codedeploy-role"
 
@@ -21,9 +21,9 @@ resource "aws_iam_role_policy_attachment" "codedeploy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
 }
 
-################ Allow EC2 to interact with Codedeploy
-resource "aws_iam_role" "ec2_codedeploy_role" {
-  name = "ec2-codedeploy-role"
+################ Allow EC2 to interact with Codedeploy (being a bit loose with permissions as easier and this is a pet project)
+resource "aws_iam_role" "ec2_role" {
+  name = "ec2-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17",
@@ -40,13 +40,13 @@ resource "aws_iam_role" "ec2_codedeploy_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "codedeploy_ec2_attach" {
-  role       = aws_iam_role.ec2_codedeploy_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy"
 }
 
-resource "aws_iam_instance_profile" "ec2_codedeploy_profile" {
-  name = "ec2-codedeploy-instance-profile"
-  role = aws_iam_role.ec2_codedeploy_role.name
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2-profile"
+  role = aws_iam_role.ec2_role.name
 }
 
 ################ Allow EC2 to interact with S3
@@ -72,7 +72,7 @@ resource "aws_iam_policy" "s3_read_access" {
 }
 
 resource "aws_iam_role_policy_attachment" "s3_read_access_attach" {
-  role       = aws_iam_role.ec2_codedeploy_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.s3_read_access.arn
 }
 
@@ -101,6 +101,31 @@ resource "aws_iam_policy" "cloudwatch_agent_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attach" {
-  role       = aws_iam_role.ec2_codedeploy_role.name
+  role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.cloudwatch_agent_policy.arn
+}
+
+################ EC2 password permissions - needs to access SecretsManager
+resource "aws_iam_policy" "secrets_manager_policy" {
+  name        = "secrets_manager_policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = "secretsmanager:GetSecretValue",
+        Resource = aws_secretsmanager_secret.ec2_password.arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "secrets_manager_policy_attach" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.secrets_manager_policy.arn
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  role = aws_iam_role.ec2_role.name
 }

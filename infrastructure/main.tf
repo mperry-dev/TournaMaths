@@ -181,11 +181,25 @@ resource "aws_launch_template" "tourna_math_lt" {
     cpu_credits = "standard"
   }
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.ec2_codedeploy_profile.arn
+  }
+
   user_data = base64encode(<<-EOF
               #!/bin/bash
 
-              # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
               sudo yum update -y
+
+              # Setup password to login via EC2 Serial Console
+              sudo yum install -y jq
+              PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.ec2_password.id} --query 'SecretString' --output text | jq -r .password)
+              echo "ec2-user:$PASSWORD" | chpasswd
+
+              # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
               sudo yum install -y ruby wget
               cd /tmp
               wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
@@ -200,8 +214,8 @@ resource "aws_launch_template" "tourna_math_lt" {
               sudo systemctl start amazon-cloudwatch-agent
 
               # Install Java
-              sudo apt update
-              sudo apt install -y openjdk-20-jdk
+              wget https://download.oracle.com/java/20/archive/jdk-20_linux-x64_bin.rpm
+              sudo rpm -ivh jdk-20_linux-x64_bin.rpm
 
               # Download Spring Boot application JAR from S3
               aws s3 cp s3://tournamaths/tournamaths.jar /home/ec2-user/
@@ -210,14 +224,6 @@ resource "aws_launch_template" "tourna_math_lt" {
               java -jar /home/ec2-user/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
               EOF
   )
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  iam_instance_profile {
-    arn = aws_iam_instance_profile.ec2_codedeploy_profile.arn
-  }
 }
 
 ################ Autoscaling group for application.
