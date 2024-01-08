@@ -3,7 +3,7 @@ resource "aws_secretsmanager_secret" "ec2_password" {
 }
 
 resource "aws_secretsmanager_secret_version" "ec2_password_version" {
-  secret_id     = aws_secretsmanager_secret.ec2_password.id
+  secret_id = aws_secretsmanager_secret.ec2_password.id
   secret_string = jsonencode({
     password = random_password.password.result
   })
