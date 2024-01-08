@@ -1,3 +1,4 @@
 #!/bin/bash
-# TODO
-echo "Running stop_application.sh"
+
+# Stop Spring Boot application
+pkill -f tournamaths.jar
