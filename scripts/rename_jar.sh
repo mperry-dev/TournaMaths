@@ -2,4 +2,4 @@
 
 echo "Running rename_jar.sh"
 
-mv /tmp/tournamaths/target/tournamaths-1.0.jar /tmp/tournamaths/target/tournamaths.jar
+mv /home/ec2-user/tournamaths-1.0.jar /home/ec2-user/tournamaths.jar

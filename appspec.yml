@@ -3,18 +3,14 @@ os: linux
 # Source files are copied to destination files during the Install Event
 # https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html
 files:
-  - source: /tmp/tournamaths/target/tournamaths.jar
-    destination: /home/ec2-user/
+  - source: target/tournamaths-1.0.jar  # This path is relative to root directory of tournamaths-deployment.zip obtained from S3
+    destination: /home/ec2-user/  # This path is absolute directory in the EC2 instance to put the source file
 hooks:
   ApplicationStop:
     - location: scripts/stop_application.sh
       timeout: 300
       runas: root
-  DownloadBundle:
-    - location: scripts/download_bundle.sh
-      timeout: 300
-      runas: root
-  BeforeInstall:
+  AfterInstall:
     - location: scripts/rename_jar.sh
       timeout: 300
       runas: root

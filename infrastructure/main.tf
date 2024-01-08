@@ -224,6 +224,16 @@ resource "aws_launch_template" "tourna_math_lt" {
               # Install Java
               wget https://download.oracle.com/java/20/archive/jdk-20_linux-x64_bin.rpm
               sudo rpm -ivh jdk-20_linux-x64_bin.rpm
+
+              #################### Download application and start it
+              # Download Spring Boot application ZIP (containing a JAR) from S3
+              aws s3 cp s3://tournamaths/tournamaths-deployment.zip /home/ec2-user/
+
+              # Unzip JAR from ZIP
+              unzip /home/ec2-user/tournamaths-deployment.zip -d /home/ec2-user/
+
+              ./home/ec2-user/scripts/rename-jar.sh
+              ./home/ec2-user/scripts/start_application.sh
               EOF
   )
 }
