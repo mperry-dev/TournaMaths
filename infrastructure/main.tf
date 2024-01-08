@@ -186,7 +186,7 @@ resource "aws_launch_template" "tourna_math_lt" {
   }
 
   iam_instance_profile {
-    arn = aws_iam_instance_profile.ec2_codedeploy_profile.arn
+    arn = aws_iam_instance_profile.ec2_profile.arn
   }
 
   user_data = base64encode(<<-EOF
