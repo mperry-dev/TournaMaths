@@ -199,6 +199,7 @@ resource "aws_launch_template" "tourna_math_lt" {
               #!/bin/bash
 
               sudo yum update -y
+              cd /tmp
 
               # Setup password to login via EC2 Serial Console
               #sudo yum install -y jq
@@ -209,7 +210,6 @@ resource "aws_launch_template" "tourna_math_lt" {
 
               # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
               sudo yum install -y ruby wget
-              cd /tmp
               wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
               chmod +x ./install
               sudo ./install auto
@@ -224,12 +224,6 @@ resource "aws_launch_template" "tourna_math_lt" {
               # Install Java
               wget https://download.oracle.com/java/20/archive/jdk-20_linux-x64_bin.rpm
               sudo rpm -ivh jdk-20_linux-x64_bin.rpm
-
-              # Download Spring Boot application JAR from S3
-              aws s3 cp s3://tournamaths/tournamaths.jar /home/ec2-user/
-
-              # Run Spring Boot application
-              java -jar /home/ec2-user/tournamaths.jar > /dev/null 2> /dev/null < /dev/null &
               EOF
   )
 }
