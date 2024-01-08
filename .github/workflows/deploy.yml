@@ -51,6 +51,7 @@ jobs:
         working-directory: ${{ env.TERRAFORM_PATH }}
         run: terraform apply -auto-approve
 
+      # Note need to enable "read and write permissions" in https://github.com/mperry-dev/TournaMaths/settings/actions for this
       - name: Update commit status
         if: always()
         run: |
@@ -59,6 +60,8 @@ jobs:
           else
             STATE="failure"
           fi
+
+          echo "STATE=$STATE for this job performed on COMMIT=${{ github.sha }}"
 
           curl -X POST \
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \

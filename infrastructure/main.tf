@@ -241,6 +241,12 @@ resource "aws_lb_listener" "https_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tourna_math_tg.arn
   }
+
+  # Want this listener created after SSL certificate validated, otherwise can get this sort of error:
+  # https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
+  depends_on = [
+    aws_acm_certificate_validation.tournamaths_cert_validation
+  ]
 }
 
 # Keep registered domain nameservers up-to-date with hosted zone
@@ -285,6 +291,11 @@ resource "aws_route53_record" "tournamaths_cert_validation_record" {
 resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
   certificate_arn         = aws_acm_certificate.tournamaths_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.tournamaths_cert_validation_record : record.fqdn]
+
+  # Certificate validation depends on registered domain nameservers matching hosted zone nameservers
+  depends_on = [
+    aws_route53domains_registered_domain.tournamaths_domain
+  ]
 }
 
 ################ Database.
