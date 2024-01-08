@@ -11,13 +11,62 @@ env:
   TERRAFORM_PATH: 'infrastructure'
 
 jobs:
-  deploy:
-    name: 'Deploy to prod'
+  build-application:
+    name: 'Build application and upload JAR to S3'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 20
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '20'
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Upload to S3
+        run: |
+          zip tournamaths-deployment.zip target/tournamaths-1.0.jar appspec.yml scripts/*
+          aws s3 cp tournamaths-deployment.zip s3://tournamaths/tournamaths-deployment.zip
+
+      - name: Update commit status
+        if: always()
+        run: |
+          if [[ "${{ job.status }}" == "success" ]]; then
+            STATE="success"
+          else
+            STATE="failure"
+          fi
+
+          echo "STATE=$STATE for this job performed on COMMIT=${{ github.sha }}"
+
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+          -d "{\"state\": \"$STATE\", \"context\": \"Deployment\", \"description\": \"Build application result\", \"target_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+
+  deploy-infrastructure:
+    name: 'Deploy infrastructure to prod'
     runs-on: ubuntu-latest
 
     steps:
       # NOTE - uncomment this if start giving coding access to other people (note have branch protection rule for main)
-      # Have branch protection rule for main branch, so should only allow deployment from that to protect production integrity
+      # Have branch protection rule for main branch, so should only allow deployment from that to protect production integrity.
+      # Also, requiring only in main branch reduces chance of accidentally destroying resources we're relying up, that deployed previously from another branch.
       #- name: Only allow deployment from main branch
       #  run: |
       #    if [[ "${{ github.ref }}" != "ref/heads/main" ]]; then
@@ -25,7 +74,7 @@ jobs:
       #      exit 1
       #    fi
 
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -67,4 +116,63 @@ jobs:
           -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
-          -d "{\"state\": \"$STATE\", \"context\": \"deployment\", \"description\": \"Deployment result\", \"target_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+          -d "{\"state\": \"$STATE\", \"context\": \"Deployment\", \"description\": \"Infrastructure deployment result\", \"target_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"
+
+  deploy-application:
+    name: 'Deploy application to prod'
+    runs-on: ubuntu-latest
+    needs: [build-application, deploy-infrastructure]
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Deploy to AWS CodeDeploy
+        run: |
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
+            --application-name tournamaths-app \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --deployment-group-name tournamaths-deployment-group \
+            --description "TournaMaths deployment" \
+            --s3-location bucket=tournamaths,bundleType=zip,key=tournamaths-deployment.zip \
+            --query 'deploymentId' --output text)
+
+          echo "Deployment ID: $DEPLOYMENT_ID"
+
+          # TODO = uncomment this when doing deployments less regularly (so chew up fewer Github Actions minutes)
+          # Poll the deployment status, so don't try to accidentally run multiple deployments at once
+          #while true; do
+          #  STATUS=$(aws deploy get-deployment \
+          #    --deployment-id $DEPLOYMENT_ID \
+          #    --query 'deploymentInfo.status' --output text)
+
+          #  echo "Deployment Status: $STATUS"
+
+          #  if [[ $STATUS == "Succeeded" ]]; then
+          #    break
+          #  elif [[ "$STATUS" == "Failed" || "$STATUS" == "Stopped" ]]; then
+          #    exit 1
+          #  fi
+          #  sleep 10
+          #done
+
+      - name: Update commit status
+        if: always()
+        run: |
+          if [[ "${{ job.status }}" == "success" ]]; then
+            STATE="success"
+          else
+            STATE="failure"
+          fi
+
+          echo "STATE=$STATE for this job performed on COMMIT=${{ github.sha }}"
+
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }} \
+          -d "{\"state\": \"$STATE\", \"context\": \"Deployment\", \"description\": \"Application deployment result\", \"target_url\": \"https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}"

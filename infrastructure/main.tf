@@ -20,7 +20,10 @@ resource "aws_vpc" "tourna_math_vpc" {
 resource "aws_subnet" "tourna_math_subnet_1a" {
   vpc_id            = aws_vpc.tourna_math_vpc.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "${var.aws_region}a"
+
+  # Make public subnet
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "TournaMaths-Subnet-1a"
@@ -30,7 +33,10 @@ resource "aws_subnet" "tourna_math_subnet_1a" {
 resource "aws_subnet" "tourna_math_subnet_1b" {
   vpc_id            = aws_vpc.tourna_math_vpc.id
   cidr_block        = "10.0.2.0/24"
-  availability_zone = "us-east-1b"
+  availability_zone = "${var.aws_region}b"
+
+  # Make public subnet
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "TournaMaths-Subnet-1b"
@@ -41,7 +47,7 @@ resource "aws_subnet" "tourna_math_subnet_1b" {
 resource "aws_subnet" "tourna_math_private_subnet_1a" {
   vpc_id            = aws_vpc.tourna_math_vpc.id
   cidr_block        = "10.0.3.0/24"
-  availability_zone = "us-east-1a"
+  availability_zone = "${var.aws_region}a"
 
   tags = {
     Name = "TournaMaths-Private-Subnet-1a"
@@ -51,7 +57,7 @@ resource "aws_subnet" "tourna_math_private_subnet_1a" {
 resource "aws_subnet" "tourna_math_private_subnet_1b" {
   vpc_id            = aws_vpc.tourna_math_vpc.id
   cidr_block        = "10.0.4.0/24"
-  availability_zone = "us-east-1b"
+  availability_zone = "${var.aws_region}b"
 
   tags = {
     Name = "TournaMaths-Private-Subnet-1b"
@@ -171,21 +177,62 @@ resource "aws_lb_listener" "front_end" {
 ################ Launch configuration.
 resource "aws_launch_template" "tourna_math_lt" {
   name_prefix   = "TournaMaths-LT-"
-  image_id      = "ami-053b0d53c279acc90" # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type (provided by Ubuntu)
-  instance_type = "t2.micro"              # A cheap instance which unlike t3.micro, doesn't have unlimited bursting, so is safer cost-wise.
+  image_id      = "ami-079db87dc4c10ac91" # Amazon Linux 2023 AMI (chose because optimized for AWS and comes with extra apps, also better documented)
+  instance_type = "t3.micro"              # A cheap instance which is built on Nitro System, so can connect via EC2 Serial Console.
 
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
 
-  user_data = base64encode(<<-EOF
-              #!/bin/bash
-              echo "Hello, TournaMaths" > index.html
-              nohup busybox httpd -f -p 80 &
-              EOF
-  )
+  # Disables T3 Unlimited feature so costs don't go up (not too expensive though https://aws.amazon.com/ec2/instance-types/t3/)
+  credit_specification {
+    cpu_credits = "standard"
+  }
 
   lifecycle {
     create_before_destroy = true
   }
+
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.ec2_profile.arn
+  }
+
+  user_data = base64encode(<<-EOF
+              #!/bin/bash
+
+              sudo yum update -y
+              cd /tmp
+
+              # Setup password to login via EC2 Serial Console
+              PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.ec2_password.id} --query 'SecretString' --output text | jq -r .password)
+              echo "ec2-user:$PASSWORD" | chpasswd
+
+              # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
+              sudo yum install -y ruby wget
+              wget https://aws-codedeploy-${var.aws_region}.s3.amazonaws.com/latest/install
+              chmod +x ./install
+              sudo ./install auto
+
+              # Install CloudWatch Agent
+              sudo yum install -y amazon-cloudwatch-agent
+
+              # Start the CodeDeploy and CloudWatch agents
+              sudo service codedeploy-agent start
+              sudo systemctl start amazon-cloudwatch-agent
+
+              # Install Java
+              wget https://download.oracle.com/java/20/archive/jdk-20_linux-x64_bin.rpm
+              sudo rpm -ivh jdk-20_linux-x64_bin.rpm
+
+              #################### Download application and start it
+              # Download Spring Boot application ZIP (containing a JAR) from S3
+              aws s3 cp s3://tournamaths/tournamaths-deployment.zip /home/ec2-user/
+
+              # Unzip JAR from ZIP
+              unzip /home/ec2-user/tournamaths-deployment.zip -d /home/ec2-user/
+
+              ./home/ec2-user/scripts/rename-jar.sh
+              ./home/ec2-user/scripts/start_application.sh
+              EOF
+  )
 }
 
 ################ Autoscaling group for application.
