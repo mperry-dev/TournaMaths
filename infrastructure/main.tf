@@ -202,11 +202,8 @@ resource "aws_launch_template" "tourna_math_lt" {
               cd /tmp
 
               # Setup password to login via EC2 Serial Console
-              #sudo yum install -y jq
-              #PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.ec2_password.id} --query 'SecretString' --output text | jq -r .password)
-              #echo "ec2-user:$PASSWORD" | chpasswd
-              sudo passwd -d ec2-user
-              sudo passwd -d root
+              PASSWORD=$(aws secretsmanager get-secret-value --secret-id ${aws_secretsmanager_secret.ec2_password.id} --query 'SecretString' --output text | jq -r .password)
+              echo "ec2-user:$PASSWORD" | chpasswd
 
               # Install CodeDeploy Agent (for AWS CodeDeploy to be able to deploy on these EC2 instances)
               sudo yum install -y ruby wget
