@@ -25,41 +25,51 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 @Configuration
 @Profile("prod")  // only use this for production - locally rely on application.properties.
 public class AppConfig {
-
-    // Load username from application.properties
-    @Value("${spring.datasource.username}")
-    private String dbUsername;
-
-    @Value("${aws.secretName}")
-    private String secretName;
-
+    // Loaded from application-prod.properties
     @Value("${aws.region}")
     private String region;
 
     @Bean
     public DataSource dataSource() {
-        SecretsManagerClient secretsManagerClient = SecretsManagerClient.builder()
-                .region(Region.of(region))
-                .build();
+        DBInstance dbInstance = getDBInstance();
 
-        GetSecretValueRequest getSecretValueRequest = GetSecretValueRequest.builder()
-                .secretId(secretName)
-                .build();
+        JSONObject masterSecret = getMasterSecret(dbInstance);
 
-        GetSecretValueResponse getSecretValueResponse = secretsManagerClient.getSecretValue(getSecretValueRequest);
-        String secretString = getSecretValueResponse.secretString();
         // NOTE if a managed database password is used and the password changes, existing PostgreSQL connections are not affected.
-        String password = (new JSONObject(secretString)).getString("db_admin_user_password");
+        String username = masterSecret.getString("username");
+        String password = masterSecret.getString("password");
 
         // Return a configured DataSource using the secret values.
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(getDatabaseURL());
-        dataSource.setUsername(dbUsername);
-        dataSource.setPassword(password); // get from secret
+        dataSource.setJdbcUrl(getDatabaseURL(dbInstance));
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
-    private String getDatabaseURL() {
+    private String getDatabaseURL(DBInstance dbInstance) {
+        // Return JDBC URL for connecting to the database
+        return "jdbc:postgresql://"+dbInstance.endpoint().address()+":"+dbInstance.endpoint().port()+"/"+dbInstance.dbName();
+    }
+
+    private JSONObject getMasterSecret(DBInstance dbInstance){
+        String masterSecretARN = dbInstance.masterUserSecret().secretArn();
+
+        SecretsManagerClient client = SecretsManagerClient.builder()
+                .region(Region.of(region))
+                .build();
+
+        GetSecretValueRequest request = GetSecretValueRequest.builder()
+                .secretId(masterSecretARN)
+                .build();
+
+        GetSecretValueResponse response = client.getSecretValue(request);
+        String secretString = response.secretString();
+
+        return new JSONObject(secretString);
+    }
+
+    private DBInstance getDBInstance(){
         RdsClient rdsClient = RdsClient.builder()
                 .region(Region.of(region))
                 .build();
@@ -77,15 +87,12 @@ public class AppConfig {
                 System.exit(1);
             }
 
-            DBInstance dbInstance = dbInstances.get(0);
-
-            // Return JDBC URL for connecting to the database
-            return "jdbc:postgresql://"+dbInstance.endpoint().address()+":"+dbInstance.endpoint().port()+"/"+dbInstance.dbName();
+            return dbInstances.get(0);
 
         } catch (RdsException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
             System.exit(1);
-            return "";  // Keep type system happy.
+            return null;  // Keep type system happy.
         }
     }
 }
