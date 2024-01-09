@@ -269,29 +269,27 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
       min_healthy_percentage = 50
       instance_warmup        = 300 # In seconds
     }
-  }
 
-  # Adding this dependency, so if IAM policies change, instance refresh is triggered.
-  # NOTE also that a refresh will always be triggered by a change in any of
-  # launch_configuration, launch_template, or mixed_instances_policy:
-  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
-  depends_on = [
-    null_resource.iam_policy_trigger
-  ]
+    triggers = ["tag"]
+  }
 
   tag {
     key                 = "Name"
     value               = "TournaMaths-ASG"
     propagate_at_launch = true
   }
-}
 
-resource "null_resource" "iam_policy_trigger" {
-  triggers = {
-    iam_policy_hash = sha256(file("${path.module}/iam.tf"))
+  # Adding this tag, so if IAM policies change, instance refresh is triggered
+  # (since trigger instance refresh above when tags change).
+  # NOTE also that a refresh will always be triggered by a change in any of
+  # launch_configuration, launch_template, or mixed_instances_policy:
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
+  tag {
+    key                 = "iam-policy-hash"
+    value               = sha256(file("${path.module}/iam.tf"))
+    propagate_at_launch = true
   }
 }
-
 
 ################ Route53 configuration - records, and SSL certificate.
 
