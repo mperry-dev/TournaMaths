@@ -163,14 +163,20 @@ resource "aws_lb_target_group" "tourna_math_tg" {
   }
 }
 
-resource "aws_lb_listener" "front_end" {
+resource "aws_lb_listener" "http_listener" {
   load_balancer_arn = aws_lb.tourna_math_alb.arn
   port              = 80
   protocol          = "HTTP"
 
+  # HTTP listener just redirects HTTP requests to the corresponding HTTPS URL
   default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tourna_math_tg.arn
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
