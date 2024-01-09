@@ -121,6 +121,10 @@ resource "aws_security_group" "tourna_math_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  tags = {
+    Name = "TournaMaths-SG"
+  }
 }
 
 ################ ALB, Target-Group, Listener.
@@ -375,19 +379,19 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
 ################ Database.
 # We're not doing backups here, deletion protection, SSL communication or encryption at rest, as just a pet project and keeping things simple.
 resource "aws_db_instance" "tourna_math_db" {
-  identifier             = "tournamath-db"
-  allocated_storage      = 20
-  storage_type           = "gp2"
-  engine                 = "postgres"
-  engine_version         = "15.3"
-  instance_class         = "db.t4g.micro"
-  db_name                = "tourna_math_db"
-  username               = "admin_user" # Can't say "admin" here as that's reserved in Postgres.
-  password               = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_user_password"]
-  parameter_group_name   = "default.postgres15"
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
-  db_subnet_group_name   = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
+  identifier                  = "tournamath-db"
+  allocated_storage           = 20
+  storage_type                = "gp2"
+  engine                      = "postgres"
+  engine_version              = "15.3"
+  instance_class              = "db.t4g.micro"
+  db_name                     = "tourna_math_db"
+  username                    = "admin_user" # Can't say "admin" here as that's reserved in Postgres.
+  manage_master_user_password = true
+  parameter_group_name        = "default.postgres15"
+  skip_final_snapshot         = true
+  vpc_security_group_ids      = [aws_security_group.tourna_math_sg.id]
+  db_subnet_group_name        = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
 
   apply_immediately = true # For convenience changes applied immediately, but should be careful
 }
