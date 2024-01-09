@@ -67,10 +67,6 @@ resource "aws_subnet" "tourna_math_private_subnet_1b" {
 resource "aws_db_subnet_group" "tourna_math_private_db_subnet_group" {
   name       = "tournamaths-private-db-subnet-group"
   subnet_ids = [aws_subnet.tourna_math_private_subnet_1a.id, aws_subnet.tourna_math_private_subnet_1b.id]
-
-  tags = {
-    Name = "tournamaths-private-db-subnet-group"
-  }
 }
 
 ################ Internet gateway.
@@ -109,6 +105,7 @@ resource "aws_route_table_association" "tourna_math_route_table_association_1b" 
 
 ################ Security group.
 resource "aws_security_group" "tourna_math_sg" {
+  name   = "tournamath-sg"
   vpc_id = aws_vpc.tourna_math_vpc.id
 
   ingress {
@@ -124,10 +121,6 @@ resource "aws_security_group" "tourna_math_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  tags = {
-    Name = "TournaMaths-SG"
-  }
 }
 
 ################ ALB, Target-Group, Listener.
@@ -139,10 +132,6 @@ resource "aws_lb" "tourna_math_alb" {
   subnets            = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   enable_deletion_protection = false
-
-  tags = {
-    Name = "TournaMaths-ALB"
-  }
 }
 
 resource "aws_lb_target_group" "tourna_math_tg" {
@@ -156,10 +145,6 @@ resource "aws_lb_target_group" "tourna_math_tg" {
     interval = 30
     path     = "/health_check"
     timeout  = 3
-  }
-
-  tags = {
-    Name = "TournaMaths-TG"
   }
 }
 
@@ -405,8 +390,4 @@ resource "aws_db_instance" "tourna_math_db" {
   db_subnet_group_name   = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
 
   apply_immediately = true # For convenience changes applied immediately, but should be careful
-
-  tags = {
-    Name = "TournaMaths-DB"
-  }
 }
