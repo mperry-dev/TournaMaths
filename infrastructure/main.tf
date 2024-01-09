@@ -383,6 +383,7 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
 
 ################ Database.
 resource "aws_db_instance" "tourna_math_db" {
+  identifier             = "tourna_math_db"
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "postgres"
