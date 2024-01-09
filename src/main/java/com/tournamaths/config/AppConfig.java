@@ -71,7 +71,7 @@ public class AppConfig {
             DescribeDbInstancesResponse response = rdsClient.describeDBInstances(request);
             List<DBInstance> dbInstances = response.dbInstances();
 
-            if (dbInstances.size() != 0){
+            if (dbInstances.size() != 1){
                 System.err.println("Should have 1 database of identifier tournamath-db, but have "+dbInstances.size());
                 System.exit(1);
             }
