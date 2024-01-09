@@ -79,7 +79,7 @@ public class AppConfig {
             DBInstance dbInstance = dbInstances.get(0);
 
             // Return JDBC URL for connecting to the database
-            return "jdbc:postgresql://"+dbInstance.endpoint().address()+":"+dbInstance.dbInstancePort()+"/"+dbInstance.dbName();
+            return "jdbc:postgresql://"+dbInstance.endpoint().address()+":"+dbInstance.endpoint().port()+"/"+dbInstance.dbName();
 
         } catch (RdsException e) {
             System.err.println(e.awsErrorDetails().errorMessage());
