@@ -147,7 +147,7 @@ resource "aws_lb" "tourna_math_alb" {
 
 resource "aws_lb_target_group" "tourna_math_tg" {
   name     = "TournaMaths-TG"
-  port     = 80
+  port     = 8080 # Tomcat (with SpringBoot) listens on port 8080 by default
   protocol = "HTTP"
   vpc_id   = aws_vpc.tourna_math_vpc.id
 
