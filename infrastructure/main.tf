@@ -237,6 +237,7 @@ resource "aws_launch_template" "tourna_math_lt" {
 
 ################ Autoscaling group for application.
 resource "aws_autoscaling_group" "tourna_math_asg" {
+  name                      = "TournaMaths-ASG"
   desired_capacity          = 2
   max_size                  = 5
   min_size                  = 1
@@ -271,12 +272,6 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
     }
 
     triggers = ["tag"]
-  }
-
-  tag {
-    key                 = "Name"
-    value               = "TournaMaths-ASG"
-    propagate_at_launch = true
   }
 
   # Adding this tag, so if IAM policies change, instance refresh is triggered
