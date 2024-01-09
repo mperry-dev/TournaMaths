@@ -252,12 +252,12 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
     version = aws_launch_template.tourna_math_lt.latest_version # Specify this instead of "$Latest" so instance refresh triggered when launch template changes
   }
 
-  # Just before an instance is terminated, give 2000 seconds to perform any required actions,
+  # Just before an instance is terminated, give 300 seconds to perform any required actions,
   # and if this time expires, termination process continues as normal.
   initial_lifecycle_hook {
     name                 = "instance-termination-hook"
     default_result       = "CONTINUE"
-    heartbeat_timeout    = 2000 # In seconds
+    heartbeat_timeout    = 300 # In seconds
     lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
   }
 
