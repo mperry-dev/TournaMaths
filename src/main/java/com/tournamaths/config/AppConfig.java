@@ -72,7 +72,7 @@ public class AppConfig {
             List<DBInstance> dbInstances = response.dbInstances();
 
             if (dbInstances.size() != 0){
-                System.err.println("Should have 1 database of name tourna_math_db, but have "+dbInstances.size());
+                System.err.println("Should have 1 database of identifier tourna_math_db, but have "+dbInstances.size());
                 System.exit(1);
             }
 
