@@ -1,0 +1,13 @@
+# Service to stop SpringBoot application upon EC2 instance termination
+[Unit]
+Description=Kill SpringBoot application
+DefaultDependencies=no
+Before=poweroff.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+ExecStop=/home/ec2-user/scripts/stop_application.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

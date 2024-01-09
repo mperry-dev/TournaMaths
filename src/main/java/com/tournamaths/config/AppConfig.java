@@ -52,33 +52,34 @@ public class AppConfig {
 
         // Return a configured DataSource using the secret values.
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(getDatabaseAddress());
+        dataSource.setJdbcUrl(getDatabaseURL());
         dataSource.setUsername(dbUsername);
         dataSource.setPassword(password); // get from secret
         return dataSource;
     }
 
-    private String getDatabaseAddress() {
+    private String getDatabaseURL() {
         RdsClient rdsClient = RdsClient.builder()
                 .region(Region.of(region))
                 .build();
         
         try {
             DescribeDbInstancesRequest request = DescribeDbInstancesRequest.builder()
-                    .dbInstanceIdentifier("tourna_math_db")
+                    .dbInstanceIdentifier("tournamath-db")
                     .build();
 
             DescribeDbInstancesResponse response = rdsClient.describeDBInstances(request);
             List<DBInstance> dbInstances = response.dbInstances();
 
-            if (dbInstances.size() != 0){
-                System.err.println("Should have 1 database of name tourna_math_db, but have "+dbInstances.size());
+            if (dbInstances.size() != 1){
+                System.err.println("Should have 1 database of identifier tournamath-db, but have "+dbInstances.size());
                 System.exit(1);
             }
 
             DBInstance dbInstance = dbInstances.get(0);
 
-            return dbInstance.endpoint().address();
+            // Return JDBC URL for connecting to the database
+            return "jdbc:postgresql://"+dbInstance.endpoint().address()+":"+dbInstance.endpoint().port()+"/"+dbInstance.dbName();
 
         } catch (RdsException e) {
             System.err.println(e.awsErrorDetails().errorMessage());

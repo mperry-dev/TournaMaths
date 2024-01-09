@@ -1,3 +1,4 @@
+# For CodeDeploy - specifies how to handle deployment event hooks, and where to get and put files.
 version: 0.0
 os: linux
 # Source files are copied to destination files during the Install Event

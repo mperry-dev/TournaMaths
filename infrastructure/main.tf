@@ -147,14 +147,14 @@ resource "aws_lb" "tourna_math_alb" {
 
 resource "aws_lb_target_group" "tourna_math_tg" {
   name     = "TournaMaths-TG"
-  port     = 80
+  port     = 8080 # Tomcat (with SpringBoot) listens on port 8080 by default
   protocol = "HTTP"
   vpc_id   = aws_vpc.tourna_math_vpc.id
 
   health_check {
     enabled  = true
     interval = 30
-    path     = "/"
+    path     = "/health_check"
     timeout  = 3
   }
 
@@ -229,6 +229,7 @@ resource "aws_launch_template" "tourna_math_lt" {
               # Unzip JAR from ZIP
               unzip /home/ec2-user/tournamaths-deployment.zip -d /home/ec2-user/
 
+              ./home/ec2-user/scripts/setup_systemd.sh
               ./home/ec2-user/scripts/rename-jar.sh
               ./home/ec2-user/scripts/start_application.sh
               EOF
@@ -237,6 +238,7 @@ resource "aws_launch_template" "tourna_math_lt" {
 
 ################ Autoscaling group for application.
 resource "aws_autoscaling_group" "tourna_math_asg" {
+  name                      = "TournaMaths-ASG"
   desired_capacity          = 2
   max_size                  = 5
   min_size                  = 1
@@ -249,12 +251,38 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
 
   launch_template {
     id      = aws_launch_template.tourna_math_lt.id
-    version = "$Latest"
+    version = aws_launch_template.tourna_math_lt.latest_version # Specify this instead of "$Latest" so instance refresh triggered when launch template changes
   }
 
+  # Just before an instance is terminated, give 300 seconds to perform any required actions,
+  # and if this time expires, termination process continues as normal.
+  initial_lifecycle_hook {
+    name                 = "instance-termination-hook"
+    default_result       = "CONTINUE"
+    heartbeat_timeout    = 300 # In seconds
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+  }
+
+  # When deploy infrastructure changes, replace the EC2 instances 1 by 1 so don't have downtime.
+  instance_refresh {
+    strategy = "Rolling"
+
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 300 # In seconds
+    }
+
+    triggers = ["tag"]
+  }
+
+  # Adding this tag, so if IAM policies change, instance refresh is triggered
+  # (since trigger instance refresh above when tags change).
+  # NOTE also that a refresh will always be triggered by a change in any of
+  # launch_configuration, launch_template, or mixed_instances_policy:
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
   tag {
-    key                 = "Name"
-    value               = "TournaMaths-ASG"
+    key                 = "iam-policy-hash"
+    value               = sha256(file("${path.module}/iam.tf"))
     propagate_at_launch = true
   }
 }
@@ -355,6 +383,7 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
 
 ################ Database.
 resource "aws_db_instance" "tourna_math_db" {
+  identifier             = "tournamath-db"
   allocated_storage      = 20
   storage_type           = "gp2"
   engine                 = "postgres"
