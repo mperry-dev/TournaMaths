@@ -388,6 +388,7 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
 }
 
 ################ Database.
+# We're not doing backups here, deletion protection, SSL communication or encryption at rest, as just a pet project and keeping things simple.
 resource "aws_db_instance" "tourna_math_db" {
   identifier             = "tournamath-db"
   allocated_storage      = 20
@@ -402,6 +403,8 @@ resource "aws_db_instance" "tourna_math_db" {
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
   db_subnet_group_name   = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
+
+  apply_immediately = true # For convenience changes applied immediately, but should be careful
 
   tags = {
     Name = "TournaMaths-DB"

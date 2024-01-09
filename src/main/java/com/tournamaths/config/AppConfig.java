@@ -48,6 +48,7 @@ public class AppConfig {
 
         GetSecretValueResponse getSecretValueResponse = secretsManagerClient.getSecretValue(getSecretValueRequest);
         String secretString = getSecretValueResponse.secretString();
+        // NOTE if a managed database password is used and the password changes, existing PostgreSQL connections are not affected.
         String password = (new JSONObject(secretString)).getString("db_admin_user_password");
 
         // Return a configured DataSource using the secret values.
