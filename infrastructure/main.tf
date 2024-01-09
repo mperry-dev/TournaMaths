@@ -252,10 +252,29 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
     version = "$Latest"
   }
 
+  # Just before an instance is terminated, give 2000 seconds to perform any required actions,
+  # and if this time expires, termination process continues as normal.
+  initial_lifecycle_hook {
+    name                 = "instance-termination-hook"
+    default_result       = "CONTINUE"
+    heartbeat_timeout    = 2000 # In seconds
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+  }
+
   tag {
     key                 = "Name"
     value               = "TournaMaths-ASG"
     propagate_at_launch = true
+  }
+}
+
+# When deploy infrastructure changes, replace the EC2 instances 1 by 1 so don't have downtime.
+resource "aws_autoscaling_group_instance_refresh" "tournamaths_asg_refresh" {
+  auto_scaling_group_name = aws_autoscaling_group.tourna_math_asg.name
+  strategy                = "Rolling"
+  preferences {
+    min_healthy_percentage = 50
+    instance_warmup        = 300 # In seconds
   }
 }
 
