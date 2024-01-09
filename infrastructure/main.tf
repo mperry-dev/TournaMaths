@@ -261,20 +261,28 @@ resource "aws_autoscaling_group" "tourna_math_asg" {
     lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
   }
 
+  # When deploy infrastructure changes, replace the EC2 instances 1 by 1 so don't have downtime.
+  instance_refresh {
+    strategy = "Rolling"
+
+    preferences {
+      min_healthy_percentage = 50
+      instance_warmup        = 300 # In seconds
+    }
+
+    # Additional triggers for instance refresh.
+    # In addition to these triggers, a refresh will always be triggered by a change in any of
+    # launch_configuration, launch_template, or mixed_instances_policy:
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group
+    triggers = {
+      iam_policy_hash = sha256(file("${path.module}/iam.tf")) # If IAM policies changed, trigger instance refresh
+    }
+  }
+
   tag {
     key                 = "Name"
     value               = "TournaMaths-ASG"
     propagate_at_launch = true
-  }
-}
-
-# When deploy infrastructure changes, replace the EC2 instances 1 by 1 so don't have downtime.
-resource "aws_autoscaling_group_instance_refresh" "tournamaths_asg_refresh" {
-  auto_scaling_group_name = aws_autoscaling_group.tourna_math_asg.name
-  strategy                = "Rolling"
-  preferences {
-    min_healthy_percentage = 50
-    instance_warmup        = 300 # In seconds
   }
 }
 
