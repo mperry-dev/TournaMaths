@@ -139,7 +139,7 @@ resource "aws_iam_policy" "ec2_examining_db_policy" {
       {
         "Effect" : "Allow",
         "Action" : "rds:DescribeDBInstances",
-        "Resource" : aws_db_instance.tourna_math_db.arn
+        "Resource" : "*"
       }
     ]
   })
