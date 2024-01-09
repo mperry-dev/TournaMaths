@@ -229,6 +229,7 @@ resource "aws_launch_template" "tourna_math_lt" {
               # Unzip JAR from ZIP
               unzip /home/ec2-user/tournamaths-deployment.zip -d /home/ec2-user/
 
+              ./home/ec2-user/scripts/setup_systemd.sh
               ./home/ec2-user/scripts/rename-jar.sh
               ./home/ec2-user/scripts/start_application.sh
               EOF
