@@ -116,6 +116,11 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Effect   = "Allow",
         Action   = "secretsmanager:GetSecretValue",
         Resource = aws_secretsmanager_secret.ec2_password.arn
+      },
+      {
+        Effect   = "Allow",
+        Action   = "secretsmanager:GetSecretValue",
+        Resource = aws_secretsmanager_secret.db_creds_secret.arn
       }
     ]
   })
