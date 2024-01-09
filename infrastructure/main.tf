@@ -1,12 +1,3 @@
-################ Database secrets.
-data "aws_secretsmanager_secret" "db_creds_secret" {
-  name = "DB_Creds_Secret"
-}
-
-data "aws_secretsmanager_secret_version" "db_creds" {
-  secret_id = data.aws_secretsmanager_secret.db_creds_secret.id
-}
-
 ################ VPC.
 resource "aws_vpc" "tourna_math_vpc" {
   cidr_block = "10.0.0.0/16"
