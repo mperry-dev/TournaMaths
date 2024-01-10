@@ -176,6 +176,25 @@ resource "aws_lb_listener" "http_listener" {
   }
 }
 
+resource "aws_lb_listener" "https_listener" {
+  load_balancer_arn = aws_lb.tournamaths_alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.tournamaths_cert.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tournamaths_tg.arn
+  }
+
+  # Want this listener created after SSL certificate validated, otherwise can get this sort of error:
+  # https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
+  depends_on = [
+    aws_acm_certificate_validation.tournamaths_cert_validation
+  ]
+}
+
 ################ Route53 configuration - records, and SSL certificate.
 resource "aws_route53_zone" "tournamaths_zone" {
   name          = "tournamaths.com"
@@ -199,25 +218,6 @@ resource "aws_route53_record" "tournamaths_a_record" {
 resource "aws_acm_certificate" "tournamaths_cert" {
   domain_name       = "tournamaths.com"
   validation_method = "DNS"
-}
-
-resource "aws_lb_listener" "https_listener" {
-  load_balancer_arn = aws_lb.tournamaths_alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.tournamaths_cert.arn
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tournamaths_tg.arn
-  }
-
-  # Want this listener created after SSL certificate validated, otherwise can get this sort of error:
-  # https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
-  depends_on = [
-    aws_acm_certificate_validation.tournamaths_cert_validation
-  ]
 }
 
 # Keep registered domain nameservers up-to-date with hosted zone
