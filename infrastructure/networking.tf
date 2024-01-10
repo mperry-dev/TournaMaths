@@ -114,9 +114,9 @@ resource "aws_security_group" "tournamaths_alb_sg" {
   }
 
   egress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
     security_groups = [aws_security_group.tournamaths_ec2_sg.id]
   }
 
@@ -130,9 +130,9 @@ resource "aws_security_group" "tournamaths_ec2_sg" {
   vpc_id = aws_vpc.tournamaths_vpc.id
 
   ingress {
-    from_port   = 8080 # Port 8080 since Tomcat listening on port 8080
-    to_port     = 8080
-    protocol    = "tcp"
+    from_port       = 8080 # Port 8080 since Tomcat listening on port 8080
+    to_port         = 8080
+    protocol        = "tcp"
     security_groups = [aws_security_group.tournamaths_alb_sg.id]
   }
 
