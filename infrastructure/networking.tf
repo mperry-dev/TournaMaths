@@ -1,6 +1,6 @@
 ################ VPC.
 resource "aws_vpc" "tournamaths_vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = "10.0.0.0/16" # A private IP address range
 
   tags = {
     Name = "TournaMaths-VPC"
@@ -10,7 +10,7 @@ resource "aws_vpc" "tournamaths_vpc" {
 ################ Public subnets for the application's EC2 instances.
 resource "aws_subnet" "tournamaths_public_subnet_1a" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
-  cidr_block        = "10.0.1.0/24"
+  cidr_block        = "10.0.1.0/24" # A private IP address range
   availability_zone = "${var.aws_region}a"
 
   # Make public subnet
@@ -23,7 +23,7 @@ resource "aws_subnet" "tournamaths_public_subnet_1a" {
 
 resource "aws_subnet" "tournamaths_public_subnet_1b" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
-  cidr_block        = "10.0.2.0/24"
+  cidr_block        = "10.0.2.0/24" # A private IP address range
   availability_zone = "${var.aws_region}b"
 
   # Make public subnet
@@ -37,7 +37,7 @@ resource "aws_subnet" "tournamaths_public_subnet_1b" {
 ################ Private subnets for database, with a subnet group that the database will be restricted to.
 resource "aws_subnet" "tournamaths_private_subnet_1a" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
-  cidr_block        = "10.0.3.0/24"
+  cidr_block        = "10.0.3.0/24" # A private IP address range
   availability_zone = "${var.aws_region}a"
 
   tags = {
@@ -47,7 +47,7 @@ resource "aws_subnet" "tournamaths_private_subnet_1a" {
 
 resource "aws_subnet" "tournamaths_private_subnet_1b" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
-  cidr_block        = "10.0.4.0/24"
+  cidr_block        = "10.0.4.0/24" # A private IP address range
   availability_zone = "${var.aws_region}b"
 
   tags = {
