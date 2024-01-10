@@ -71,6 +71,16 @@ resource "aws_launch_template" "tournamaths_lt" {
 }
 
 ################ Autoscaling group for application.
+# Hash of contents of scripts directory, so can tell when a script has changed and thus should trigger refresh.
+locals {
+  scripts_hash = sha256(join("", [for f in fileset("${path.module}/../scripts", "**") : filesha256("${path.module}/../scripts/${f}")]))
+}
+
+# For debugging above, print the contents of the scripts directory picked up by fileset.
+output "scripts_files" {
+  value = fileset("${path.module}/../scripts", "**")
+}
+
 resource "aws_autoscaling_group" "tournamaths_asg" {
   name                      = "TournaMaths-ASG"
   desired_capacity          = 2
@@ -117,6 +127,13 @@ resource "aws_autoscaling_group" "tournamaths_asg" {
   tag {
     key                 = "iam-policy-hash"
     value               = sha256(file("${path.module}/iam.tf"))
+    propagate_at_launch = true
+  }
+
+  # Adding this tag so changing any scripts will trigger an instance refresh.
+  tag {
+    key                 = "scripts-hash"
+    value               = local.scripts_hash
     propagate_at_launch = true
   }
 }
