@@ -1,4 +1,7 @@
-# Script to keep EC2 alive, every 10 minutes
+# Script to keep EC2 alive, every 10 minutes.
+# It would be better to solve the root cause of EC2 instances "going to sleep",
+# but because this cron's request goes through all infrastructure components (from the domain down to the instance),
+# it is a more thorough way to keep alive than running target group health check.
 */10 * * * * /home/ec2-user/scripts/keep_ec2_alive.sh
 
 # Every morning at 1am, download AWS SSL RDS certificate.
