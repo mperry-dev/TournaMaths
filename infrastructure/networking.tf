@@ -95,6 +95,36 @@ resource "aws_route_table_association" "tournamaths_route_table_association_1b" 
 }
 
 ################ Security groups.
+resource "aws_security_group" "tournamaths_alb_sg" {
+  name   = "tournamath-alb-sg"
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    security_groups = [aws_security_group.tournamaths_ec2_sg.id]
+  }
+
+  tags = {
+    Name = "TournaMaths-ALB-SG"
+  }
+}
+
 resource "aws_security_group" "tournamaths_ec2_sg" {
   name   = "tournamath-ec2-sg"
   vpc_id = aws_vpc.tournamaths_vpc.id
@@ -103,7 +133,7 @@ resource "aws_security_group" "tournamaths_ec2_sg" {
     from_port   = 8080 # Port 8080 since Tomcat listening on port 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.tournamaths_alb_sg.id]
   }
 
   egress {
@@ -139,7 +169,7 @@ resource "aws_lb" "tournamaths_alb" {
   name               = "TournaMaths-ALB"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.tournamaths_ec2_sg.id]
+  security_groups    = [aws_security_group.tournamaths_alb_sg.id]
   subnets            = [aws_subnet.tournamaths_public_subnet_1a.id, aws_subnet.tournamaths_public_subnet_1b.id]
 
   enable_deletion_protection = false
