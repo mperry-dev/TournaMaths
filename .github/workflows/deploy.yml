@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload to S3
         run: |
-          zip tournamaths-deployment.zip target/tournamaths-1.0.jar appspec.yml scripts/* systemd-services/*
+          zip tournamaths-deployment.zip target/tournamaths-1.0.jar tournamaths-ec2.cron appspec.yml scripts/* systemd-services/*
           aws s3 cp tournamaths-deployment.zip s3://tournamaths/tournamaths-deployment.zip
 
       - name: Update commit status

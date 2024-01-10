@@ -1,6 +1,7 @@
 package com.tournamaths.config;
 
 import java.util.List;
+import java.util.Properties;
 import org.json.JSONObject;
 
 import com.zaxxer.hikari.HikariDataSource;
@@ -44,6 +45,15 @@ public class AppConfig {
         dataSource.setJdbcUrl(getDatabaseURL(dbInstance));
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+
+        // Setup SSL communication for defence-in-depth.
+        Properties sslProps = new Properties();
+        sslProps.setProperty("ssl", "true");
+        sslProps.setProperty("sslmode", "verify-full");
+        sslProps.setProperty("sslrootcert", "/home/ec2-user/us-east-1-bundle.pem");
+        sslProps.setProperty("target_session_attrs", "read-write");
+        dataSource.setDataSourceProperties(sslProps);
+
         return dataSource;
     }
 
