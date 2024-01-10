@@ -213,13 +213,6 @@ resource "aws_route53_record" "tournamaths_a_record" {
   }
 }
 
-# Because certificates have to be validated, might need to run Terraform multiple times if replace certificate
-# https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
-resource "aws_acm_certificate" "tournamaths_cert" {
-  domain_name       = "tournamaths.com"
-  validation_method = "DNS"
-}
-
 # Keep registered domain nameservers up-to-date with hosted zone
 # NOTE AWS hosted zones always have 4 name servers https://aws.amazon.com/route53/faqs/
 # Doing this statically since if use loop, Terraform creates resources for each nameserver,
@@ -239,6 +232,13 @@ resource "aws_route53domains_registered_domain" "tournamaths_domain" {
   name_server {
     name = aws_route53_zone.tournamaths_zone.name_servers[3]
   }
+}
+
+# Because certificates have to be validated, might need to run Terraform multiple times if replace certificate
+# https://stackoverflow.com/questions/72227832/certificate-must-have-a-fully-qualified-domain-name-a-supported-signature-and
+resource "aws_acm_certificate" "tournamaths_cert" {
+  domain_name       = "tournamaths.com"
+  validation_method = "DNS"
 }
 
 # DNS Validation of cerficate
