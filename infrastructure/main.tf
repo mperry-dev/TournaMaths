@@ -95,26 +95,42 @@ resource "aws_route_table_association" "tourna_math_route_table_association_1b" 
 }
 
 ################ Security group.
-resource "aws_security_group" "tourna_math_sg" {
-  name   = "tournamath-sg"
+resource "aws_security_group" "tourna_math_ec2_sg" {
+  name   = "tournamath-ec2-sg"
   vpc_id = aws_vpc.tourna_math_vpc.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 8080 # Port 8080 since Tomcat listening on port 8080
+    to_port     = 8080
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1" # -1 means all protocols
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "TournaMaths-SG"
+    Name = "TournaMaths-EC2-SG"
+  }
+}
+
+resource "aws_security_group" "tourna_math_rds_sg" {
+  name   = "tournamath-rds-sg"
+  vpc_id = aws_vpc.tourna_math_vpc.id
+
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tourna_math_ec2_sg.id]
+  }
+
+  tags = {
+    Name = "TournaMaths-RDS-SG"
   }
 }
 
@@ -123,7 +139,7 @@ resource "aws_lb" "tourna_math_alb" {
   name               = "TournaMaths-ALB"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.tourna_math_sg.id]
+  security_groups    = [aws_security_group.tourna_math_ec2_sg.id]
   subnets            = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   enable_deletion_protection = false
@@ -166,7 +182,7 @@ resource "aws_launch_template" "tourna_math_lt" {
   image_id      = "ami-079db87dc4c10ac91" # Amazon Linux 2023 AMI (chose because optimized for AWS and comes with extra apps, also better documented)
   instance_type = "t3.micro"              # A cheap instance which is built on Nitro System, so can connect via EC2 Serial Console.
 
-  vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
+  vpc_security_group_ids = [aws_security_group.tourna_math_ec2_sg.id]
 
   # Disables T3 Unlimited feature so costs don't go up (not too expensive though https://aws.amazon.com/ec2/instance-types/t3/)
   credit_specification {
@@ -393,7 +409,7 @@ resource "aws_db_instance" "tourna_math_db" {
   manage_master_user_password = true
   parameter_group_name        = "default.postgres15"
   skip_final_snapshot         = true
-  vpc_security_group_ids      = [aws_security_group.tourna_math_sg.id]
+  vpc_security_group_ids      = [aws_security_group.tourna_math_rds_sg.id]
   db_subnet_group_name        = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
 
   apply_immediately = true # For convenience changes applied immediately, but should be careful
