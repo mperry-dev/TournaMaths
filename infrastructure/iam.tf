@@ -117,10 +117,12 @@ resource "aws_iam_policy" "secrets_manager_policy" {
         Action   = "secretsmanager:GetSecretValue",
         Resource = aws_secretsmanager_secret.ec2_password.arn
       },
+      # NOTE there can only be 1 master user secret
+      # https://github.com/hashicorp/terraform-provider-aws/issues/31661#issuecomment-1599479025
       {
         Effect   = "Allow",
         Action   = "secretsmanager:GetSecretValue",
-        Resource = data.aws_secretsmanager_secret.db_creds_secret.arn
+        Resource = aws_db_instance.tourna_math_db.master_user_secret[0].secret_arn
       }
     ]
   })

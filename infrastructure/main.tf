@@ -1,12 +1,3 @@
-################ Database secrets.
-data "aws_secretsmanager_secret" "db_creds_secret" {
-  name = "DB_Creds_Secret"
-}
-
-data "aws_secretsmanager_secret_version" "db_creds" {
-  secret_id = data.aws_secretsmanager_secret.db_creds_secret.id
-}
-
 ################ VPC.
 resource "aws_vpc" "tourna_math_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -67,10 +58,6 @@ resource "aws_subnet" "tourna_math_private_subnet_1b" {
 resource "aws_db_subnet_group" "tourna_math_private_db_subnet_group" {
   name       = "tournamaths-private-db-subnet-group"
   subnet_ids = [aws_subnet.tourna_math_private_subnet_1a.id, aws_subnet.tourna_math_private_subnet_1b.id]
-
-  tags = {
-    Name = "tournamaths-private-db-subnet-group"
-  }
 }
 
 ################ Internet gateway.
@@ -109,6 +96,7 @@ resource "aws_route_table_association" "tourna_math_route_table_association_1b" 
 
 ################ Security group.
 resource "aws_security_group" "tourna_math_sg" {
+  name   = "tournamath-sg"
   vpc_id = aws_vpc.tourna_math_vpc.id
 
   ingress {
@@ -139,10 +127,6 @@ resource "aws_lb" "tourna_math_alb" {
   subnets            = [aws_subnet.tourna_math_subnet_1a.id, aws_subnet.tourna_math_subnet_1b.id]
 
   enable_deletion_protection = false
-
-  tags = {
-    Name = "TournaMaths-ALB"
-  }
 }
 
 resource "aws_lb_target_group" "tourna_math_tg" {
@@ -156,10 +140,6 @@ resource "aws_lb_target_group" "tourna_math_tg" {
     interval = 30
     path     = "/health_check"
     timeout  = 3
-  }
-
-  tags = {
-    Name = "TournaMaths-TG"
   }
 }
 
@@ -235,9 +215,11 @@ resource "aws_launch_template" "tourna_math_lt" {
               # Unzip JAR from ZIP
               unzip /home/ec2-user/tournamaths-deployment.zip -d /home/ec2-user/
 
-              ./home/ec2-user/scripts/setup_systemd.sh
-              ./home/ec2-user/scripts/rename-jar.sh
-              ./home/ec2-user/scripts/start_application.sh
+              cd /home/ec2-user
+              cp target/tournamaths-1.0.jar tournamaths.jar
+
+              ./scripts/setup_systemd.sh
+              ./scripts/start_application.sh
               EOF
   )
 }
@@ -388,22 +370,21 @@ resource "aws_acm_certificate_validation" "tournamaths_cert_validation" {
 }
 
 ################ Database.
+# We're not doing backups here, deletion protection, SSL communication or encryption at rest, as just a pet project and keeping things simple.
 resource "aws_db_instance" "tourna_math_db" {
-  identifier             = "tournamath-db"
-  allocated_storage      = 20
-  storage_type           = "gp2"
-  engine                 = "postgres"
-  engine_version         = "15.3"
-  instance_class         = "db.t4g.micro"
-  db_name                = "tourna_math_db"
-  username               = "admin_user" # Can't say "admin" here as that's reserved in Postgres.
-  password               = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["db_admin_user_password"]
-  parameter_group_name   = "default.postgres15"
-  skip_final_snapshot    = true
-  vpc_security_group_ids = [aws_security_group.tourna_math_sg.id]
-  db_subnet_group_name   = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
+  identifier                  = "tournamath-db"
+  allocated_storage           = 20
+  storage_type                = "gp2"
+  engine                      = "postgres"
+  engine_version              = "15.3"
+  instance_class              = "db.t4g.micro"
+  db_name                     = "tourna_math_db"
+  username                    = "admin_user" # Can't say "admin" here as that's reserved in Postgres.
+  manage_master_user_password = true
+  parameter_group_name        = "default.postgres15"
+  skip_final_snapshot         = true
+  vpc_security_group_ids      = [aws_security_group.tourna_math_sg.id]
+  db_subnet_group_name        = aws_db_subnet_group.tourna_math_private_db_subnet_group.name
 
-  tags = {
-    Name = "TournaMaths-DB"
-  }
+  apply_immediately = true # For convenience changes applied immediately, but should be careful
 }
