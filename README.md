@@ -28,7 +28,6 @@ docker-compose --profile dev up tournamaths-app
 - Job to check Terraform changes
 - Faster deployments
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
-- Template for PRs
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
 
 ## Miscellaneous Notes
