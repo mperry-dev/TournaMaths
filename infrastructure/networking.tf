@@ -83,7 +83,7 @@ resource "aws_network_acl" "tournamaths_db_acl" {
     action     = "deny"
     cidr_block = "0.0.0.0/0"
     from_port  = 0
-    to_port    = 65535 # Range is all ports
+    to_port    = 0 # Port range must be 0 for "all" protocol
   }
 
   # Allow only outbound traffic to VPC
@@ -93,7 +93,7 @@ resource "aws_network_acl" "tournamaths_db_acl" {
     action     = "allow"
     cidr_block = aws_vpc.tournamaths_vpc.cidr_block
     from_port  = 0
-    to_port    = 65535 # Range is all ports
+    to_port    = 65535 # Range is all ports for tcp
   }
 
   # Deny all other outbound traffic
@@ -103,7 +103,7 @@ resource "aws_network_acl" "tournamaths_db_acl" {
     action     = "deny"
     cidr_block = "0.0.0.0/0"
     from_port  = 0
-    to_port    = 65535 # Range is all ports
+    to_port    = 0 # Port range must be 0 for "all" protocol
   }
 
   tags = {
