@@ -60,6 +60,57 @@ resource "aws_db_subnet_group" "tournamaths_private_db_subnet_group" {
   subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
 }
 
+################ ACL for database private subnets - 2nd layer of security to block all traffic not coming into port 5432.
+
+# Define the Network ACL
+resource "aws_network_acl" "tournamaths_db_acl" {
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  # Inbound rule to allow PostgreSQL (port 5432) only from VPC
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 5432
+    to_port    = 5432
+  }
+
+  # Deny all other inbound traffic
+  ingress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  # Allow only outbound traffic to VPC
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 0
+    to_port    = 0
+  }
+
+  # Deny all other outbound traffic
+  egress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "TournaMaths-DB-NACL"
+  }
+}
+
 ################ Internet gateway so EC2 instances can access internet.
 resource "aws_internet_gateway" "tournamaths_igw" {
   vpc_id = aws_vpc.tournamaths_vpc.id
