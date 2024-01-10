@@ -14,6 +14,7 @@ resource "aws_db_instance" "tournamaths_db" {
   skip_final_snapshot         = true
   vpc_security_group_ids      = [aws_security_group.tournamaths_rds_sg.id]
   db_subnet_group_name        = aws_db_subnet_group.tournamaths_private_db_subnet_group.name
+  storage_encrypted           = true
 
   apply_immediately = true # For convenience changes applied immediately, but should be careful
 }
