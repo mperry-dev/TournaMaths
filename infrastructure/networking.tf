@@ -160,6 +160,9 @@ resource "aws_security_group" "tournamaths_rds_sg" {
     security_groups = [aws_security_group.tournamaths_ec2_sg.id]
   }
 
+  # NOTE - by default, since no egress rule defined all, any outbound traffic is allowed.
+  # This shouldn't be a concern as PostgreSQL shouldn't initiate outbound traffic.
+
   tags = {
     Name = "TournaMaths-RDS-SG"
   }
