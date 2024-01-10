@@ -226,7 +226,7 @@ resource "aws_security_group" "tournamaths_rds_sg" {
   # Restricting to just VPC since cannot implement deny rule in security group.
   egress {
     from_port   = 0
-    to_port     = 0
+    to_port     = 65535 # Range is all ports for tcp
     protocol    = "tcp"
     cidr_blocks = [aws_vpc.tournamaths_vpc.cidr_block]
   }
