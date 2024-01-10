@@ -1,4 +1,5 @@
 # For CodeDeploy - specifies how to handle deployment event hooks, and where to get and put files.
+# We focus on the Java application here as the purpose is to update the application functionality - not infrastructure components like systemd.
 version: 0.0
 os: linux
 # Source files are copied to destination files during the Install Event
