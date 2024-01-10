@@ -19,7 +19,7 @@ docker-compose --profile dev up tournamaths-app
 
 #### Infrastructure
 
-- For database - backups, deletion protection, full SSL encryption (SSL communication for defense-in-depth)
+- For database - backups, deletion protection
 - Database migrations library
 - Autoscaling
 - Staging environment

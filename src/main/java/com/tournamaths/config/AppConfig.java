@@ -46,7 +46,7 @@ public class AppConfig {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
 
-        // Setup SSL communication.
+        // Setup SSL communication for defence-in-depth.
         Properties sslProps = new Properties();
         sslProps.setProperty("ssl", "true");
         sslProps.setProperty("sslmode", "verify-full");
