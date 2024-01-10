@@ -8,7 +8,7 @@ resource "aws_vpc" "tournamaths_vpc" {
 }
 
 ################ Public subnets for the application's EC2 instances.
-resource "aws_subnet" "tournamaths_subnet_1a" {
+resource "aws_subnet" "tournamaths_public_subnet_1a" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "${var.aws_region}a"
@@ -21,7 +21,7 @@ resource "aws_subnet" "tournamaths_subnet_1a" {
   }
 }
 
-resource "aws_subnet" "tournamaths_subnet_1b" {
+resource "aws_subnet" "tournamaths_public_subnet_1b" {
   vpc_id            = aws_vpc.tournamaths_vpc.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = "${var.aws_region}b"
@@ -85,12 +85,12 @@ resource "aws_route_table" "tournamaths_route_table" {
 
 # route_table_association to public route table means the linked subnets are public.
 resource "aws_route_table_association" "tournamaths_route_table_association_1a" {
-  subnet_id      = aws_subnet.tournamaths_subnet_1a.id
+  subnet_id      = aws_subnet.tournamaths_public_subnet_1a.id
   route_table_id = aws_route_table.tournamaths_route_table.id
 }
 
 resource "aws_route_table_association" "tournamaths_route_table_association_1b" {
-  subnet_id      = aws_subnet.tournamaths_subnet_1b.id
+  subnet_id      = aws_subnet.tournamaths_public_subnet_1b.id
   route_table_id = aws_route_table.tournamaths_route_table.id
 }
 
@@ -140,7 +140,7 @@ resource "aws_lb" "tournamaths_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.tournamaths_ec2_sg.id]
-  subnets            = [aws_subnet.tournamaths_subnet_1a.id, aws_subnet.tournamaths_subnet_1b.id]
+  subnets            = [aws_subnet.tournamaths_public_subnet_1a.id, aws_subnet.tournamaths_public_subnet_1b.id]
 
   enable_deletion_protection = false
 }
@@ -259,7 +259,7 @@ resource "aws_autoscaling_group" "tournamaths_asg" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
   force_delete              = true
-  vpc_zone_identifier       = [aws_subnet.tournamaths_subnet_1a.id, aws_subnet.tournamaths_subnet_1b.id]
+  vpc_zone_identifier       = [aws_subnet.tournamaths_public_subnet_1a.id, aws_subnet.tournamaths_public_subnet_1b.id]
 
   target_group_arns = [aws_lb_target_group.tournamaths_tg.arn]
 
