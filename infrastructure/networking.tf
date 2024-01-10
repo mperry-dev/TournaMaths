@@ -73,6 +73,7 @@ resource "aws_internet_gateway" "tournamaths_igw" {
 resource "aws_route_table" "tournamaths_route_table" {
   vpc_id = aws_vpc.tournamaths_vpc.id
 
+  # Route outbound traffic from EC2 instances through internet gateway
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.tournamaths_igw.id
