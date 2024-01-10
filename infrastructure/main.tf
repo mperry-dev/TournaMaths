@@ -60,7 +60,7 @@ resource "aws_db_subnet_group" "tournamaths_private_db_subnet_group" {
   subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
 }
 
-################ Internet gateway.
+################ Internet gateway so EC2 instances can access internet.
 resource "aws_internet_gateway" "tournamaths_igw" {
   vpc_id = aws_vpc.tournamaths_vpc.id
 
@@ -302,7 +302,6 @@ resource "aws_autoscaling_group" "tournamaths_asg" {
 }
 
 ################ Route53 configuration - records, and SSL certificate.
-
 resource "aws_route53_zone" "tournamaths_zone" {
   name          = "tournamaths.com"
   force_destroy = true
