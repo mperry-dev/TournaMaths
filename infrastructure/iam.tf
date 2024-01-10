@@ -122,7 +122,7 @@ resource "aws_iam_policy" "secrets_manager_policy" {
       {
         Effect   = "Allow",
         Action   = "secretsmanager:GetSecretValue",
-        Resource = aws_db_instance.tourna_math_db.master_user_secret[0].secret_arn
+        Resource = aws_db_instance.tournamaths_db.master_user_secret[0].secret_arn
       }
     ]
   })
