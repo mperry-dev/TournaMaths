@@ -22,6 +22,7 @@ public class HealthCheckController {
 
     @GetMapping("/health_check")
     public ResponseEntity<String> healthCheck() {
+        // Try-with-resources syntax here handles closing the resources automatically
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT 1")) {
