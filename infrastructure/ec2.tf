@@ -57,6 +57,7 @@ resource "aws_launch_template" "tournamaths_lt" {
               cp target/tournamaths-1.0.jar tournamaths.jar
 
               ./scripts/setup_systemd.sh
+              ./scripts/download_aws_rds_cert.sh
               ./scripts/start_application.sh
 
               #################### Setup cron to keep EC2 instances alive - make request to application every 10 minutes.
@@ -65,7 +66,7 @@ resource "aws_launch_template" "tournamaths_lt" {
               # it is a more thorough way to keep alive than running target group health check.
               sudo yum install -y cronie
               # NOTE - this is all being executed as the root user, so have to use "sudo su -" to see the crontab jobs.
-              echo "*/10 * * * * /home/ec2-user/scripts/keep_ec2_alive.sh" | crontab -
+              crontab tournamaths-ec2.cron
               sudo systemctl enable crond
               sudo systemctl start crond
               EOF

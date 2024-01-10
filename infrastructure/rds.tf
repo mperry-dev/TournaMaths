@@ -16,7 +16,7 @@ resource "aws_db_instance" "tournamaths_db" {
   db_subnet_group_name        = aws_db_subnet_group.tournamaths_private_db_subnet_group.name
 
   storage_encrypted  = true
-  ca_cert_identifier = "rds-ca-rsa-2048-g1"
+  ca_cert_identifier = "rds-ca-rsa2048-g1"
 
   apply_immediately = true # For convenience changes applied immediately, but should be careful
 }

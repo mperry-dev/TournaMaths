@@ -1,0 +1,5 @@
+# Script to keep EC2 alive, every 10 minutes
+*/10 * * * * /home/ec2-user/scripts/keep_ec2_alive.sh
+
+# Every morning at 1am, download AWS SSL RDS certificate.
+0 1 * * * /home/ec2-user/scripts/download_aws_rds_cert.sh
