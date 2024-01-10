@@ -111,6 +111,17 @@ resource "aws_network_acl" "tournamaths_db_acl" {
   }
 }
 
+# Associate the Network ACL with the private subnets for the database
+resource "aws_network_acl_association" "tournamaths_db_acl_association_1a" {
+  network_acl_id = aws_network_acl.tournamaths_db_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_1a.id
+}
+
+resource "aws_network_acl_association" "tournamaths_db_acl_association_1b" {
+  network_acl_id = aws_network_acl.tournamaths_db_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_1b.id
+}
+
 ################ Internet gateway so EC2 instances can access internet.
 resource "aws_internet_gateway" "tournamaths_igw" {
   vpc_id = aws_vpc.tournamaths_vpc.id
