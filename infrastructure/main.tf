@@ -220,6 +220,16 @@ resource "aws_launch_template" "tourna_math_lt" {
 
               ./scripts/setup_systemd.sh
               ./scripts/start_application.sh
+
+              #################### Setup cron to keep EC2 instances alive - make request to application every 10 minutes.
+              # It would be better to solve the root cause of EC2 instances "going to sleep",
+              # but because this cron's request goes through all infrastructure components (from the domain down to the instance),
+              # it is a more thorough way to keep alive than running target group health check.
+              sudo yum install -y cronie
+              # NOTE - this is all being executed as the root user, so have to use "sudo su -" to see the crontab jobs.
+              echo "*/10 * * * * /home/ec2-user/scripts/keep_ec2_alive.sh" | crontab -
+              sudo systemctl enable crond
+              sudo systemctl start crond
               EOF
   )
 }
