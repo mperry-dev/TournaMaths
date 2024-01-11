@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
-public class MathQuestionController {
+public class CreateMathQuestionController {
 
     private final MathQuestionRepository repository;
 
-    public MathQuestionController(MathQuestionRepository repository) {
+    public CreateMathQuestionController(MathQuestionRepository repository) {
         this.repository = repository;
     }
 
-    @PostMapping("/questions")
+    @PostMapping("/create_questions")
     public String newQuestion(@RequestParam String question, RedirectAttributes redirectAttributes) {
         MathQuestion newQuestion = new MathQuestion(question);
         repository.save(newQuestion);
@@ -26,7 +26,7 @@ public class MathQuestionController {
         return "redirect:/questions";
     }
 
-    @GetMapping("/questions")
+    @GetMapping("/list_questions")
     public String all() {
         Iterable<MathQuestion> questions = repository.findAll();
 
