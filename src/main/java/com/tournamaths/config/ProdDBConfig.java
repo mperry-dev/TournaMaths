@@ -25,7 +25,7 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
 
 @Configuration
 @Profile("prod")  // only use this for production - locally rely on application.properties.
-public class AppConfig {
+public class ProdDBConfig {
     // Loaded from application-prod.properties
     @Value("${aws.region}")
     private String region;
