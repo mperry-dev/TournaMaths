@@ -19,12 +19,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Transactional means Spring handles committing/rolling back transaction, and opening/closing session automatically for public methods.
+ * Default propagation is REQUIRED - if a transactional method calls another transactional method, the existing transaction continues.
+ * Rolling back by default is only for Runtime exceptions (not checked exceptions).
+ */
 @Controller
-@Transactional // This means Spring handles committing/rolling back transaction, and opening/closing session automatically for public methods. Default propagation is REQUIRED.
+@Transactional
 public class CreateQuestionsController {
 
+    // Use Spring's dependency injection to injection session object, and tied to current transaction context.
+    // Much nicer than having to Autowire and use SessionFactory!
     @PersistenceContext
-    private Session session; // Use Spring's dependency injection to injection session object, and tied to current transaction context.
+    private Session session;
 
     @PostMapping("/create_questions")
     public String newQuestion(@RequestParam String identifier, @RequestParam String description, @RequestParam String equation, RedirectAttributes redirectAttributes) {
