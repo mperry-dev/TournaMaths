@@ -62,6 +62,9 @@ docker-compose --profile dev up tournamaths-app
 #### Application
 
 - Tests/coverage checking
+- Only admin users should be able to edit/delete questions
+- Admin interface
+- Ability to edit/delete questions
 - Multi-user competitions
 - Design better around multiple screen sizes - particularly mobile phones
 - Expressions so that can add templates for questions with random numbers to be added, rather than having to write out every instance of a question
