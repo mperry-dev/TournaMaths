@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Questions</title>
+</head>
+<body>
+    <h1>All Questions:</h1>
+    <ul>
+        <li th:each="question : ${questions}">
+            <span th:text="${question}"></span>
+        </li>
+    </ul>
+
+    <h1>Add New Question:</h1>
+    <form method="POST" action="/create_questions">
+        Question: <input type="text" name="question" /><br />
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>
