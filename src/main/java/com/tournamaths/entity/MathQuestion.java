@@ -10,17 +10,21 @@ public class MathQuestion {
     @Id
     @GeneratedValue
     private Long id;
-    private String question;
+    private String identifier;
+    private String description;
+    private String equation;
 
     public MathQuestion(){
 
     }
 
-    public MathQuestion(String question){
-        this.question = question;
+    public MathQuestion(String identifier, String description, String equation){
+        this.identifier = identifier;
+        this.description = description;
+        this.equation = equation;
     }
 
     public String toString(){
-        return id + ": "+question;
+        return id + ": " + identifier + " - " + description + " - " + equation;
     }
 }

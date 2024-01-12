@@ -20,8 +20,9 @@ public class CreateMathQuestionController {
     }
 
     @PostMapping("/create_questions")
-    public String newQuestion(@RequestParam String question, RedirectAttributes redirectAttributes) {
-        MathQuestion newQuestion = new MathQuestion(question);
+    public String newQuestion(@RequestParam String identifier, @RequestParam String description, @RequestParam String equation, RedirectAttributes redirectAttributes) {
+        MathQuestion newQuestion = new MathQuestion(identifier, description, equation);
+        System.out.println("Created question "+newQuestion.toString());
         repository.save(newQuestion);
         redirectAttributes.addFlashAttribute("message", "Question created successfully!");
         return "redirect:/list_questions";

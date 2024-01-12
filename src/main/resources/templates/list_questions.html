@@ -36,15 +36,19 @@
         <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in">□ (Student answer placeholder)</button>
     </div>
 
-    <h2>Question ID:</h2>
-    <input type="text" id="question-id-input" class="input-field" placeholder="Enter a unique ID for the problem" />
+    <form method="POST" action="/create_questions">
+        <h2>Question ID:</h2>
+        <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
 
-    <h2>Description:</h2>
-    <input type="text" id="description-input" class="input-field" placeholder="Enter a description for the problem" />
+        <h2>Description:</h2>
+        <input type="text" id="description-input" name="description" class="input-field" placeholder="Enter a description for the problem" />
 
-    <h2>Your Equation:</h2>
-    <input type="text" id="equation-input" /><br />
-    <div id="question-preview"></div>
+        <h2>Your Equation:</h2>
+        <input type="text" id="equation-input" name="equation" /><br />
+        <div id="question-preview"></div>
+
+        <input type="submit" value="Submit"/>
+    </form>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
