@@ -62,6 +62,7 @@ docker-compose --profile dev up tournamaths-app
 
 #### Application
 
+- Login/account setup page, with logo
 - Tests/coverage checking
 - Only admin users should be able to edit/delete questions
 - Admin interface

@@ -25,13 +25,13 @@ public class CreateMathQuestionController {
         System.out.println("Created question "+newQuestion.toString());
         repository.save(newQuestion);
         redirectAttributes.addFlashAttribute("message", "Question created successfully!");
-        return "redirect:/list_questions";
+        return "redirect:/create_questions";
     }
 
-    @GetMapping("/list_questions")
+    @GetMapping("/create_questions")
     public String all(Model model) {
         Iterable<MathQuestion> questions = repository.findAll();
         model.addAttribute("questions", questions);
-        return "list_questions";
+        return "create_questions";
     }
 }
