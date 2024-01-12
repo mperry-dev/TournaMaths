@@ -4,9 +4,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public @Data class MathQuestion {
 
     @Id
@@ -15,19 +20,4 @@ public @Data class MathQuestion {
     private String identifier;
     private String description;
     private String equation;
-
-    public MathQuestion(){
-
-    }
-
-    public MathQuestion(String identifier, String description, String equation){
-        this.identifier = identifier;
-        this.description = description;
-        this.equation = equation;
-    }
-
-    public String toString(){
-        return id + ": " + identifier + " - " + description + " - " + equation;
-    }
-
 }
