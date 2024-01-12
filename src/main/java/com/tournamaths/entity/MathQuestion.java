@@ -5,19 +5,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public @Data class MathQuestion {
 
     @Id
     @GeneratedValue
     private Long id;
+
+    @NonNull
     private String identifier;
+
+    @NonNull
     private String description;
+
+    @NonNull
     private String equation;
 }
