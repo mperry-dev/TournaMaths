@@ -15,14 +15,39 @@ docker-compose --profile dev up tournamaths-app
 - Have spending limit implemented at for Github Actions https://github.com/settings/billing/spending_limit
 - Switched on bucket versioning for S3 bucket, in case want to roll back versions of stored code in future.
 
+## Core Technology Components Used and Why I Chose Them
+
+#### Application-level
+
+- Java - I normally program in Python and felt like programming in a different language. Java's got good typing and web frameworks.
+- SpringBoot - very popular and well-supported. Its bean system implements separation of concerns well.
+- KaTeX library for maths equations - simple, popular, powerful and well-supported. The main alternative seems to be MathJax, which seems to be very slow.
+- Thymeleaf for the template engine - popular, powerful and well-supported. Since files are also HTML pages, can load them in browser, which is nice. Beats the main popular competitor I considered (FreeMarker) by supporting custom functionality better: https://springhow.com/spring-boot-template-engines-comparison/
+- JQuery - easier than vanilla javascript
+- Typescript - types are nice
+- pico.css - very simple and elegant
+
+#### Infrastructure-level
+- Terraform - simple, well-supported. Beats alternatives like Cloudformation as it's cross-platform.
+- Docker - used for local development to isolate environments. Particularly useful for local PostgreSQL image, which can be easily spun up and torn down.
+- EC2 - I mainly felt like playing around with EC2 for this project. For most projects I'd be inclined to recommend a serverless approach (AWS Lambda) since scaling becomes very simple and OS-level components usually don't need to be handled (overall much simpler). For Lambdas, deployment also becomes a lot simpler and faster since they can be immediately deployed from an S3 bucket, whilst deploying to EC2 instances is slower and is best done using a service like CodeDeploy. For a personal pet project, EC2 provides the advantage of not accidentally increasing costs drastically. It's also a bit simpler to bring together EC2 and RDS than Lambda and RDS, since in EC2 everything gets setup upon instance launch once (or upon some lifecycle hooks), whilst in Lambda you need to potentially handle creating/recreating resources like database engines per Lambda invocation, which can cause performance issues. EC2 also makes it easier to customize things and to access the instance securely using the EC2 Serial Console.
+- RDS - PostgreSQL is a powerful relational database, providing strong ACID compliance. I chose non-serverless PostgreSQL to avoid escalating costs for a personal project, but would recommend AWS's serverless PostgreSQL for new applications - it handles scaling up and down automatically, you don't need to add components such as read replicas to improve performance, and it still has full ACID compliance.
+- Github Actions for deployment - very simple and powerful way to run AWS deployments from your Github repository. Since it's got full access to the Github repository, my current setup can be extended to provide a mechanism to deploy an arbitrary git tag/commit, and to setup a quick rollback mechanism in-case of deployment issues.
+- CodeDeploy for application deployment - AWS's managed deployment service - it provides simple hooks for different deployment lifecycle events.
+
 ## Potential Future Improvements
 
 #### Infrastructure
 
+- Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
+- Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
 - Database migrations library
-- Autoscaling
+- Production Cloudwatch Logging
+- CDN for faster content delivery
+- Backing up and serving Javascript libraries to ensure availability regardless of provider's availability
 - Staging environment
+- Autoscaling
 - Deployment process allowing fast rollbacks and deployments of particular commits (rather than just the latest)
 - Linting CI jobs
 - Job to check Terraform changes
@@ -30,6 +55,28 @@ docker-compose --profile dev up tournamaths-app
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
 
-## Miscellaneous Notes
+#### Security
 
-- It's probably better to build most new applications in a serverless fashion (using Lambdas and serverless PostgreSQL), but I felt like doing it differently for this project
+- SQL injection and Javascript injection protection
+- XSRF protection
+
+#### Application
+
+- Login/account setup page, with logo
+- Tests/coverage checking
+- Only admin users should be able to edit/delete questions
+- Admin interface
+- Ability to edit/delete questions
+- Multi-user competitions
+- Design better around multiple screen sizes - particularly mobile phones
+- Expressions so that can add templates for questions with random numbers to be added, rather than having to write out every instance of a question
+- Different types of questions
+
+## Recommended VSCode Extensions
+
+- Extension Pack for Java (Microsoft)
+- Github Actions (Github)
+- Git History (Don Jayamanne)
+- Lombok Annotations Support for VS Code (Microsoft)
+- Github Copilot (Github)
+- HashiCorp Terraform (Hashicorp)
