@@ -5,12 +5,12 @@ resource "aws_db_instance" "tournamaths_db" {
   allocated_storage           = 20
   storage_type                = "gp2"
   engine                      = "postgres"
-  engine_version              = "15.3"
+  engine_version              = "16.1"
   instance_class              = "db.t4g.micro"
   db_name                     = "tournamaths_db"
   username                    = "admin_user" # Can't say "admin" here as that's reserved in Postgres.
   manage_master_user_password = true
-  parameter_group_name        = "default.postgres15"
+  parameter_group_name        = "default.postgres16"
   skip_final_snapshot         = true
   vpc_security_group_ids      = [aws_security_group.tournamaths_rds_sg.id]
   db_subnet_group_name        = aws_db_subnet_group.tournamaths_private_db_subnet_group.name
