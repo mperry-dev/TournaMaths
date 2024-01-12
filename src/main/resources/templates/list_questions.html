@@ -128,7 +128,15 @@
                 let textBefore = input.value.substring(0, startPos);
                 let textAfter  = input.value.substring(endPos, input.value.length);
                 input.value = textBefore + textToInsert + textAfter;
-                cursorPos += textToInsert.length;
+
+                // Adjust cursor position to be in middle of curly backets if they exist
+                if (textToInsert.includes("{}")) {
+                    cursorPos += textToInsert.indexOf("{") + 1; // Move cursor inside the curly brackets
+                }
+                else {
+                    cursorPos += textToInsert.length; // Default cursor position after the inserted text
+                }
+
                 input.selectionStart = cursorPos;
                 input.selectionEnd = cursorPos;
                 input.focus();
