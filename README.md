@@ -52,3 +52,12 @@ docker-compose --profile dev up tournamaths-app
 - Faster deployments
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
+
+## Recommended VSCode Extensions
+
+- Extension Pack for Java (Microsoft)
+- Github Actions (Github)
+- Git History (Don Jayamanne)
+- Lombok Annotations Support for VS Code (Microsoft)
+- Github Copilot (Github)
+- HashiCorp Terraform (Hashicorp)

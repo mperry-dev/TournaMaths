@@ -4,8 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import lombok.Data;
+
 @Entity
-public class MathQuestion {
+public @Data class MathQuestion {
 
     @Id
     @GeneratedValue
@@ -27,4 +29,5 @@ public class MathQuestion {
     public String toString(){
         return id + ": " + identifier + " - " + description + " - " + equation;
     }
+
 }

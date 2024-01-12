@@ -69,8 +69,13 @@
 
     <div id="question-list">
         <h2>All Questions:</h2>
-        <ul th:each="question : ${questions}">
-            <li th:text="${question}"></li>
+        <ul>
+            <li th:each="question : ${questions}">
+                <strong>ID:</strong> <span th:text="${question.identifier}"></span><br>
+                <strong>Description:</strong> <span th:text="${question.description}"></span><br>
+                <strong>Equation:</strong> <span th:text="${question.equation}" class="katex-equation"></span><br>
+                <hr>
+            </li>
         </ul>
     </div>
 
@@ -102,6 +107,12 @@
                     $(elementToRender).text('Error in rendering: ' + e.message);
                 }
             }
+
+            // Render KaTeX for each question's equation in the list of equations
+            $('.katex-equation').each(function() {
+                let equation = $(this).text();
+                renderKaTeX(equation, this);
+            });
 
             // Method so that symbols are inserted at the user's cursor position
             function insertAtCursor(input, textToInsert) {
