@@ -23,6 +23,7 @@ docker-compose --profile dev up tournamaths-app
 - SpringBoot - very popular and well-supported. Its bean system implements separation of concerns well.
 - KaTeX library for maths equations - simple, popular, powerful and well-supported. The main alternative seems to be MathJax, which seems to be very slow.
 - Thymeleaf for the template engine - popular, powerful and well-supported. Since files are also HTML pages, can load them in browser, which is nice. Beats the main popular competitor I considered (FreeMarker) by supporting custom functionality better: https://springhow.com/spring-boot-template-engines-comparison/
+- Hibernate ORM - this seems to be the most popular, best-supported ORM for Spring. It integrates very nicely with SpringBoot.
 - JQuery - easier than vanilla javascript
 - Typescript - types are nice (EDIT: not doing this yet, this is TODO)
 - pico.css - very simple and elegant
