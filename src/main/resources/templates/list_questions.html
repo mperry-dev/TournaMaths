@@ -1,20 +1,83 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Questions</title>
+    <title>Math Question Builder with Boxed Placeholder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
+    <style>
+        #question-preview {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+        }
+        .symbol-button {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>All Questions:</h1>
-    <ul>
-        <li th:each="question : ${questions}">
-            <span th:text="${question}"></span>
-        </li>
-    </ul>
+    <h1>Math Question Builder</h1>
 
-    <h1>Add New Question:</h1>
-    <form method="POST" action="/create_questions">
-        Question: <input type="text" name="question" /><br />
-        <input type="submit" value="Submit" />
-    </form>
+    <div>
+        <!-- Existing buttons -->
+        <button class="symbol-button" data-symbol="+">+</button>
+        <button class="symbol-button" data-symbol="-">-</button>
+        <button class="symbol-button" data-symbol="\times">× (times)</button>
+        <button class="symbol-button" data-symbol="\div">÷ (div)</button>
+        <button class="symbol-button" data-symbol="\sqrt{}">√ (sqrt)</button>
+        <button class="symbol-button" data-symbol="^{ }">^ (power)</button>
+        <!-- Student answer placeholder button -->
+        <button class="symbol-button" data-symbol="\boxed{}">□ (Student answer placeholder)</button>
+    </div>
+
+    <h2>Your Equation:</h2>
+    <input type="text" id="equation-input" /><br />
+    <div id="question-preview"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Input box for constructing question
+            let equationInput = $('#equation-input');
+
+            // Render the equation as the user clicks buttons
+            $('.symbol-button').click(function() {
+                let symbol = $(this).data('symbol');
+                insertAtCursor(equationInput[0], symbol);
+                renderKaTeX(equationInput.val(), '#question-preview');
+            });
+
+            // Render the equation as the user types
+            equationInput.on('input', function() {
+                renderKaTeX($(this).val(), '#question-preview');
+            });
+
+            // Method to render the KaTeX
+            function renderKaTeX(text, elementToRender) {
+                try {
+                    var renderedEquation = katex.renderToString(text, { throwOnError: false, displayMode: true });
+                    $(elementToRender).html(renderedEquation);
+                } catch (e) {
+                    $(elementToRender).text('Error in rendering: ' + e.message);
+                }
+            }
+
+            // Method so that symbols are inserted at the user's cursor position
+            function insertAtCursor(input, textToInsert) {
+                let startPos = input.selectionStart;
+                let endPos = input.selectionEnd;
+                let cursorPos = startPos;
+                let textBefore = input.value.substring(0, startPos);
+                let textAfter  = input.value.substring(endPos, input.value.length);
+                input.value = textBefore + textToInsert + textAfter;
+                cursorPos += textToInsert.length;
+                input.selectionStart = cursorPos;
+                input.selectionEnd = cursorPos;
+                input.focus();
+            }
+        });
+    </script>
 </body>
 </html>
