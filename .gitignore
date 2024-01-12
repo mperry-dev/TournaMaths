@@ -9,3 +9,5 @@ target/
 *.tfstate
 *.tfstate.backup
 *terraform-provider-aws*
+
+.vscode/*
