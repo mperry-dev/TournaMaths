@@ -80,3 +80,5 @@ docker-compose --profile dev up tournamaths-app
 - Lombok Annotations Support for VS Code (Microsoft)
 - Github Copilot (Github)
 - HashiCorp Terraform (Hashicorp)
+- Cron Explained (Tumido)
+- Systemd Helper (Liu Yue)
