@@ -54,6 +54,7 @@
             <button class="symbol-button" data-symbol="=" title="equals">=</button>
             <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
             <button class="symbol-button" data-symbol="^{}" title="power">^</button>
+            <button class="symbol-button" data-symbol="()" title="brackets">()</button>
             <!-- Student answer placeholder button -->
             <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in (enter your expected answer in the curly brackets)">□</button>
         </div>
@@ -129,9 +130,12 @@
                 let textAfter  = input.value.substring(endPos, input.value.length);
                 input.value = textBefore + textToInsert + textAfter;
 
-                // Adjust cursor position to be in middle of curly backets if they exist
+                // Adjust cursor position to be in middle of curly or round backets if they exist
                 if (textToInsert.includes("{}")) {
                     cursorPos += textToInsert.indexOf("{") + 1; // Move cursor inside the curly brackets
+                }
+                else if (textToInsert.includes("()")){
+                    cursorPos += textToInsert.indexOf("(") + 1; // Move cursor inside the round brackets
                 }
                 else {
                     cursorPos += textToInsert.length; // Default cursor position after the inserted text
