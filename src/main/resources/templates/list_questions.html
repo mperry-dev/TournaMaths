@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Math Question Builder with Boxed Placeholder</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
     <style>
         body {
@@ -26,12 +27,17 @@
             height: 500px;
         }
         .symbol-button {
-            margin-right: 5px;
-            margin-bottom: 5px;
+            padding: 0.25rem 0.5rem;
+            text-align: center;
         }
         .input-field {
             margin-top: 10px;
             width: 100%;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
+            gap: 5px;
         }
     </style>
 </head>
@@ -39,7 +45,7 @@
     <div id="builder">
         <h1>Math Question Builder</h1>
 
-        <div>
+        <div class="grid">
             <!-- Buttons for maths symbols -->
             <button class="symbol-button" data-symbol="+" title="plus">+</button>
             <button class="symbol-button" data-symbol="-" title="minus">-</button>
@@ -47,9 +53,9 @@
             <button class="symbol-button" data-symbol="\div" title="divide">÷</button>
             <button class="symbol-button" data-symbol="=" title="equals">=</button>
             <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
-            <button class="symbol-button" data-symbol="^{ }" title="power">^ (power)</button>
+            <button class="symbol-button" data-symbol="^{ }" title="power">^</button>
             <!-- Student answer placeholder button -->
-            <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in">□ (Student answer placeholder)</button>
+            <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in">□</button>
         </div>
 
         <form method="POST" action="/create_questions">

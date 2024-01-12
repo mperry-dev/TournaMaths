@@ -42,6 +42,7 @@ docker-compose --profile dev up tournamaths-app
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
 - Database migrations library
+- Production Cloudwatch Logging
 - CDN for faster content delivery
 - Backing up and serving Javascript libraries to ensure availability regardless of provider's availability
 - Staging environment
@@ -61,6 +62,9 @@ docker-compose --profile dev up tournamaths-app
 #### Functionality
 
 - Multi-user competitions
+- Design better around multiple screen sizes - particularly mobile phones
+- Expressions so that can add templates for questions with random numbers to be added, rather than having to write out every instance of a question
+- Different types of questions
 
 ## Recommended VSCode Extensions
 
