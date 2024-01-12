@@ -32,6 +32,8 @@ public class CreateQuestionsController {
 
     // Use Spring's dependency injection to injection session object, and tied to current transaction context.
     // Much nicer than having to Autowire and use SessionFactory!
+    // Need to be careful not to use this outside of the transactional context,
+    // otherwise it can be stale.
     @PersistenceContext
     private Session session;
 
