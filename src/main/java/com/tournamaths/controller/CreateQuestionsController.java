@@ -13,6 +13,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
+@Transactional // This means Spring handles committing/rolling back transaction automatically for public methods. Default propagation is REQUIRED
 public class CreateQuestionsController {
 
     @Autowired
@@ -28,10 +30,8 @@ public class CreateQuestionsController {
     @PostMapping("/create_questions")
     public String newQuestion(@RequestParam String identifier, @RequestParam String description, @RequestParam String equation, RedirectAttributes redirectAttributes) {
         Session session = sessionFactory.openSession();
-        session.beginTransaction();
         MathQuestion newQuestion = new MathQuestion(identifier, description, equation);
         session.persist(newQuestion);
-        session.getTransaction().commit();
         session.close();
         redirectAttributes.addFlashAttribute("message", "Question created successfully!");
         return "redirect:/create_questions";

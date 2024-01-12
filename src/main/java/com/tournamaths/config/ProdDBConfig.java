@@ -8,10 +8,11 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.rds.RdsClient;
@@ -24,6 +25,7 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueReques
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 @Configuration
+@EnableTransactionManagement
 @Profile("prod")  // only use this for production - locally rely on application.properties.
 public class ProdDBConfig {
     // Loaded from application-prod.properties
