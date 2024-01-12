@@ -4,41 +4,10 @@
     <title>TournaMaths Question Builder</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
-    <style>
-        body {
-            display: flex;
-        }
-        #builder, #question-list {
-            flex: 1;
-            padding: 10px;
-        }
-        #question-preview {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-top: 10px;
-            background-color: #f9f9f9;
-        }
-        #question-list {
-            border: 1px solid #ddd;
-            margin-top: 10px;
-            background-color: #f9f9f9;
-            overflow-y: auto;
-            height: 100vh;
-        }
-        .symbol-button {
-            padding: 0.25rem 0.5rem;
-            text-align: center;
-        }
-        .input-field {
-            margin-top: 10px;
-            width: 100%;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
-            gap: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/create_questions.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
 </head>
 <body>
     <div id="builder">
@@ -84,67 +53,6 @@
             </li>
         </ul>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Input box for constructing question
-            let equationInput = $('#equation-input');
-
-            // Render the equation as the user clicks buttons
-            $('.symbol-button').click(function() {
-                let symbol = $(this).data('symbol');
-                insertAtCursor(equationInput[0], symbol);
-                renderKaTeX(equationInput.val(), '#question-preview');
-            });
-
-            // Render the equation as the user types
-            equationInput.on('input', function() {
-                renderKaTeX($(this).val(), '#question-preview');
-            });
-
-            // Method to render the KaTeX
-            function renderKaTeX(text, elementToRender) {
-                try {
-                    var renderedEquation = katex.renderToString(text, { throwOnError: false, displayMode: true });
-                    $(elementToRender).html(renderedEquation);
-                } catch (e) {
-                    $(elementToRender).text('Error in rendering: ' + e.message);
-                }
-            }
-
-            // Render KaTeX for each question's equation in the list of equations
-            $('.katex-equation').each(function() {
-                let equation = $(this).text();
-                renderKaTeX(equation, this);
-            });
-
-            // Method so that symbols are inserted at the user's cursor position
-            function insertAtCursor(input, textToInsert) {
-                let startPos = input.selectionStart;
-                let endPos = input.selectionEnd;
-                let cursorPos = startPos;
-                let textBefore = input.value.substring(0, startPos);
-                let textAfter  = input.value.substring(endPos, input.value.length);
-                input.value = textBefore + textToInsert + textAfter;
-
-                // Adjust cursor position to be in middle of curly or round backets if they exist
-                if (textToInsert.includes("{}")) {
-                    cursorPos += textToInsert.indexOf("{") + 1; // Move cursor inside the curly brackets
-                }
-                else if (textToInsert.includes("()")){
-                    cursorPos += textToInsert.indexOf("(") + 1; // Move cursor inside the round brackets
-                }
-                else {
-                    cursorPos += textToInsert.length; // Default cursor position after the inserted text
-                }
-
-                input.selectionStart = cursorPos;
-                input.selectionEnd = cursorPos;
-                input.focus();
-            }
-        });
-    </script>
 </body>
+<script src="/js/create_questions.js"></script>
 </html>

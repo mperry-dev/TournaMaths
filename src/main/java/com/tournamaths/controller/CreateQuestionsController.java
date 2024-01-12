@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class CreateMathQuestionController {
+public class CreateQuestionsController {
 
     private final MathQuestionRepository repository;
 
-    public CreateMathQuestionController(MathQuestionRepository repository) {
+    public CreateQuestionsController(MathQuestionRepository repository) {
         this.repository = repository;
     }
 
