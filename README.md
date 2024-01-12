@@ -39,6 +39,7 @@ docker-compose --profile dev up tournamaths-app
 
 #### Infrastructure
 
+- Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
 - Database migrations library
