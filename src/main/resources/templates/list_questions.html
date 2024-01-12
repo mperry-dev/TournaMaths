@@ -4,11 +4,26 @@
     <title>Math Question Builder with Boxed Placeholder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css">
     <style>
+        body {
+            display: flex;
+        }
+        #builder, #question-list {
+            flex: 1;
+            padding: 10px;
+        }
         #question-preview {
             border: 1px solid #ddd;
             padding: 10px;
             margin-top: 10px;
             background-color: #f9f9f9;
+        }
+        #question-list {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            height: 500px;
         }
         .symbol-button {
             margin-right: 5px;
@@ -21,34 +36,43 @@
     </style>
 </head>
 <body>
-    <h1>Math Question Builder</h1>
+    <div id="builder">
+        <h1>Math Question Builder</h1>
 
-    <div>
-        <!-- Buttons for maths symbols -->
-        <button class="symbol-button" data-symbol="+" title="plus">+</button>
-        <button class="symbol-button" data-symbol="-" title="minus">-</button>
-        <button class="symbol-button" data-symbol="\times" title="multiply">×</button>
-        <button class="symbol-button" data-symbol="\div" title="divide">÷</button>
-        <button class="symbol-button" data-symbol="=" title="equals">=</button>
-        <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
-        <button class="symbol-button" data-symbol="^{ }" title="power">^ (power)</button>
-        <!-- Student answer placeholder button -->
-        <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in">□ (Student answer placeholder)</button>
+        <div>
+            <!-- Buttons for maths symbols -->
+            <button class="symbol-button" data-symbol="+" title="plus">+</button>
+            <button class="symbol-button" data-symbol="-" title="minus">-</button>
+            <button class="symbol-button" data-symbol="\times" title="multiply">×</button>
+            <button class="symbol-button" data-symbol="\div" title="divide">÷</button>
+            <button class="symbol-button" data-symbol="=" title="equals">=</button>
+            <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
+            <button class="symbol-button" data-symbol="^{ }" title="power">^ (power)</button>
+            <!-- Student answer placeholder button -->
+            <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in">□ (Student answer placeholder)</button>
+        </div>
+
+        <form method="POST" action="/create_questions">
+            <h2>Question ID:</h2>
+            <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
+
+            <h2>Description:</h2>
+            <input type="text" id="description-input" name="description" class="input-field" placeholder="Enter a description for the problem" />
+
+            <h2>Your Equation:</h2>
+            <input type="text" id="equation-input" name="equation" /><br />
+            <div id="question-preview"></div>
+
+            <input type="submit" value="Submit"/>
+        </form>
     </div>
 
-    <form method="POST" action="/create_questions">
-        <h2>Question ID:</h2>
-        <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
-
-        <h2>Description:</h2>
-        <input type="text" id="description-input" name="description" class="input-field" placeholder="Enter a description for the problem" />
-
-        <h2>Your Equation:</h2>
-        <input type="text" id="equation-input" name="equation" /><br />
-        <div id="question-preview"></div>
-
-        <input type="submit" value="Submit"/>
-    </form>
+    <div id="question-list">
+        <h2>All Questions:</h2>
+        <ul th:each="question : ${questions}">
+            <li th:text="${question}"></li>
+        </ul>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.js"></script>
