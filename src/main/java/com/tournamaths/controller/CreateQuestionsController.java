@@ -2,7 +2,6 @@ package com.tournamaths.controller;
 
 import com.tournamaths.entity.MathQuestion;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -33,16 +33,11 @@ public class CreateQuestionsController {
     // Much nicer than having to Autowire and use SessionFactory!
     @PersistenceContext
     private Session session;
-    private CriteriaBuilder cb;
 
-    // https://docs.oracle.com/cd/E19798-01/821-1841/gjjfn/index.html
-    // This is run after dependency injection of the session above.
     // Need to be careful not to use this outside of the transactional context,
     // otherwise it can be stale.
-    @PostConstruct
-    private void init() {
-        cb = session.getCriteriaBuilder();
-    }
+    @Autowired
+    private CriteriaBuilder cb;
 
     @PostMapping("/create_questions")
     public String newQuestion(@RequestParam String identifier, @RequestParam String description, @RequestParam String equation, RedirectAttributes redirectAttributes) {
