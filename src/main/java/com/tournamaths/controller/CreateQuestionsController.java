@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * Transactional means Spring handles committing/rolling back transaction, and opening/closing session automatically for public methods.
  * Default propagation is REQUIRED - if a transactional method calls another transactional method, the existing transaction continues.
+ * It's important to this propagation approach since doing dependency injection of Session and CriteriaBuilder - want to avoid them being used in the wrong transaction.
  * Rolling back by default is only for Runtime exceptions (not checked exceptions).
  */
 @Controller
