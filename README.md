@@ -53,6 +53,15 @@ docker-compose --profile dev up tournamaths-app
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
 
+#### Security
+
+- SQL injection and Javascript injection protection
+- XSRF protection
+
+#### Functionality
+
+- Multi-user competitions
+
 ## Recommended VSCode Extensions
 
 - Extension Pack for Java (Microsoft)
