@@ -43,8 +43,8 @@ resource "aws_launch_template" "tournamaths_lt" {
               sudo systemctl start amazon-cloudwatch-agent
 
               # Install Java
-              wget https://download.oracle.com/java/20/archive/jdk-20_linux-x64_bin.rpm
-              sudo rpm -ivh jdk-20_linux-x64_bin.rpm
+              wget https://download.oracle.com/java/21/archive/jdk-21_linux-x64_bin.rpm
+              sudo rpm -ivh jdk-21_linux-x64_bin.rpm
 
               #################### Download application and start it
               # Download Spring Boot application ZIP (containing a JAR) from S3
