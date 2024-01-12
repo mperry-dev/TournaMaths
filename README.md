@@ -42,6 +42,7 @@ docker-compose --profile dev up tournamaths-app
 - Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
+- Connection pooling https://www.baeldung.com/spring-boot-tomcat-connection-pool https://www.baeldung.com/hibernate-spring
 - Database migrations library
 - Production Cloudwatch Logging
 - CDN for faster content delivery
