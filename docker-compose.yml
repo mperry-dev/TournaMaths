@@ -1,11 +1,22 @@
 version: "3.8"
 services:
-  tournamaths-app:
+  tournamaths-app-run:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-    build: .
+    build: docker/run
     ports:
       - "8080:8080"
+    depends_on:
+      - db
+    profiles:
+      - dev
+  tournamaths-app-debug:
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    build: docker/debug
+    ports:
+      - "8080:8080"
+      - "5005:5005" # Debugging port
     depends_on:
       - db
     profiles:

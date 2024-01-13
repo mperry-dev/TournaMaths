@@ -3,11 +3,18 @@
 ## Instructions to Build and Run Locally
 
 ```
-mvn clean install
-docker-compose --profile dev build
-docker-compose --profile dev up -d db
-docker-compose --profile dev up tournamaths-app
+./run-local.sh
 ```
+
+## Instructions to Build, Run and Debug Locally
+
+```
+./debug-local.sh
+```
+
+Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension installed, and follow these instructions to run the debugger: https://code.visualstudio.com/docs/editor/debugging
+
+This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
 ## Deployment Notes
 
@@ -23,6 +30,7 @@ docker-compose --profile dev up tournamaths-app
 - SpringBoot - very popular and well-supported. Its bean system implements separation of concerns well.
 - KaTeX library for maths equations - simple, popular, powerful and well-supported. The main alternative seems to be MathJax, which seems to be very slow.
 - Thymeleaf for the template engine - popular, powerful and well-supported. Since files are also HTML pages, can load them in browser, which is nice. Beats the main popular competitor I considered (FreeMarker) by supporting custom functionality better: https://springhow.com/spring-boot-template-engines-comparison/
+- Hibernate ORM - this seems to be the most popular, best-supported ORM for Spring. It integrates very nicely with SpringBoot.
 - JQuery - easier than vanilla javascript
 - Typescript - types are nice (EDIT: not doing this yet, this is TODO)
 - pico.css - very simple and elegant
@@ -42,6 +50,7 @@ docker-compose --profile dev up tournamaths-app
 - Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
+- Connection pooling https://www.baeldung.com/spring-boot-tomcat-connection-pool https://www.baeldung.com/hibernate-spring
 - Database migrations library
 - Production Cloudwatch Logging
 - CDN for faster content delivery
