@@ -1,3 +1,5 @@
+# Dockerfile for debugging application locally from VSCode
+
 # Start with a base image containing Java runtime
 FROM eclipse-temurin:21-jdk-alpine
 

@@ -3,11 +3,18 @@
 ## Instructions to Build and Run Locally
 
 ```
-mvn clean install
-docker-compose --profile dev build
-docker-compose --profile dev up -d db
-docker-compose --profile dev up tournamaths-app
+./run-local.sh
 ```
+
+## Instructions to Build, Run and Debug Locally
+
+```
+./debug-local.sh
+```
+
+Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension installed, and follow these instructions to run the debugger: https://code.visualstudio.com/docs/editor/debugging
+
+This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
 ## Deployment Notes
 
