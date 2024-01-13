@@ -14,6 +14,8 @@ public class CriteriaBuilderConfig {
      * otherwise it can be stale.
      */
 
+    // PersistenceContext used to inject Session/EntityManager
+    // Note Session subclasses EntityManager - a Hibernate Session is an EntityManager https://docs.jboss.org/hibernate/orm/6.4/javadocs/org/hibernate/Session.html
     @PersistenceContext
     private Session session;
 
