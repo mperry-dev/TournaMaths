@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Tournamaths Signup</title>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Tournamaths</strong></li>
+        </ul>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#" role="button">Signup</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="grid">
+            <section>
+                <hgroup>
+                    <h2>Welcome to Tournamaths</h2>
+                    <h3>Join the Excitement of Math Tournaments!</h3>
+                </hgroup>
+                <p>Participate in challenging and fun mathematics tournaments. Connect with other math enthusiasts, compete, and sharpen your skills!</p>
+                <figure>
+                    <img src="https://source.unsplash.com/featured/?mathematics,puzzles" alt="Mathematics and puzzles" />
+                    <figcaption><a href="#" target="_blank">Learn More</a></figcaption>
+                </figure>
+                <h3>Sign Up Today</h3>
+                <p>Fill in the form below to get started.</p>
+                <form class="grid">
+                    <input type="text" id="firstname" name="firstname" placeholder="First Name" aria-label="First Name" required />
+                    <input type="text" id="lastname" name="lastname" placeholder="Last Name" aria-label="Last Name" required />
+                    <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required />
+                    <input type="password" id="password" name="password" placeholder="Password" aria-label="Password" required />
+                    <button type="submit" onclick="event.preventDefault()">Sign Up</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    <footer class="container">
+        <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+    </footer>
+</body>
+</html>
