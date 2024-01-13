@@ -5,54 +5,70 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
     <link rel="stylesheet" href="/css/create_questions.css">
+    <link rel="stylesheet" href="/css/nav_bar.css">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
 </head>
 <body>
-    <div id="builder">
-        <h1>TournaMaths Question Builder</h1>
+    <nav class="container-fluid">
+        <ul>
+            <li><a href="/"><strong>Tournamaths</strong></a></li>
+        </ul>
+        <ul>
+            <li><a href="/"><img src="/images/logo.png" alt="Tournamaths Logo" /></a></li>
+        </ul>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#" role="button">Signup</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div id="builder">
+            <h1>TournaMaths Question Builder</h1>
 
-        <div class="grid">
-            <!-- Buttons for maths symbols -->
-            <button class="symbol-button" data-symbol="+" title="plus">+</button>
-            <button class="symbol-button" data-symbol="-" title="minus">-</button>
-            <button class="symbol-button" data-symbol="\times" title="multiply">×</button>
-            <button class="symbol-button" data-symbol="\div" title="divide">÷</button>
-            <button class="symbol-button" data-symbol="=" title="equals">=</button>
-            <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
-            <button class="symbol-button" data-symbol="^{}" title="power">^</button>
-            <button class="symbol-button" data-symbol="()" title="brackets">()</button>
-            <!-- Student answer placeholder button -->
-            <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in (enter your expected answer in the curly brackets)">□</button>
+            <div class="grid">
+                <!-- Buttons for maths symbols -->
+                <button class="symbol-button" data-symbol="+" title="plus">+</button>
+                <button class="symbol-button" data-symbol="-" title="minus">-</button>
+                <button class="symbol-button" data-symbol="\times" title="multiply">×</button>
+                <button class="symbol-button" data-symbol="\div" title="divide">÷</button>
+                <button class="symbol-button" data-symbol="=" title="equals">=</button>
+                <button class="symbol-button" data-symbol="\sqrt{}" title="square root">√</button>
+                <button class="symbol-button" data-symbol="^{}" title="power">^</button>
+                <button class="symbol-button" data-symbol="()" title="brackets">()</button>
+                <!-- Student answer placeholder button -->
+                <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in (enter your expected answer in the curly brackets)">□</button>
+            </div>
+
+            <form method="POST" action="/create_questions">
+                <h2>Question ID:</h2>
+                <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
+
+                <h2>Description:</h2>
+                <input type="text" id="description-input" name="description" class="input-field" placeholder="Enter a description for the problem" />
+
+                <h2>Solved Equation:</h2>
+                <input type="text" id="equation-input" name="equation" /><br />
+                <div id="question-preview"></div>
+
+                <input type="submit" value="Submit"/>
+            </form>
         </div>
 
-        <form method="POST" action="/create_questions">
-            <h2>Question ID:</h2>
-            <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
-
-            <h2>Description:</h2>
-            <input type="text" id="description-input" name="description" class="input-field" placeholder="Enter a description for the problem" />
-
-            <h2>Solved Equation:</h2>
-            <input type="text" id="equation-input" name="equation" /><br />
-            <div id="question-preview"></div>
-
-            <input type="submit" value="Submit"/>
-        </form>
-    </div>
-
-    <div id="question-list">
-        <h2>All Questions:</h2>
-        <ul>
-            <li th:each="question : ${questions}">
-                <strong>ID:</strong> <span th:text="${question.identifier}"></span><br>
-                <strong>Description:</strong> <span th:text="${question.description}"></span><br>
-                <strong>Equation:</strong> <span th:text="${question.equation}" class="katex-equation"></span><br>
-                <hr>
-            </li>
-        </ul>
-    </div>
+        <div id="question-list">
+            <h2>All Questions:</h2>
+            <ul>
+                <li th:each="question : ${questions}">
+                    <strong>ID:</strong> <span th:text="${question.identifier}"></span><br>
+                    <strong>Description:</strong> <span th:text="${question.description}"></span><br>
+                    <strong>Equation:</strong> <span th:text="${question.equation}" class="katex-equation"></span><br>
+                    <hr>
+                </li>
+            </ul>
+        </div>
+    </main>
 </body>
 <script src="/js/create_questions.js"></script>
 </html>

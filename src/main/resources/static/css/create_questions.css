@@ -1,5 +1,6 @@
-body {
+.container {
     display: flex;
+    flex-direction: column; /* Stack child elements vertically */
 }
 #builder, #question-list {
     flex: 1;
