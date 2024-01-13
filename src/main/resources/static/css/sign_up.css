@@ -1,7 +1,7 @@
 .container-fluid {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start; /* Adjust the alignment */
     padding: 10px;
 }
 
