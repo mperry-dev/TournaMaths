@@ -4,6 +4,9 @@
 # Maven
 target/
 
+# Compiled Java JARs
+*.jar
+
 # Some terraform files shouldn't be committed - tfstate can have secrets.
 # Some files should be kept - for example, lock file to keep infrastructure versions in-sync.
 *.tfstate

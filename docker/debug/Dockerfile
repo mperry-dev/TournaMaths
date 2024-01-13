@@ -15,8 +15,8 @@ EXPOSE 8080
 # Expose port 5005 for debugger https://stackoverflow.com/a/72705981
 EXPOSE 5005
 
-# The application's jar file
-ARG JAR_FILE=../../target/tournamaths-1.0.jar
+# The application's jar file (in docker/debug folder, parallel to this Dockerfile)
+ARG JAR_FILE=tournamaths-1.0.jar
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} tournamaths.jar
