@@ -10,4 +10,4 @@ target/
 *.tfstate.backup
 *terraform-provider-aws*
 
-.vscode/*
+.vscode/settings.json

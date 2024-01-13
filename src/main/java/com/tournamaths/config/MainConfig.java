@@ -32,6 +32,7 @@ public class MainConfig {
     // https://www.baeldung.com/spring-bean
     @Bean
     public HibernateCriteriaBuilder criteriaBuilder() {
+        System.out.println("Getting criteriaBuilder");
         return session.getCriteriaBuilder();
     }
 }
