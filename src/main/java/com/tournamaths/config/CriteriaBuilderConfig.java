@@ -3,11 +3,13 @@ package com.tournamaths.config;
 import org.hibernate.Session;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Configuration
+@EnableTransactionManagement
 public class CriteriaBuilderConfig {
     /*
      * Need to be careful not to use this outside of the transactional context,
