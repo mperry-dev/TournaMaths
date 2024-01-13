@@ -46,6 +46,10 @@ public class CreateQuestionsController {
 
     // Need to be careful not to use this outside of the transactional context,
     // otherwise it can be stale.
+    // Code shows how CriteriaBuilder reaches through SessionFactory when creating queries:
+    // final SqmStatement<T> statement = sessionFactory.get().getQueryEngine().getHqlTranslator().translate( hql, resultClass );
+    // https://github.com/hibernate/hibernate-orm/blob/dfa9cd5b2945f8384535853a54d836d121eb9067/hibernate-core/src/main/java/org/hibernate/query/sqm/internal/SqmCriteriaNodeBuilder.java#L320
+    // SessionFactoryImpl.java -> queryEngine = QueryEngineImpl.from( this, bootMetamodel );
     @Autowired
     private HibernateCriteriaBuilder cb;
 

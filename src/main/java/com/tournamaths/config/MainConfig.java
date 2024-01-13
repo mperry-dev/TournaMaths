@@ -30,6 +30,12 @@ public class MainConfig {
     private Session session;
 
     // https://www.baeldung.com/spring-bean
+    // In SessionFactoryImpl.java, the criteria builder is obtained from the query engine, which in turn creates it in QueryEngineImpl.java
+    // It looks like in , the session just talks to the sessionFactory to get the criteriaBuilder.
+    // Concretely, the CriteriaBuilder is of class SqmCriteriaNodeBuilder
+    // QueryEngineImpl (a query engine) -> creates SqmCriteriaNodeBuilder (a criteria builder)
+    // AbstractSharedSessionContract (a session) -> has a reference to a SessionFactoryImpl (a session factory)
+    // SessionFactoryImpl talks to QueryEngineImpl to get CriteriaBuilder in getCriteriaBuilder, after validating that not closed... so I'm not keen to skip that validation
     @Bean
     public HibernateCriteriaBuilder criteriaBuilder() {
         return session.getCriteriaBuilder();
