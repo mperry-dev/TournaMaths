@@ -7,4 +7,4 @@ docker-compose down
 docker-compose --profile dev build -f docker/run/Dockerfile
 
 docker-compose --profile dev up -d db
-docker-compose --profile dev up tournamaths-app
+docker-compose --profile dev up tournamaths-app-run

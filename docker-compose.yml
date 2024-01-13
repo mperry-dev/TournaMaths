@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  tournamaths-app:
+  tournamaths-app-run:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
     build: ./docker/run
