@@ -25,9 +25,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Default propagation is REQUIRED - if a transactional method calls another transactional method, the existing transaction continues.
  * It's important to this propagation approach since doing dependency injection of Session and CriteriaBuilder - want to avoid them being used in the wrong transaction.
  * Rolling back by default is only for Runtime exceptions (not checked exceptions).
+ * NOTE because using Transactional, have container-managed transactions, so only need to rollback after unchecked exceptions https://docs.jboss.org/hibernate/orm/6.4/javadocs/org/hibernate/Session.html
  */
 @Controller
-@Transactional(rollbackFor = Exception.class) // rollback both after checked and unchecked exceptions
+@Transactional
 public class CreateQuestionsController {
 
     // Use Spring's dependency injection to injection session object, and tied to current transaction context.
