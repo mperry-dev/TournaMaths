@@ -36,6 +36,11 @@ public class CreateQuestionsController {
     // Much nicer than having to Autowire and use SessionFactory!
     // Need to be careful not to use this outside of the transactional context,
     // otherwise it can be stale.
+    // Useful docs:
+    // https://docs.jboss.org/hibernate/orm/4.0/devguide/en-US/html/ch02.html#d0e1198
+    // https://www.baeldung.com/jpa-hibernate-persistence-context
+    // https://stackoverflow.com/questions/31335211/autowired-vs-persistencecontext-for-entitymanager-bean
+    // https://stackoverflow.com/questions/5640778/hibernate-sessionfactory-vs-jpa-entitymanagerfactory
     @PersistenceContext
     private Session session;
 
