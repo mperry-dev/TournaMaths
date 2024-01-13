@@ -1,0 +1,23 @@
+.container-fluid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.container-fluid ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+/* Adjust the logo size */
+.container-fluid img {
+    width: 100px; /* Adjust the width as needed */
+    height: auto;
+}
