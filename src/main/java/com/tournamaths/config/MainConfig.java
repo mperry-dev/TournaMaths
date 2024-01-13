@@ -1,12 +1,12 @@
 package com.tournamaths.config;
 
 import org.hibernate.Session;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 @Configuration
 @EnableTransactionManagement
@@ -23,7 +23,7 @@ public class MainConfig {
     private Session session;
 
     @Bean
-    public CriteriaBuilder criteriaBuilder() {
+    public HibernateCriteriaBuilder criteriaBuilder() {
         return session.getCriteriaBuilder();
     }
 }

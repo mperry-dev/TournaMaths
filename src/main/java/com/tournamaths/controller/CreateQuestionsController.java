@@ -3,7 +3,6 @@ package com.tournamaths.controller;
 import com.tournamaths.entity.MathQuestion;
 
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 
@@ -11,6 +10,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Transactional means Spring handles committing/rolling back transaction, and opening/closing session automatically for public methods.
+ * https://stackoverflow.com/questions/24710620/how-does-transactional-influence-current-session-in-hibernate
  * Default propagation is REQUIRED - if a transactional method calls another transactional method, the existing transaction continues.
  * It's important to this propagation approach since doing dependency injection of Session and CriteriaBuilder - want to avoid them being used in the wrong transaction.
  * Rolling back by default is only for Runtime exceptions (not checked exceptions).
@@ -41,7 +42,7 @@ public class CreateQuestionsController {
     // Need to be careful not to use this outside of the transactional context,
     // otherwise it can be stale.
     @Autowired
-    private CriteriaBuilder cb;
+    private HibernateCriteriaBuilder cb;
 
     @PostMapping("/create_questions")
     public String newQuestion(@RequestParam String identifier, @RequestParam String description, @RequestParam String equation, RedirectAttributes redirectAttributes) {
