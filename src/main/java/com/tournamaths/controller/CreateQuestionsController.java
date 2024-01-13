@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * Rolling back by default is only for Runtime exceptions (not checked exceptions).
  */
 @Controller
-@Transactional
+@Transactional(rollbackFor = Exception.class) // rollback both after checked and unchecked exceptions
 public class CreateQuestionsController {
 
     // Use Spring's dependency injection to injection session object, and tied to current transaction context.
