@@ -45,7 +45,12 @@ public class SecurityConfig {
             )
             // Configure form login - sets up a page for users to login
             .formLogin(Customizer.withDefaults()) // As using default settings for form login, Springboot will use session-based authentication.
-            .logout((logout) -> logout.permitAll());
+            .logout((logout) ->
+                logout.permitAll()
+                .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
+                .logoutUrl("/logout") // TODO = call this
+                .logoutSuccessUrl("/logout-success") // TODO = implement
+            );
 
         return http.build();
 
