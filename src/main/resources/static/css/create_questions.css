@@ -1,22 +1,37 @@
-body {
+.container {
     display: flex;
+    flex-direction: row; /* Stack child elements horizontally */
+    max-width: 80vw; /* Overrides default 1150px */
 }
-#builder, #question-list {
-    flex: 1;
+#builder, #question-list-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Each expanded to fill half of the width of the screen */
+    width: 40vw;
     padding: 10px;
 }
 #question-preview {
     border: 1px solid #ddd;
-    padding: 10px;
     margin-top: 10px;
+    margin-bottom: 10px;
     background-color: #f9f9f9;
+    height: 150px; /* Set a fixed height */
+    overflow-x: auto; /* Add horizontal scrolling if content overflows */
+    overflow-y: auto; /* Add vertical scrolling if content overflows */
 }
 #question-list {
+    display: flex;
+    flex-direction: column;
     border: 1px solid #ddd;
     margin-top: 10px;
     background-color: #f9f9f9;
-    overflow-y: auto;
-    height: 100vh;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    white-space: nowrap; /* Prevent content from wrapping */
+    flex: 1; /* Fill remaining vertical space */
+}
+#question-list-section {
+    height: 1000px;
 }
 .symbol-button {
     padding: 0.25rem 0.5rem;
@@ -30,4 +45,5 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
     gap: 5px;
+    height: 70px;
 }
