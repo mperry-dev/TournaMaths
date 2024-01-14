@@ -68,6 +68,7 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 
 - SQL injection and Javascript injection protection
 - XSRF protection
+- JWT authentication
 
 #### Application
 
