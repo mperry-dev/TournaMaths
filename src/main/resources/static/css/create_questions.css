@@ -5,7 +5,6 @@
 #builder, #question-list {
     display: flex;
     flex-wrap: wrap;
-    flex: 1;
     padding: 10px;
     flex-direction: column;
 }
