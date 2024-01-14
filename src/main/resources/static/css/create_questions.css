@@ -12,9 +12,12 @@
 }
 #question-preview {
     border: 1px solid #ddd;
-    padding: 10px;
     margin-top: 10px;
+    margin-bottom: 10px;
     background-color: #f9f9f9;
+    height: 150px; /* Set a fixed height */
+    overflow-x: auto; /* Add horizontal scrolling if content overflows */
+    overflow-y: auto; /* Add vertical scrolling if content overflows */
 }
 #question-list {
     display: flex;
@@ -28,7 +31,7 @@
     flex: 1; /* Fill remaining vertical space */
 }
 #question-list-section {
-    height: 100vh;
+    height: 1000px;
 }
 .symbol-button {
     padding: 0.25rem 0.5rem;
