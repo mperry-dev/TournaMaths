@@ -57,16 +57,18 @@
             </form>
         </div>
 
-        <div id="question-list">
+        <div id="question-list-section">
             <h2>All Questions:</h2>
-            <ul>
-                <li th:each="question : ${questions}">
-                    <strong>ID:</strong> <span th:text="${question.identifier}"></span><br>
-                    <strong>Description:</strong> <span th:text="${question.description}"></span><br>
-                    <strong>Equation:</strong> <span th:text="${question.equation}" class="katex-equation"></span><br>
-                    <hr>
-                </li>
-            </ul>
+            <div id="question-list">
+                <ul>
+                    <li th:each="question : ${questions}">
+                        <strong>ID:</strong> <span th:text="${question.identifier}"></span><br>
+                        <strong>Description:</strong> <span th:text="${question.description}"></span><br>
+                        <strong>Equation:</strong> <span th:text="${question.equation}" class="katex-equation"></span><br>
+                        <hr>
+                    </li>
+                </ul>
+            </div>
         </div>
     </main>
 </body>
