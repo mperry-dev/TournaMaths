@@ -5,14 +5,10 @@
 }
 #builder, #question-list-section {
     display: flex;
+    flex-direction: column;
     flex: 1; /* Each expanded to fill half of the width of the screen */
     width: 40vw;
-}
-#builder, #question-list {
-    display: flex;
-    flex-wrap: wrap;
     padding: 10px;
-    flex-direction: column;
 }
 #question-preview {
     border: 1px solid #ddd;
@@ -21,6 +17,8 @@
     background-color: #f9f9f9;
 }
 #question-list {
+    display: flex;
+    flex-direction: column;
     border: 1px solid #ddd;
     margin-top: 10px;
     background-color: #f9f9f9;
@@ -30,8 +28,6 @@
     flex: 1; /* Fill remaining vertical space */
 }
 #question-list-section {
-    display: flex;
-    flex-direction: column;
     height: 100vh;
 }
 .symbol-button {
