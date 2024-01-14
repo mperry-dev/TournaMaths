@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+// Calling this AppUser instead of User to avoid clashing with PostgreSQL-reserved word "user"
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public @Data class User {
+public @Data class AppUser {
 
     @Id
     @GeneratedValue
