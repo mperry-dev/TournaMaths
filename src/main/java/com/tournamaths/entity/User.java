@@ -20,6 +20,7 @@ public @Data class User {
     @GeneratedValue
     private Long id;
 
+    // Email is the user's "username" from the perspective of Spring Security
     @Column(nullable = false, unique = true)
     @NonNull
     private String email;
