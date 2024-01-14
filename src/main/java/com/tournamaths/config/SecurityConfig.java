@@ -1,5 +1,6 @@
 package com.tournamaths.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -41,7 +42,9 @@ public class SecurityConfig {
             // Define authorization rules - e.g. could enable any endpoint starting with /public if configured here.
             // Here enable any authenticated request to access endpoints
             .authorizeHttpRequests(auth ->
-                auth.anyRequest().authenticated()
+                auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()  // Permit static resources
+                .requestMatchers("/").permitAll() // Allow anyone to access the home page
+                .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
             .formLogin(Customizer.withDefaults()) // As using default settings for form login, Springboot will use session-based authentication.
