@@ -1,10 +1,12 @@
 .container {
     display: flex;
     flex-direction: row; /* Stack child elements horizontally */
+    max-width: 80vw; /* Overrides default 1150px */
 }
 #builder, #question-list-section {
     display: flex;
     flex: 1; /* Each expanded to fill half of the width of the screen */
+    width: 40vw;
 }
 #builder, #question-list {
     display: flex;
@@ -22,8 +24,10 @@
     border: 1px solid #ddd;
     margin-top: 10px;
     background-color: #f9f9f9;
-    overflow-y: auto;
-    flex-basis: calc(100% - 200px); /* Adjust the width as needed */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
+    white-space: nowrap; /* Prevent content from wrapping */
+    flex: 1; /* Fill remaining vertical space */
 }
 #question-list-section {
     display: flex;
