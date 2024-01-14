@@ -3,6 +3,7 @@ package com.tournamaths.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,7 +13,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity // https://spring.io/guides/gs/securing-web/
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true) // https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
 public class SecurityConfig {
     // We can add lots of SecurityFilterChains in this method
     // https://medium.com/@2015-2-60-004/multiple-spring-security-configurations-form-based-token-based-authentication-c65ffbeabd07
