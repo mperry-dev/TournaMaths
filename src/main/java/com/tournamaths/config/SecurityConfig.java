@@ -3,7 +3,9 @@ package com.tournamaths.config;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,8 +49,11 @@ public class SecurityConfig {
                 .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
-            .formLogin(form -> form.loginPage("/login").permitAll()) //Springboot will use session-based authentication by default.
-            .logout((logout) ->
+            .formLogin(form -> //Springboot will use session-based authentication by default.
+                form.loginPage("/login")
+                .defaultSuccessUrl("/create_questions", true)
+                .permitAll())
+            .logout(logout ->
                 logout.permitAll()
                 .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
                 .logoutUrl("/logout") // TODO = call this
@@ -63,5 +68,10 @@ public class SecurityConfig {
         // For salting and hashing passwords.
         // BCrypt stores prefix, cost factor, salt and hash in resultant string.
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
