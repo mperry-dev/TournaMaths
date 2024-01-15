@@ -51,7 +51,8 @@ public class SecurityConfig {
             // Configure form login - sets up a page for users to login
             .formLogin(form -> //Springboot will use session-based authentication by default.
                 form.loginPage("/login")
-                .defaultSuccessUrl("/create_questions", true)
+                .usernameParameter("email")
+                .defaultSuccessUrl("/create_questions") // When the user logs in, they will be redirected to whichever page they previously were trying to access, OR the create_questions page
                 .permitAll())
             .logout(logout ->
                 logout.permitAll()

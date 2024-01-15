@@ -79,6 +79,8 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 
 - Add Typescript in
 - Login/account setup page, with logo
+- Check password strength when user signs up
+- CAPTCHA for bot protection
 - Confirm email address when entered in for a new account
 - Password reset
 - Tests/coverage checking
