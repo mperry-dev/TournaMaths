@@ -77,6 +77,7 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 
 #### Application
 
+- Logout should replace ability to login/register when logged in, redirect should occur from login page, registration shouldn't be available. Endpoints to login/register should also return error.
 - Add Typescript in
 - Login/account setup page, with logo
 - Check password strength when user signs up
