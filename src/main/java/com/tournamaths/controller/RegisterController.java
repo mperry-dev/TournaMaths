@@ -7,8 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tournamaths.entity.AppUser;
@@ -26,7 +26,7 @@ public class RegisterController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody AppUser user) {
+    public ResponseEntity<?> registerUser(@ModelAttribute AppUser user) {
         // Add user to database
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
