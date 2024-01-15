@@ -18,10 +18,10 @@
                     <h2>Welcome to TournaMaths</h2>
                     <h3>Login to Continue</h3>
                 </hgroup>
-                <form>
+                <form th:action="@{/login}" method="POST">
                     <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required>
                     <input type="password" id="password" name="password" placeholder="Password" aria-label="Password" required>
-                    <button type="submit" onclick="event.preventDefault()">Login</button>
+                    <button type="submit">Login</button>
                 </form>
             </section>
         </div>

@@ -16,6 +16,10 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
+## Accessing Local Development Docker Database
+
+`PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev`
+
 ## Deployment Notes
 
 - Secrets for deployment are at https://github.com/mperry-dev/TournaMaths/settings/secrets/actions

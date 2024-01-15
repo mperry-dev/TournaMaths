@@ -34,7 +34,7 @@
                 <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in (enter your expected answer in the curly brackets)">□</button>
             </div>
 
-            <form method="POST" action="/create_questions">
+            <form th:action="@{/create_questions}" method="POST">
                 <h2>Question ID:</h2>
                 <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
 

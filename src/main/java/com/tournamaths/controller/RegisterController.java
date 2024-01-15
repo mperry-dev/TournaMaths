@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tournamaths.entity.AppUser;
 import com.tournamaths.repository.AppUserRepository;
 
+import jakarta.transaction.Transactional;
+
 @RestController
+@Transactional
 public class RegisterController {
     @Autowired
     private AppUserRepository userRepository;
@@ -27,12 +30,14 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@ModelAttribute AppUser user) {
+        String password = user.getPassword();
+
         // Add user to database
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
 
         // Authenticate the user after registration
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), password);
         Authentication authentication = authenticationManager.authenticate(authToken);
 
         // Set the authentication in the security context, including granted authorities and other details
