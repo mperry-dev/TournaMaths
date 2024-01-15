@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Tournamaths Login</title>
+</head>
+<body>
+    <nav th:replace="navbar.html"></nav>
+
+    <main class="container">
+        <div class="grid">
+            <section>
+                <hgroup>
+                    <h2>Welcome to TournaMaths</h2>
+                    <h3>Login to Continue</h3>
+                </hgroup>
+                <form>
+                    <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required>
+                    <input type="password" id="password" name="password" placeholder="Password" aria-label="Password" required>
+                    <button type="submit" onclick="event.preventDefault()">Login</button>
+                </form>
+            </section>
+        </div>
+    </main>
+    <footer class="container">
+        <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+    </footer>
+</body>
+</html>
