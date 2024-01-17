@@ -13,7 +13,10 @@
 
         <!-- Conditional Login/Logout Button -->
         <li th:if="${!#authorization.expression('isAuthenticated()')}">
-            <a href="/login" role="button">Login</a>
+            <!-- Put this in a form (even though could use a href) as the easiest way to make the look of the login and logout buttons match -->
+            <form th:action="@{/login}" method="GET">
+                <button type="submit">Login</button>
+            </form>
         </li>
         <li th:if="${#authorization.expression('isAuthenticated()')}">
             <form th:action="@{/logout}" method="POST">
