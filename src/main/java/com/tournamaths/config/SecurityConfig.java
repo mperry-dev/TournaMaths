@@ -1,5 +1,7 @@
 package com.tournamaths.config;
 
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +16,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import com.google.common.collect.ImmutableList;
 
 @Configuration
 @EnableWebSecurity // https://spring.io/guides/gs/securing-web/
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true) // https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
 public class SecurityConfig {
+    public static final List<String> anonymousEndpoints = ImmutableList.of("/login", "/register");
+
     // We can add lots of SecurityFilterChains in this method
     // https://medium.com/@2015-2-60-004/multiple-spring-security-configurations-form-based-token-based-authentication-c65ffbeabd07
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        RequestMatcher[] anonymousEndpointRequestMatchers = anonymousEndpoints.stream().map(AntPathRequestMatcher::new).toArray(RequestMatcher[]::new);
+
         http
             // Enable CSRF protection with a cookie-based CSRF token repository
             .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
@@ -46,7 +56,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()  // Permit static resources
                 .requestMatchers("/", "/public/**").permitAll() // Allow anyone to access the home page, registration endpoint, or any page starting with /public/. Login page handled separately below.
-                .requestMatchers("/login", "/register").anonymous() // Cannot access the login page or the registration endpoint if already logged in, but if not logged in can access it
+                .requestMatchers(anonymousEndpointRequestMatchers).anonymous() // Cannot access the login page or the registration endpoint if already logged in, but if not logged in can access it
                 .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
