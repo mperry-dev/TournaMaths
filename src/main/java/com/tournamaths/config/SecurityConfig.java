@@ -45,7 +45,8 @@ public class SecurityConfig {
             // Here enable any authenticated request to access endpoints
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()  // Permit static resources
-                .requestMatchers("/", "/register", "/public/**").permitAll() // Allow anyone to access the home page, registration endpoint, or any page starting with /public/. Login page handled separately below.
+                .requestMatchers("/", "/public/**").permitAll() // Allow anyone to access the home page, registration endpoint, or any page starting with /public/. Login page handled separately below.
+                .requestMatchers("/login", "/register").anonymous() // Cannot access the login page or the registration endpoint if already logged in, but if not logged in can access it
                 .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
