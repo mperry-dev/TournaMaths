@@ -54,7 +54,7 @@ public class SecurityConfig {
                 form.loginPage("/login")
                 .usernameParameter("email")
                 .defaultSuccessUrl("/create_questions") // When the user logs in, they will be redirected to whichever page they previously were trying to access, OR the create_questions page
-                .permitAll())
+                ) // Don't specify permitAll() here, so that /login is inaccessible to logged-in users
             .logout(logout ->
                 logout.permitAll()
                 .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
