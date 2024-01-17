@@ -45,16 +45,17 @@ public class SecurityConfig {
             // Here enable any authenticated request to access endpoints
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()  // Permit static resources
-                .requestMatchers("/", "/public/**").permitAll() // Allow anyone to access the home page, registration endpoint, or any page starting with /public/. Login page handled separately below.
-                .requestMatchers("/register").anonymous() // Cannot access the registration endpoint if already logged in, but if not logged in can access it.
+                .requestMatchers("/", "/login", "/public/**").permitAll() // Allow anyone to access the home page, login page, registration endpoint, or any page starting with /public/.
+                .requestMatchers("/process_login", "/register").anonymous() // Cannot access the login processing endpoint or the registration endpoint if already logged in, but if not logged in can access it.
                 .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
             .formLogin(form -> //Springboot will use session-based authentication by default.
-                form.loginPage("/login") // NOTE for /login, the POST request can be run a 2nd time whilst logged in - this isn't a security threat though.
+                form.loginPage("/login")
+                .loginProcessingUrl("/process_login")
                 .usernameParameter("email")
                 .defaultSuccessUrl("/create_questions") // When the user logs in, they will be redirected to whichever page they previously were trying to access, OR the create_questions page
-                .permitAll()) // permitAll() here means /login is accessible to logged-in users - since want that to redirect to home page rather than erroring
+                ) // // Don't specify permitAll() here, so that have granular control - we make /process_login inaccessible to logged-in users, /login accessible to all users
             .logout(logout ->
                 logout.permitAll()
                 .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
