@@ -46,15 +46,15 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()  // Permit static resources
                 .requestMatchers("/", "/public/**").permitAll() // Allow anyone to access the home page, registration endpoint, or any page starting with /public/. Login page handled separately below.
-                .requestMatchers("/login", "/register").anonymous() // Cannot access the login page or the registration endpoint if already logged in, but if not logged in can access it
+                .requestMatchers("/register").anonymous() // Cannot access the registration endpoint if already logged in, but if not logged in can access it.
                 .anyRequest().authenticated() // All other requests must be authenticated
             )
             // Configure form login - sets up a page for users to login
             .formLogin(form -> //Springboot will use session-based authentication by default.
-                form.loginPage("/login")
+                form.loginPage("/login") // NOTE for /login, the POST request can be run a 2nd time whilst logged in - this isn't a security threat though.
                 .usernameParameter("email")
                 .defaultSuccessUrl("/create_questions") // When the user logs in, they will be redirected to whichever page they previously were trying to access, OR the create_questions page
-                ) // Don't specify permitAll() here, so that /login is inaccessible to logged-in users
+                .permitAll()) // permitAll() here means /login is accessible to logged-in users - since want that to redirect to home page rather than erroring
             .logout(logout ->
                 logout.permitAll()
                 .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
