@@ -1,7 +1,7 @@
 .container-fluid {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Center align items vertically */
+    align-items: flex-start; /* Raise items up */
     padding: 10px;
 }
 
