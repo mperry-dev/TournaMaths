@@ -57,8 +57,8 @@ public class SecurityConfig {
             .logout(logout ->
                 logout.permitAll()
                 .deleteCookies("JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
-                .logoutUrl("/logout") // TODO = call this
-                .logoutSuccessUrl("/logout-success") // TODO = implement
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
             );
 
         return http.build();

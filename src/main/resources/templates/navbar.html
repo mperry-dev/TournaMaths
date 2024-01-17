@@ -10,6 +10,15 @@
     </ul>
     <ul>
         <li><a href="#">About</a></li>
-        <li><a href="/login" role="button">Login</a></li>
+
+        <!-- Conditional Login/Logout Button -->
+        <li th:if="${!#authorization.expression('isAuthenticated()')}">
+            <a href="/login" role="button">Login</a>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        </li>
     </ul>
 </nav>
