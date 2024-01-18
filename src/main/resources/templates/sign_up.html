@@ -27,16 +27,18 @@
                     <figcaption><a href="#" target="_blank">Learn More</a></figcaption>
                 </figure>
                 -->
-                <h3>Sign Up Today</h3>
-                <p>Fill in the form below to get started.</p>
-                <!-- CSRF protection https://www.baeldung.com/spring-security-csrf -->
-                <form id="signupForm" class="grid" th:action="@{/register}" th:object="${user}" method="POST"> <!-- Automatically provides CSRF protection https://www.baeldung.com/csrf-thymeleaf-with-spring-security -->
-                    <input type="text" id="firstName" name="firstName" placeholder="First Name" aria-label="First Name" required />
-                    <input type="text" id="lastName" name="lastName" placeholder="Last Name" aria-label="Last Name" required />
-                    <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required />
-                    <input type="password" id="password" name="password" placeholder="Password" aria-label="Password" required />
-                    <button type="submit">Sign Up</button>
-                </form>
+                <div th:if="${!#authorization.expression('isAuthenticated()')}">
+                    <h3>Sign Up Today</h3>
+                    <p>Fill in the form below to get started.</p>
+                    <!-- CSRF protection https://www.baeldung.com/spring-security-csrf -->
+                    <form id="signupForm" class="grid" th:action="@{/register}" th:object="${user}" method="POST"> <!-- Automatically provides CSRF protection https://www.baeldung.com/csrf-thymeleaf-with-spring-security -->
+                        <input type="text" id="firstName" name="firstName" placeholder="First Name" aria-label="First Name" required />
+                        <input type="text" id="lastName" name="lastName" placeholder="Last Name" aria-label="Last Name" required />
+                        <input type="email" id="email" name="email" placeholder="Email" aria-label="Email" required />
+                        <input type="password" id="password" name="password" placeholder="Password" aria-label="Password" required />
+                        <button type="submit">Sign Up</button>
+                    </form>
+                </div>
             </section>
         </div>
     </main>
