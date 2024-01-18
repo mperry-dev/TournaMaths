@@ -32,7 +32,7 @@ public class SecurityConfig {
                 headers.xssProtection(
                         xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
                 ).contentSecurityPolicy(
-                        cps -> cps.policyDirectives("script-src 'self' cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js") // Allow restricted list of scripts
+                        cspc -> cspc.policyDirectives("script-src 'self' cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js") // Allow restricted list of scripts
                 ))
             // Configure other headers for security
             .headers(headers ->
