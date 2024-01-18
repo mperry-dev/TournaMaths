@@ -32,6 +32,11 @@ public class RegisterController {
 
     @PostMapping("/register")
     public RedirectView registerUser(@ModelAttribute AppUser user, HttpSession session) {
+        // Check if the email is already in use - if so user can reattempt registration
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            return new RedirectView("/?error");
+        }
+
         String password = user.getPassword();
 
         // Add user to database
