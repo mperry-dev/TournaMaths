@@ -75,6 +75,7 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 - JWT authentication
 - Rate-limiting endpoints which could be abused, like user registration or login
 - 2FA
+- Lock down file permissions more on EC2 instances
 
 #### Application
 
