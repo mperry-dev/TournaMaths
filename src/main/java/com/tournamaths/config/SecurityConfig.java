@@ -26,7 +26,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             // Enable CSRF protection with a cookie-based CSRF token repository
-            .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+            // By default, HttpOnly flag is set to true, which means client-side scripts cannot read CSRF token:
+            // https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/csrf/CookieCsrfTokenRepository.java#L58C2-L58C2
+            .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository()))
             // Enable XSS protection https://www.baeldung.com/spring-prevent-xss#making-an-application-xss-safewith-spring-security
             .headers(headers ->
                 headers.xssProtection(
