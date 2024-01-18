@@ -71,7 +71,7 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 #### Security
 
 - SQL injection and Javascript injection protection
-- XSRF protection
+- CSRF protection
 - JWT authentication
 - Rate-limiting endpoints which could be abused, like user registration or login
 
