@@ -199,13 +199,13 @@ resource "aws_network_acl" "tournamaths_elasticache_acl" {
   }
 }
 
-# Associate the Network ACL with the private subnets for the database
-resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_1a" {
+# Associate the Network ACL with the private subnets for the cache
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_2a" {
   network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
   subnet_id      = aws_subnet.tournamaths_private_subnet_2a.id
 }
 
-resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_1b" {
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_2b" {
   network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
   subnet_id      = aws_subnet.tournamaths_private_subnet_2b.id
 }
