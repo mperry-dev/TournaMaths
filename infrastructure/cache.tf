@@ -1,4 +1,5 @@
 # Using non-serverless cache without replicas as cheaper when choose most basic instance. In real website I'd recommend serverless as simpler.
+# NOTE can't turn on transit_encryption_enabled for Redis
 resource "aws_elasticache_cluster" "tournamaths_elasticache_redis" {
   cluster_id           = "tournamaths-redis-cluster"
   engine               = "redis"
