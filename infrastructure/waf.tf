@@ -6,7 +6,7 @@
 # https://stackoverflow.com/questions/65252674/when-using-terraform-with-aws-how-can-i-set-a-rate-limit-on-a-specific-uri-path
 resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
   name  = "tournamaths-waf-web-acl"
-  scope = "REGIONAL" # or CLOUDFRONT for CloudFront distributions
+  scope = "REGIONAL" # Attaching this to an ALB, so regional scope
 
   default_action {
     allow {}
