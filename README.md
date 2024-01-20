@@ -25,7 +25,7 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 Start by logging into EC2 serial console. Then run:
 
 ```
-psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournamaths_db user=admin_user password=$(aws secretsmanager get-secret-value --secret-id 'rds!db-bca8c669-5e58-4292-9a6a-c18f1992caef' --region us-east-1 --query 'SecretString' --output text | jq -r .password) sslmode=verify-full sslrootcert=/home/ec2-user/us-east-1-bundle.pem"
+psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournamaths_db user=admin_user password=$(aws secretsmanager get-secret-value --secret-id 'rds!db-b1c7e2b7-9824-4bf7-bb39-6db7c282322d' --region us-east-1 --query 'SecretString' --output text | jq -r .password) sslmode=verify-full sslrootcert=/home/ec2-user/us-east-1-bundle.pem"
 ```
 
 NOTE if the database or other AWS components are replaced, this command will need to be updated.
