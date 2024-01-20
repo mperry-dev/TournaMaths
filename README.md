@@ -16,6 +16,20 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
+## Accessing Local Development Docker Database
+
+`PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev`
+
+## Accessing Production PostgreSQL Database via Shell from EC2 Serial Console
+
+Start by logging into EC2 serial console. Then run:
+
+```
+psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournamaths_db user=admin_user password=$(aws secretsmanager get-secret-value --secret-id 'rds!db-bca8c669-5e58-4292-9a6a-c18f1992caef' --region us-east-1 --query 'SecretString' --output text | jq -r .password) sslmode=verify-full sslrootcert=/home/ec2-user/us-east-1-bundle.pem"
+```
+
+NOTE if the database or other AWS components are replaced, this command will need to be updated.
+
 ## Deployment Notes
 
 - Secrets for deployment are at https://github.com/mperry-dev/TournaMaths/settings/secrets/actions
@@ -63,16 +77,27 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 - Faster deployments
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
+- Add indexes to database
 
 #### Security
 
+- Remove ability to login as root user in EC2 from ec2-user (leaving it without doing this for now as it's convenient for debugging purposes)
 - SQL injection and Javascript injection protection
-- XSRF protection
+- CSRF protection
+- JWT authentication
+- Rate-limiting endpoints which could be abused, like user registration or login
+- 2FA
+- Lock down file permissions more on EC2 instances
 
 #### Application
 
+- Logout should replace ability to login/register when logged in, redirect should occur from login page, registration shouldn't be available. Endpoints to login/register should also return error.
 - Add Typescript in
 - Login/account setup page, with logo
+- Check password strength when user signs up
+- CAPTCHA for bot protection
+- Confirm email address when entered in for a new account
+- Password reset
 - Tests/coverage checking
 - Only admin users should be able to edit/delete questions
 - Admin interface

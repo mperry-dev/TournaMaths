@@ -11,24 +11,30 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+// Calling this AppUser instead of User to avoid clashing with PostgreSQL-reserved word "user"
 @Entity
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public @Data class MathQuestion {
+public @Data class AppUser {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    // Email is the user's "username" from the perspective of Spring Security
+    @Column(nullable = false, unique = true)
     @NonNull
-    private String identifier;
+    private String email;
 
     @Column(nullable = false)
     @NonNull
-    private String description;
+    private String firstName;
 
     @Column(nullable = false)
     @NonNull
-    private String equation;
+    private String lastName;
+
+    @Column(nullable = false)
+    @NonNull
+    private String password; // BCrypt hash (with salting) of the password
 }

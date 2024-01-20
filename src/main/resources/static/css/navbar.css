@@ -1,7 +1,7 @@
 .container-fluid {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Adjust the alignment */
+    align-items: flex-start; /* Raise items up */
     padding: 10px;
 }
 
@@ -20,4 +20,8 @@
 .container-fluid img {
     width: 100px; /* Adjust the width as needed */
     height: auto;
+}
+/* Form containing buttons like login and logout */
+.container-fluid form {
+    margin-bottom: 0px; /* This is by default 20px - override it so the button isn't raised up */
 }

@@ -1,3 +1,6 @@
+<!-- Importing this CSS again when the template adding this fragment already has it is redundant, but I find it clearer this way -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+<link rel="stylesheet" href="/css/navbar.css">
 <nav class="container-fluid">
     <ul>
         <li><a href="/"><strong>Tournamaths</strong></a></li>
@@ -6,10 +9,19 @@
         <li><a href="/"><img src="/images/logo.png" alt="Tournamaths Logo" /></a></li>
     </ul>
     <ul>
-        <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
-        <li><a href="#" role="button">Signup</a></li>
+
+        <!-- Conditional Login/Logout Button -->
+        <li th:if="${!#authorization.expression('isAuthenticated()')}">
+            <!-- Put this in a form (even though could use a href) as the easiest way to make the look of the login and logout buttons match -->
+            <form th:action="@{/login}" method="GET">
+                <button type="submit">Login</button>
+            </form>
+        </li>
+        <li th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/logout}" method="POST">
+                <button type="submit">Logout</button>
+            </form>
+        </li>
     </ul>
 </nav>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-<link rel="stylesheet" href="/css/navbar.css">

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>TournaMaths Question Builder</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
     <link rel="stylesheet" href="/css/create_questions.css">
@@ -30,7 +34,7 @@
                 <button class="symbol-button" data-symbol="\boxed{}" title="Box for student to enter answer in (enter your expected answer in the curly brackets)">□</button>
             </div>
 
-            <form method="POST" action="/create_questions">
+            <form th:action="@{/create_questions}" method="POST">
                 <h2>Question ID:</h2>
                 <input type="text" id="question-id-input" name="identifier" class="input-field" placeholder="Enter a unique ID for the problem" />
 
@@ -59,6 +63,7 @@
             </div>
         </div>
     </main>
+    <footer th:replace="footer.html"></footer>
 </body>
 <script src="/js/create_questions.js"></script>
 </html>

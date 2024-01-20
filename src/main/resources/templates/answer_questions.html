@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Math Problem Solving with KaTeX</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Math Problem Solving with KaTeX</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
     <link rel="stylesheet" href="/css/answer_questions.css">
@@ -34,9 +36,7 @@
             <!-- Subscription Section -->
         </div>
     </section>
-    <footer class="container">
-        <!-- Footer Content -->
-    </footer>
+    <footer th:replace="footer.html"></footer>
 </body>
 <script src="/js/answer_questions.js"></script>
 </html>

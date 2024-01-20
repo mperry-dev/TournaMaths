@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @Transactional
 public class CreateQuestionsController {
+    // NOTE - this would be more simply defined using a repository class (wrote it this way when testing how the CriteriaBuilder worked)
 
     // Use Spring's dependency injection to inject entityManager object, and tied to current transaction context.
     // Much nicer than having to Autowire and use EntityManagerFactory!
