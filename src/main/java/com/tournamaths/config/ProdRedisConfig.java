@@ -21,7 +21,10 @@ public class ProdRedisConfig {
     @Value("${aws.region}")
     private String region;
 
-
+    private String getRedisEndpoint() {
+        CacheNode cacheNode = getCacheNode();
+        return cacheNode.endpoint().address() + ":" + cacheNode.endpoint().port();
+    }
 
     private CacheNode getCacheNode() {
         try (ElastiCacheClient elasticacheClient = ElastiCacheClient.builder()
