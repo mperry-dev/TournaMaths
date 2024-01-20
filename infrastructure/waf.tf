@@ -1,5 +1,6 @@
-# Setup Web Application Firewall - this can rate-limit per-IP address calling our appliation
-# Not gathering metrics since this is a pet project and don't want to spend too muchy
+# Setup Web Application Firewall - this can rate-limit per-IP address calling our appliation.
+# To have limits below 100 for an endpoint, have to do it through the application code - see IpAddressRateLimitingFilter.java
+# Not gathering metrics since this is a pet project and don't want to spend too much
 # Could also perform bot control and fraud control: https://aws.amazon.com/waf/pricing/
 # Can turn on CAPTCHA here too in future - not turning it on as if was DDOSed from multiple IPs it could be quite expensive
 
