@@ -83,7 +83,7 @@ resource "aws_subnet" "tournamaths_private_subnet_2b" {
 
 resource "aws_elasticache_subnet_group" "tournamaths_private_elasticache_subnet_group" {
   name       = "tournamaths-private-elasticache-subnet-group"
-  subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
+  subnet_ids = [aws_subnet.tournamaths_private_subnet_2a.id, aws_subnet.tournamaths_private_subnet_2b.id]
 }
 
 ################ ACL for database private subnets - 2nd layer of security to block all traffic not coming into port 5432.
