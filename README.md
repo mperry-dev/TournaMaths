@@ -89,16 +89,24 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
 - Add indexes to database
+- Logging
+- Monitoring
 
 #### Security
 
+- Better password policies
+- Password reset
+- Email verification of user accounts
 - Remove ability to login as root user in EC2 from ec2-user (leaving it without doing this for now as it's convenient for debugging purposes)
 - SQL injection and Javascript injection protection
 - CSRF protection
 - JWT authentication
 - Rate-limiting endpoints which could be abused, like user registration or login
 - 2FA
+- CAPTCHAs
+- Temporary account lockout
 - Lock down file permissions more on EC2 instances
+- Could setup AWS Shield DDOS protection (unlikely to do so for this application since want to keep costs low and not a critical application)
 
 #### Application
 
