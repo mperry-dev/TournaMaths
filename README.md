@@ -30,7 +30,11 @@ psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournam
 
 NOTE if the database or other AWS components are replaced, this command will need to be updated.
 
-## Deployment Notes
+## Deploying to Production
+
+Click the "Run workflow" dropdown and select your branch to deploy the latest commit of at https://github.com/mperry-dev/TournaMaths/actions/workflows/deploy.yml, and then click the green "Run workflow" button that appears.
+
+#### Notes
 
 - Secrets for deployment are at https://github.com/mperry-dev/TournaMaths/settings/secrets/actions
 - Have spending limit implemented at for Github Actions https://github.com/settings/billing/spending_limit
