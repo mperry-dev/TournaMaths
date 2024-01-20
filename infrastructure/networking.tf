@@ -148,6 +148,68 @@ resource "aws_network_acl_association" "tournamaths_db_acl_association_1b" {
   subnet_id      = aws_subnet.tournamaths_private_subnet_1b.id
 }
 
+################ ACL for cache private subnets - 2nd layer of security to block all traffic not coming into port 6379. NOTE this is quite similar to tournamaths_db_acl
+
+# Define the Network ACL
+resource "aws_network_acl" "tournamaths_elasticache_acl" {
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  # Inbound rule to allow Redis (port 6379) only from VPC
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 6379
+    to_port    = 6379
+  }
+
+  # Deny all other inbound traffic
+  ingress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0 # Port range must be 0 for "all" protocol
+  }
+
+  # Allow only outbound traffic to VPC
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 0
+    to_port    = 65535 # Range is all ports for tcp
+  }
+
+  # Deny all other outbound traffic
+  egress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0 # Port range must be 0 for "all" protocol
+  }
+
+  tags = {
+    Name = "TournaMaths-Elasticache-NACL"
+  }
+}
+
+# Associate the Network ACL with the private subnets for the database
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_1a" {
+  network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_2a.id
+}
+
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_1b" {
+  network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_2b.id
+}
+
 ################ Internet gateway so EC2 instances can access internet.
 resource "aws_internet_gateway" "tournamaths_igw" {
   vpc_id = aws_vpc.tournamaths_vpc.id
