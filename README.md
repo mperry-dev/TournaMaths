@@ -71,6 +71,7 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 
 #### Infrastructure
 
+- Implement distributed session management using Redis
 - Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
