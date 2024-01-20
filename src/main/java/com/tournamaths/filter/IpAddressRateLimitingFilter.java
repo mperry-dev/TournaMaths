@@ -19,8 +19,11 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 public class IpAddressRateLimitingFilter implements Filter {
     /**
      * Filter to rate-limit by IP address;
-     * 
+     *
      * NOTE this approach could disadvantage legitimate users behind a proxy/NAT.
+     *
+     * The purpose of this is to protect the EC2 instances from being overloaded, rather than numerically-consistent per-account security (e.g. preventing more than login attempts per minute).
+     * For per-account security, should implement a centralized stored cache (such as Redis) and cache by user id.
      */
 
     // NOTE LoadingCache and AtomicInteger are thread-safe
