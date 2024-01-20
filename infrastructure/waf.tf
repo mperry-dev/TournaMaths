@@ -35,6 +35,7 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
   }
 
   # This isn't useful to me right now since can't set limit below 100, which is the general limit I want. However, it demonstrates how to implement finer control over individual endpoints.
+  # I might use this code later so leaving it commented out
   /* rule {
     name     = "RateLimitLoginAndRegistration"
     priority = 2
