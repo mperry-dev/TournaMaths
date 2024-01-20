@@ -84,3 +84,8 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
     sampled_requests_enabled   = false
   }
 }
+
+resource "aws_wafv2_web_acl_association" "tournamaths-waf-alb-association" {
+  resource_arn = aws_lb.tournamaths_alb.arn
+  web_acl_arn  = aws_wafv2_web_acl.tournamaths_waf_web_acl.arn
+}
