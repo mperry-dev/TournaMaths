@@ -22,46 +22,51 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
 
     statement {
       or_statement {
-        rate_based_statement {
-          limit              = 15 # Limit of requests for a 5-minute time span for login endpoint
-          aggregate_key_type = "IP"
+        statement {
+          rate_based_statement {
+            limit              = 15 # Limit of requests for a 5-minute time span for login endpoint
+            aggregate_key_type = "IP"
 
-          scope_down_statement {
-            byte_match_statement {
-              field_to_match {
-                uri_path {}
-              }
-              positional_constraint = "STARTS_WITH"
-              search_string         = "/process_login"
-              text_transformation {
-                priority = 0
-                type     = "NONE"
+            scope_down_statement {
+              byte_match_statement {
+                field_to_match {
+                  uri_path {}
+                }
+                positional_constraint = "STARTS_WITH"
+                search_string         = "/process_login"
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
               }
             }
           }
         }
-        rate_based_statement {
-          limit              = 15 # Limit of requests for a 5-minute time span for registration endpoint
-          aggregate_key_type = "IP"
+        statement {
+          rate_based_statement {
+            limit              = 15 # Limit of requests for a 5-minute time span for registration endpoint
+            aggregate_key_type = "IP"
 
-
-          scope_down_statement {
-            byte_match_statement {
-              field_to_match {
-                uri_path {}
-              }
-              positional_constraint = "STARTS_WITH"
-              search_string         = "/register"
-              text_transformation {
-                priority = 0
-                type     = "NONE"
+            scope_down_statement {
+              byte_match_statement {
+                field_to_match {
+                  uri_path {}
+                }
+                positional_constraint = "STARTS_WITH"
+                search_string         = "/register"
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
               }
             }
           }
         }
-        rate_based_statement {
-          limit              = 100 # Limit of requests for a 5-minute time span in general
-          aggregate_key_type = "IP"
+        statement {
+          rate_based_statement {
+            limit              = 100 # Limit of requests for a 5-minute time span in general
+            aggregate_key_type = "IP"
+          }
         }
       }
     }
