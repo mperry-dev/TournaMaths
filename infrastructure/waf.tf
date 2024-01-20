@@ -34,7 +34,8 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
     }
   }
 
-  rule {
+  # This isn't useful to me right now since can't set limit below 100, which is the general limit I want. However, it demonstrates how to implement finer control over individual endpoints.
+  /* rule {
     name     = "RateLimitLoginAndRegistration"
     priority = 2
 
@@ -85,7 +86,7 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
       metric_name                = "RateLimitLoginAndRegistration"
       sampled_requests_enabled   = false
     }
-  }
+  } */
 
   visibility_config {
     cloudwatch_metrics_enabled = false
