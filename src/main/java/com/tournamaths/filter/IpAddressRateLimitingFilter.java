@@ -23,7 +23,7 @@ public class IpAddressRateLimitingFilter implements Filter {
      *
      * NOTE this approach could disadvantage legitimate users behind a proxy/NAT.
      *
-     * The purpose of this is to protect the EC2 instances from being overloaded, rather than numerically-consistent per-account security (e.g. preventing more than login attempts per minute).
+     * The purpose of this is to protect the EC2 instances from being overloaded, rather than numerically-consistent per-account security (e.g. preventing too many login attempts per minute per account being subjected to it).
      * For per-account security, should implement a centralized stored cache (such as Redis) and cache by user id.
      */
 
