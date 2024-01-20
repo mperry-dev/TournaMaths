@@ -18,7 +18,8 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 
 public class IpAddressRateLimitingFilter implements Filter {
     /**
-     * Filter to rate-limit by IP address;
+     * Filter to rate-limit by IP address.
+     * This allows setting whatever limit we like - Web ACLs only allow minimum limits of 100 per 5 minutes (I'd like login/registration to have lower limits).
      *
      * NOTE this approach could disadvantage legitimate users behind a proxy/NAT.
      *
