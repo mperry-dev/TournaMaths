@@ -61,6 +61,12 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Github Actions for deployment - very simple and powerful way to run AWS deployments from your Github repository. Since it's got full access to the Github repository, my current setup can be extended to provide a mechanism to deploy an arbitrary git tag/commit, and to setup a quick rollback mechanism in-case of deployment issues.
 - CodeDeploy for application deployment - AWS's managed deployment service - it provides simple hooks for different deployment lifecycle events.
 
+#### Notes on SpringBoot
+
+- This Springboot app on EC2 initializes and starts up once, including starting the embedded Tomcat server, initializing Spring's application context, and setting up beans and services.
+- The embedded Tomcat server handles incoming HTTP requests concurrently using a pool of threads (not using separate processes per-request). There is a single Java process constituting the Springboot application.
+- Can scale vertically by upgrading EC2 instances to provide more CPU, memory and resources to handle more concurrent requests effectively. Can scale horizontally by adding more EC2 instances in autoscaling group.
+
 ## Potential Future Improvements
 
 #### Infrastructure
