@@ -21,53 +21,27 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
     }
 
     statement {
-      or_statement {
-        statement {
-          rate_based_statement {
-            limit              = 15 # Limit of requests for a 5-minute time span for login endpoint
-            aggregate_key_type = "IP"
+      rate_based_statement {
+        limit              = 100 # Limit of requests for a 5-minute time span in general
+        aggregate_key_type = "IP"
 
-            scope_down_statement {
-              byte_match_statement {
-                field_to_match {
-                  uri_path {}
-                }
-                positional_constraint = "STARTS_WITH"
-                search_string         = "/process_login"
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-        statement {
-          rate_based_statement {
-            limit              = 15 # Limit of requests for a 5-minute time span for registration endpoint
-            aggregate_key_type = "IP"
-
-            scope_down_statement {
-              byte_match_statement {
-                field_to_match {
-                  uri_path {}
-                }
-                positional_constraint = "STARTS_WITH"
-                search_string         = "/register"
-                text_transformation {
-                  priority = 0
-                  type     = "NONE"
-                }
-              }
-            }
-          }
-        }
-        statement {
-          rate_based_statement {
-            limit              = 100 # Limit of requests for a 5-minute time span in general
-            aggregate_key_type = "IP"
-          }
-        }
+        # Can use logic like this later on for more granular control
+        # However you can't nest RateBasedStatements inside other statements, so would need a rule for every endpoint (which would get charged separately)
+        # So since this is jut a pet project just applying a catch-all rate-limit to protect the EC2 instances,
+        # and applying more granular rate-limiting in the application code.
+        #scope_down_statement {
+        #  byte_match_statement {
+        #    field_to_match {
+        #      uri_path {}
+        #    }
+        #    positional_constraint = "STARTS_WITH"
+        #    search_string         = "/process_login"
+        #    text_transformation {
+        #      priority = 0
+        #      type     = "NONE"
+        #    }
+        #  }
+        #}
       }
     }
 
