@@ -36,5 +36,5 @@ public @Data class AppUser {
 
     @Column(nullable = false)
     @NonNull
-    private String password;
+    private String password; // BCrypt hash (with salting) of the password
 }
