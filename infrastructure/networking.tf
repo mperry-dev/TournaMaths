@@ -60,6 +60,32 @@ resource "aws_db_subnet_group" "tournamaths_private_db_subnet_group" {
   subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
 }
 
+################ Private subnets for cache, with a subnet group that the cache will be restricted to.
+resource "aws_subnet" "tournamaths_private_subnet_2a" {
+  vpc_id            = aws_vpc.tournamaths_vpc.id
+  cidr_block        = "10.0.5.0/24" # A private IP address range
+  availability_zone = "${var.aws_region}a"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-2a"
+  }
+}
+
+resource "aws_subnet" "tournamaths_private_subnet_2b" {
+  vpc_id            = aws_vpc.tournamaths_vpc.id
+  cidr_block        = "10.0.6.0/24" # A private IP address range
+  availability_zone = "${var.aws_region}b"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-2b"
+  }
+}
+
+resource "aws_elasticache_subnet_group" "tournamaths_private_elasticache_subnet_group" {
+  name       = "tournamaths-private-elasticache-subnet-group"
+  subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
+}
+
 ################ ACL for database private subnets - 2nd layer of security to block all traffic not coming into port 5432.
 
 # Define the Network ACL
@@ -233,6 +259,31 @@ resource "aws_security_group" "tournamaths_rds_sg" {
 
   tags = {
     Name = "TournaMaths-RDS-SG"
+  }
+}
+
+resource "aws_security_group" "tournamaths_elasticache_sg" {
+  name   = "tournamath-elasticache-sg"
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  ingress {
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tournamaths_ec2_sg.id]
+  }
+
+  # Don't really need to restrict traffic here, but leaving without actually means any outbound traffic is allowed - this feels clearer.
+  # Restricting to just VPC since cannot implement deny rule in security group.
+  egress {
+    from_port   = 0
+    to_port     = 65535 # Range is all ports for tcp
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.tournamaths_vpc.cidr_block]
+  }
+
+  tags = {
+    Name = "TournaMathsElastiCacheSG"
   }
 }
 
