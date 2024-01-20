@@ -30,6 +30,14 @@ psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournam
 
 NOTE if the database or other AWS components are replaced, this command will need to be updated.
 
+## Accessing Production Redis Cache via Shell from EC2 Serial Console
+
+```
+redis6-cli -h tournamaths-redis-cluster.cb3ejx.0001.use1.cache.amazonaws.com -p 6379
+```
+
+NOTE if the cache or other AWS components are replaced, this command will need to be updated.
+
 ## Deploying to Production
 
 Click the "Run workflow" dropdown and select your branch to deploy the latest commit of at https://github.com/mperry-dev/TournaMaths/actions/workflows/deploy.yml, and then click the green "Run workflow" button that appears.
