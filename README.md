@@ -67,6 +67,10 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - The embedded Tomcat server handles incoming HTTP requests concurrently using a pool of threads (not using separate processes per-request). There is a single Java process constituting the Springboot application.
 - Can scale vertically by upgrading EC2 instances to provide more CPU, memory and resources to handle more concurrent requests effectively. Can scale horizontally by adding more EC2 instances in autoscaling group.
 
+## Security Notes
+
+- AWS automatically provides AWS Shield Standard (DDOS protection)
+
 ## Potential Future Improvements
 
 #### Infrastructure
@@ -106,7 +110,6 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - CAPTCHAs
 - Temporary account lockout
 - Lock down file permissions more on EC2 instances
-- Could setup AWS Shield DDOS protection (unlikely to do so for this application since want to keep costs low and not a critical application)
 
 #### Application
 
