@@ -77,6 +77,7 @@ NOTE if the database or other AWS components are replaced, this command will nee
 - Faster deployments
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
 - Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
+- Add indexes to database
 
 #### Security
 
