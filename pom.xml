@@ -105,6 +105,12 @@
             <version>1.18.30</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Caffeine is a caching library, with similar functionality to Guava's cache. Benchmarking indicates it is faster https://github.com/ben-manes/caffeine/wiki/Benchmarks https://stackoverflow.com/questions/55494488/caffeine-versus-guava-cache -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
+        </dependency>
     </dependencies>
 
     <build>
