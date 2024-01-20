@@ -3,8 +3,14 @@ package com.tournamaths.config;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.elasticache.ElastiCacheClient;
@@ -21,9 +27,24 @@ public class ProdRedisConfig {
     @Value("${aws.region}")
     private String region;
 
-    private String getRedisEndpoint() {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new JdkSerializationRedisSerializer());
+        return template;
+    }
+
+    @Bean
+    public JedisConnectionFactory redisConnectionFactory() {
         CacheNode cacheNode = getCacheNode();
-        return cacheNode.endpoint().address() + ":" + cacheNode.endpoint().port();
+
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
+        config.setHostName(cacheNode.endpoint().address());
+        config.setPort(cacheNode.endpoint().port());
+
+        return new JedisConnectionFactory(config);
     }
 
     private CacheNode getCacheNode() {
