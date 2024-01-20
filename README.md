@@ -80,6 +80,7 @@ NOTE if the database or other AWS components are replaced, this command will nee
 
 #### Security
 
+- Remove ability to login as root user in EC2 from ec2-user (leaving it without doing this for now as it's convenient for debugging purposes)
 - SQL injection and Javascript injection protection
 - CSRF protection
 - JWT authentication
