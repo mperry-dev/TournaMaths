@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class TournaMathsUserDetailsService implements UserDetailsService {
+    // This is used automatically by SpringBoot security to load a user, particularly for AuthenticationManager.
 
     @Autowired
     private AppUserRepository userRepository;
