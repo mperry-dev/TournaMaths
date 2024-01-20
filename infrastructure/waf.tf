@@ -49,26 +49,30 @@ resource "aws_wafv2_web_acl" "tournamaths_waf_web_acl" {
 
         scope_down_statement {
           or_statement {
-            byte_match_statement {
-              field_to_match {
-                uri_path {}
-              }
-              positional_constraint = "STARTS_WITH"
-              search_string         = "/process_login"
-              text_transformation {
-                priority = 0
-                type     = "NONE"
+            statement {
+              byte_match_statement {
+                field_to_match {
+                  uri_path {}
+                }
+                positional_constraint = "STARTS_WITH"
+                search_string         = "/process_login"
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
               }
             }
-            byte_match_statement {
-              field_to_match {
-                uri_path {}
-              }
-              positional_constraint = "STARTS_WITH"
-              search_string         = "/register"
-              text_transformation {
-                priority = 0
-                type     = "NONE"
+            statement {
+              byte_match_statement {
+                field_to_match {
+                  uri_path {}
+                }
+                positional_constraint = "STARTS_WITH"
+                search_string         = "/register"
+                text_transformation {
+                  priority = 0
+                  type     = "NONE"
+                }
               }
             }
           }
