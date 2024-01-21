@@ -94,11 +94,10 @@ public class SecurityConfig {
                 form.loginPage("/login")
                     .loginProcessingUrl("/process_login")
                     .usernameParameter("email")
-                    .defaultSuccessUrl(
-                        "/create_questions")) // Don't specify permitAll() here, so that have
-        // granular control - we make /process_login
-        // inaccessible to logged-in users, /login accessible
-        // to all users
+                    // Don't specify permitAll() here, so that have granular control - we make
+                    // /process_login inaccessible to logged-in users, /login accessible to all
+                    // users
+                    .defaultSuccessUrl("/create_questions"))
         .logout(
             logout ->
                 logout
