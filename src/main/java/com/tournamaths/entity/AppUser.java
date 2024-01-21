@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,24 +16,22 @@ import lombok.RequiredArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public @Data class AppUser {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+  @Id @GeneratedValue private Long id;
 
-    // Email is the user's "username" from the perspective of Spring Security
-    @Column(nullable = false, unique = true)
-    @NonNull
-    private String email;
+  // Email is the user's "username" from the perspective of Spring Security
+  @Column(nullable = false, unique = true)
+  @NonNull
+  private String email;
 
-    @Column(nullable = false)
-    @NonNull
-    private String firstName;
+  @Column(nullable = false)
+  @NonNull
+  private String firstName;
 
-    @Column(nullable = false)
-    @NonNull
-    private String lastName;
+  @Column(nullable = false)
+  @NonNull
+  private String lastName;
 
-    @Column(nullable = false)
-    @NonNull
-    private String password; // BCrypt hash (with salting) of the password
+  @Column(nullable = false)
+  @NonNull
+  private String password; // BCrypt hash (with salting) of the password
 }

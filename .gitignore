@@ -14,3 +14,8 @@ target/
 *terraform-provider-aws*
 
 .vscode/settings.json
+
+# Node.js
+node_modules/
+package-lock.json
+package.json

@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableRedisHttpSession
-@EnableTransactionManagement // Enable Spring's annotation-driven transaction management capability, across all environments
+// Enable Spring's annotation-driven transaction management capability, across all environments
+@EnableTransactionManagement
 public class MiscConfig {
-    // This is for miscellaneous configurations - particularly where the annotations above have to be added to a configuration class, but there wasn't a need for a full configuration class.
+  // This is for miscellaneous configurations - particularly where the annotations above have to be
+  // added to a configuration class, but there wasn't a need for a full configuration class.
 }
