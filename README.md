@@ -103,6 +103,7 @@ sudo npm init @eslint/config
 # Linting
 eslint src/main/resources/static/js
 
+# Formatting
 prettier --write src/main/resources/static/js
 ```
 
