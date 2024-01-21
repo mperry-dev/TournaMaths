@@ -1,10 +1,12 @@
 #!/bin/bash
 
-# Run terraform fmt on all .tf files in the infrastructure directory
-terraform fmt infrastructure/*.tf
+# Run terraform fmt on all .tf files in the infrastructure directory - giving error code if made changes, without making changes
+terraform fmt -check infrastructure/*.tf
 terraform_fmt_exit=$?
 if [ $terraform_fmt_exit -ne 0 ]; then
   echo "Had to do Terraform linting."
+  # Actually make the changes now
+  terraform fmt infrastructure/*.tf
 else
   echo "No Terraform files changed."
 fi
