@@ -20,6 +20,8 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 
 `PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev`
 
+You can also docker exec onto the container and use `psql` to get in from there.
+
 ## Accessing Production PostgreSQL Database via Shell from EC2 Serial Console
 
 Start by logging into EC2 serial console. Then run:
