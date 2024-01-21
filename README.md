@@ -178,13 +178,20 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 ## Security Notes
 
 - AWS automatically provides AWS Shield Standard (DDOS protection)
+- Have CSRF protection
+- Have XSS protection
+- Have a Content Security Policy (TODO = expand this)
+- Have rate limiting (TODO = expand this based on per-user rate limiting)
+
+## Infrastructure Notes
+
+- Have implemented session management using Redis (Elasticache). I generally prefer not to use caches too heavily as it can add complexity, however using a cache is appropriate for sessions and Springboot's integration of it makes it much simpler to be confident in correctness.
 
 ## Potential Future Improvements
 
 #### Infrastructure
 
-- Implement distributed session management using Redis. I'm generally not a fan of using caching too much as it can add complexity, but session management is a special case and as we're using Spring Security to do most of the legwork with sessions, the integration should be simple. So I'll setup caching in production for the sessions as a special "once-off", but not set anything up to replicate it locally since I don't intend to use it elsewhere.
-- Lock versions of pom.xml dependencies in-place, to avoid stuff breaking
+- Rate limiting using Redis backend
 - Stop downtime from occurring when deploy application (by avoiding target group immediately connecting to new EC2 instance before warmup period finished)
 - For database - backups, deletion protection
 - Connection pooling https://www.baeldung.com/spring-boot-tomcat-connection-pool https://www.baeldung.com/hibernate-spring
@@ -195,11 +202,9 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Staging environment
 - Autoscaling
 - Deployment process allowing fast rollbacks and deployments of particular commits (rather than just the latest)
-- Linting CI jobs
-- Job to check Terraform changes
 - Faster deployments
 - Github Actions deployments waiting for CodeDeploy (this is implemented but commented out)
-- Access Control Lists for infrastructure other than the database (as an extra layer on top of security groups - but can add complexity, so not high priority)
+- Access Control Lists for infrastructure other than the database/cache (as an extra layer on top of security groups - but can add complexity, so not high priority)
 - Add indexes to database
 - Logging
 - Monitoring
@@ -211,9 +216,7 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Email verification of user accounts
 - Remove ability to login as root user in EC2 from ec2-user (leaving it without doing this for now as it's convenient for debugging purposes)
 - SQL injection and Javascript injection protection
-- CSRF protection
 - JWT authentication
-- Rate-limiting endpoints which could be abused, like user registration or login
 - 2FA
 - CAPTCHAs
 - Temporary account lockout
