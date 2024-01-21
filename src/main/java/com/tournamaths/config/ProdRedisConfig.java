@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.RedisStaticMasterReplicaConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
@@ -40,9 +40,9 @@ public class ProdRedisConfig {
     public LettuceConnectionFactory redisConnectionFactory() {
         CacheNode cacheNode = getCacheNode();
 
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName(cacheNode.endpoint().address());
-        config.setPort(cacheNode.endpoint().port());
+        // Need to use RedisStaticMasterReplicaConfiguration, not RedisStandaloneConfiguration - see tip at:
+        // https://docs.spring.io/spring-data/redis/reference/redis/connection-modes.html
+        RedisStaticMasterReplicaConfiguration config = new RedisStaticMasterReplicaConfiguration(cacheNode.endpoint().address(), cacheNode.endpoint().port());
 
         return new LettuceConnectionFactory(config);
     }
