@@ -1,5 +1,12 @@
 # TournaMaths
 
+## Stuff to Install Locally (thse instructions are for Ubuntu)
+
+- Java 21: https://ubuntuhandbook.org/index.php/2022/03/install-jdk-18-ubuntu/
+- Terraform: https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform
+- Docker: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+- Node (for ESLint): https://github.com/nodesource/distributions?tab=readme-ov-file#using-ubuntu
+
 ## Instructions to Build and Run Locally
 
 ```
