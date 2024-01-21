@@ -5,4 +5,3 @@ terraform fmt infrastructure/*.tf
 
 # Continue with the commit if terraform fmt succeeded
 exit $?
-
