@@ -51,13 +51,13 @@ if [ -n "$changed_js_files" ]; then
   eslint $changed_js_files > /dev/null 2>&1 # Silence output, redo linting with fix option
   eslint_exit=$?
   if [ $eslint_exit -ne 0 ]; then
-    echo "ESLint: Doing JavaScript linting."
+    echo "Doing JavaScript linting (ESLint)."
     eslint --fix src/main/resources/static/js/ # Actually fix problems where possible
   else
-    echo "ESLint: No JavaScript files changed."
+    echo "No JavaScript files changed (ESLint)."
   fi
 else
-  echo "ESLint: No JavaScript files changed."
+  echo "No JavaScript files changed (ESLint)."
 fi
 
 # Run Prettier on the changed JavaScript files, if any
@@ -66,14 +66,14 @@ if [ -n "$changed_js_files" ]; then
   prettier --check $changed_js_files
   prettier_exit=$?
   if [ $prettier_exit -ne 0 ]; then
-    echo "Prettier: Doing JavaScript formatting."
+    echo "Doing JavaScript formatting (Prettier)."
     prettier --log-level log
     prettier --write $changed_js_files
   else
-    echo "Prettier: No JavaScript files changed."
+    echo "No JavaScript files changed (Prettier)."
   fi
 else
-  echo "Prettier: No JavaScript files changed."
+  echo "No JavaScript files changed (Prettier)."
 fi
 
 ############################## Set the exit code of this script (to determine whether commit goes through)  ##############################
