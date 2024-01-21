@@ -13,6 +13,7 @@ module.exports = {
   globals: {
     $: 'readonly', // For JQuery
     jQuery: 'readonly',
+    katex: 'readonly',
   },
   rules: {
     // your custom rules here
