@@ -2,7 +2,6 @@ name: Check Terraform
 
 on:
   push:
-  pull_request:
 
 jobs:
   lint:
@@ -13,10 +12,9 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    # Use latest terraform version
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
-      with:
-        terraform_version: '5.8.0' # Specify the Terraform version
 
     - name: Terraform Format Check
       run: terraform fmt -check
