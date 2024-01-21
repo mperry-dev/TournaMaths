@@ -5,7 +5,7 @@ terraform fmt infrastructure/*.tf
 terraform_fmt_exit=$?
 
 # Run google-java-format on all .java files in src/main/java/tournamaths
-find src/main/java/tournamaths -name "*.java" -exec google-java-format -i {} \;
+find src/main/java/com/tournamaths -name "*.java" -exec google-java-format -i {} \;
 google_java_format_exit=$?
 
 # Exit with an error code if either of the commands failed
