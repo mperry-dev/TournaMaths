@@ -65,7 +65,7 @@ You don't need to do anything beyond installing Terraform to be able to run Terr
 2. Install ESLint (I've done this globally as not using Node.js much, but for others it may be best to do it non-globally): https://eslint.org/docs/latest/use/getting-started#global-install https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
 
 ```
-sudo npm install eslint --global
+sudo npm install eslint eslint-plugin-es6 --global
 
 sudo cp .eslintrc.cjs ~/.eslintrc.cjs
 ```
