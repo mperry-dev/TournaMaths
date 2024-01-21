@@ -175,6 +175,15 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - The embedded Tomcat server handles incoming HTTP requests concurrently using a pool of threads (not using separate processes per-request). There is a single Java process constituting the Springboot application.
 - Can scale vertically by upgrading EC2 instances to provide more CPU, memory and resources to handle more concurrent requests effectively. Can scale horizontally by adding more EC2 instances in autoscaling group.
 
+## Application Notes
+
+Currently have:
+- Registration/login pages, that implement good security practices - with session-based authentication stored in Redis Elasticache. I lock off or give access to the pages appropriately depending on their login status.
+    - There is more to do r.e. security best practices here
+- A page to create maths questions in an editor
+- A page that will be used later to display questions and run a "tournament" of answering as many questions as possible under a time limit
+- The ability to logout
+
 ## Security Notes
 
 - AWS automatically provides AWS Shield Standard (DDOS protection)
@@ -182,9 +191,13 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Have XSS protection
 - Have a Content Security Policy (TODO = expand this)
 - Have rate limiting (TODO = expand this based on per-user rate limiting)
+- Have password hashing/salting
 
 ## Infrastructure Notes
 
+- Have RDS database, EC2 instances, Redis Elasticache, Application Load Balancer, IAM permissions, ACLs, security groups, Codedeploy application code deployment (rolling deployment), Web-Application-Firewall
+- Security groups and ACLs are used to lock-off resources from the internet as much as possible
+- The database is protected by a "defense in depth" approach - it has security groups/ACLs protecting its communications, fully verified SSL encryption of its traffic, encryption of the database, username/password that is automatically managed by AWS
 - Have implemented session management using Redis (Elasticache). I generally prefer not to use caches too heavily as it can add complexity, however using a cache is appropriate for sessions and Springboot's integration of it makes it much simpler to be confident in correctness.
 
 ## Potential Future Improvements
@@ -224,9 +237,7 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 
 #### Application
 
-- Logout should replace ability to login/register when logged in, redirect should occur from login page, registration shouldn't be available. Endpoints to login/register should also return error.
 - Add Typescript in
-- Login/account setup page, with logo
 - Check password strength when user signs up
 - CAPTCHA for bot protection
 - Confirm email address when entered in for a new account
@@ -235,7 +246,6 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - End-to-end testing
 - Only admin users should be able to edit/delete questions
 - Admin interface
-- Ability to edit/delete questions
 - Multi-user competitions
 - Design better around multiple screen sizes - particularly mobile phones
 - Expressions so that can add templates for questions with random numbers to be added, rather than having to write out every instance of a question
