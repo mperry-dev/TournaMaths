@@ -20,10 +20,8 @@ import org.springframework.security.web.header.writers.XXssProtectionHeaderWrite
 
 @Configuration
 @EnableWebSecurity // https://spring.io/guides/gs/securing-web/
-@EnableMethodSecurity(
-    prePostEnabled = true,
-    securedEnabled =
-        true) // https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
+// https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
   @Autowired private IpAddressRateLimitingFilter loginAndRegistrationRateLimitingFilter;
 
@@ -74,36 +72,39 @@ public class SecurityConfig {
         // Here enable any authenticated request to access endpoints
         .authorizeHttpRequests(
             auth ->
+                // Permit static resources
                 auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                    .permitAll() // Permit static resources
+                    .permitAll()
+                    // Allow anyone to access the home page, login page, registration endpoint, any
+                    // page starting with /public/, or health check.
                     .requestMatchers("/", "/login", "/public/**", "/health_check")
-                    .permitAll() // Allow anyone to access the home page, login page, registration
-                    // endpoint, any page starting with /public/, or health check.
+                    .permitAll()
+                    // Cannot access the login processing endpoint or the registration endpoint if
+                    // already logged in, but if not logged in can access it.
                     .requestMatchers("/process_login", "/register")
-                    .anonymous() // Cannot access the login processing endpoint or the registration
-                    // endpoint if already logged in, but if not logged in can access
-                    // it.
+                    .anonymous()
+                    // All other requests must be authenticated
                     .anyRequest()
-                    .authenticated() // All other requests must be authenticated
-            )
+                    .authenticated())
         // Configure form login - sets up a page for users to login
         .formLogin(
             form -> // Springboot will use session-based authentication by default.
-            form.loginPage("/login")
+                // When the user logs in, they will be redirected to whichever page they previously
+                // were trying to access, OR the create_questions page
+                form.loginPage("/login")
                     .loginProcessingUrl("/process_login")
                     .usernameParameter("email")
                     .defaultSuccessUrl(
-                        "/create_questions") // When the user logs in, they will be redirected to
-            // whichever page they previously were trying to
-            // access, OR the create_questions page
-            ) // // Don't specify permitAll() here, so that have granular control - we make
-        // /process_login inaccessible to logged-in users, /login accessible to all users
+                        "/create_questions")) // Don't specify permitAll() here, so that have
+        // granular control - we make /process_login
+        // inaccessible to logged-in users, /login accessible
+        // to all users
         .logout(
             logout ->
                 logout
+                    // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
                     .permitAll()
-                    .deleteCookies(
-                        "JSESSIONID") // https://www.baeldung.com/spring-security-login#3-configuration-for-form-login
+                    .deleteCookies("JSESSIONID")
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/"));
 
