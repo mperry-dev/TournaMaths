@@ -1,0 +1,28 @@
+name: Lint JavaScript
+
+on:
+  push:
+
+jobs:
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21 # Latest as of writing this
+
+    - name: Go into Node.js CI
+      run: npm ci
+
+    - name: Run ESLint
+      uses: sibiraj-s/action-eslint@v3
+      with:
+        eslint-args: '--ignore-path=.gitignore --quiet'
+        extensions: 'js,jsx,ts,tsx'
+        annotations: true
