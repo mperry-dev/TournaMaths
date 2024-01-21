@@ -16,6 +16,12 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
+## Executing Linting Manually
+
+```
+terraform fmt infrastructure/*.tf
+```
+
 ## Accessing Local Development Docker Database via Shell
 
 ```
