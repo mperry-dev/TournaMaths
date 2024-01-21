@@ -4,7 +4,7 @@ resource "aws_elasticache_cluster" "tournamaths_elasticache_redis" {
   cluster_id           = "tournamaths-redis-cluster"
   engine               = "redis"
   node_type            = "cache.t4g.micro"
-  num_cache_nodes      = 1 # Keeping low so cheap
+  num_cache_nodes      = 1                # Keeping low so cheap
   parameter_group_name = "default.redis7" # Cluster mode is disabled https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/ParameterGroups.Redis.html#ParameterGroups.Redis.7
   engine_version       = "7.1"
   port                 = 6379

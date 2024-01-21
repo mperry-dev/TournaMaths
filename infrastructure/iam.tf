@@ -151,3 +151,23 @@ resource "aws_iam_role_policy_attachment" "ec2_examining_db_policy_attach" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.ec2_examining_db_policy.arn
 }
+
+################ Allow EC2 to Describe Elasticache Instance
+
+resource "aws_iam_policy" "ec2_examining_elasticache_policy" {
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "elasticache:DescribeCacheClusters",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_examining_elasticache_policy_attach" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = aws_iam_policy.ec2_examining_elasticache_policy.arn
+}
