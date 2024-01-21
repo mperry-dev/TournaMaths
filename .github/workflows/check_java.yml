@@ -1,0 +1,26 @@
+name: Check Java
+
+on:
+  push:
+
+jobs:
+  lint:
+    name: Lint Java
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 21
+
+    - uses: dbelyaev/action-checkstyle@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: github-pr-review
+        level: error
+        checkstyle_config: google_checks.xml
