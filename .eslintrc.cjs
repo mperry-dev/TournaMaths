@@ -1,7 +1,20 @@
 module.exports = {
-    // Your ESLint configuration here
-    extends: 'eslint:recommended',
-    rules: {
-      // Your ESLint rules here
-    },
-  };
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  extends: [
+    'eslint:recommended',
+  ],
+  parserOptions: {
+    ecmaVersion: 12, // ECMAScript 2021
+    sourceType: 'script',
+  },
+  globals: {
+    $: 'readonly', // For JQuery
+    jQuery: 'readonly',
+  },
+  rules: {
+    // your custom rules here
+  },
+};

@@ -251,6 +251,7 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 - Confirm email address when entered in for a new account
 - Password reset
 - Tests/coverage checking
+- End-to-end testing
 - Only admin users should be able to edit/delete questions
 - Admin interface
 - Ability to edit/delete questions
