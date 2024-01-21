@@ -51,7 +51,7 @@ if [ -n "$changed_js_files" ]; then
   eslint $changed_js_files > /dev/null 2>&1 # Silence output, redo linting with fix option
   eslint_exit=$?
   if [ $eslint_exit -ne 0 ]; then
-    echo "Doing JavaScript linting (ESLint)."
+    echo "Doing JavaScript linting/formatting (ESLint)."
     eslint --fix src/main/resources/static/js/ # Actually fix problems where possible
   else
     echo "No JavaScript files changed (ESLint)."
