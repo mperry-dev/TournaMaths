@@ -16,11 +16,28 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
-## Executing Linting Manually
+## Executing Java Linting Manually
+
+#### Setting up Google Java Format On Ubuntu
+
+Full instructions are at: https://github.com/google/google-java-format
+
+Particularly:
+```
+wget https://github.com/google/google-java-format/releases/download/v1.19.2/google-java-format-1.19.2-all-deps.jar
+
+sudo mv google-java-format-1.19.2-all-deps.jar /usr/local/bin/google-java-format.jar
+
+sudo cp scripts/google-java-format /usr/local/bin/google-java-format
+```
+
+## Executing Terraform Linting Manually
 
 ```
 terraform fmt infrastructure/*.tf
 ```
+
+There is also a Github CI job to lint and print the plan for Terraform.
 
 ## Setting up Git Hooks (particularly pre-commit hooks)
 
@@ -57,8 +74,10 @@ docker exec -it tournamaths_redis_1 redis-cli
 ```
 # Connect to application image
 docker exec -it tournamaths_tournamaths-app-run_1 bash
+
 # If no error (hangs), indicates TCP connection can be established to the Redis
 bash -c 'cat < /dev/tcp/redis/6379'
+
 # Should see "PING" as the result - this indicates that the Redis is receiving and processing commands
 (echo -en "PING\r\n"; cat < /dev/tcp/redis/6379) | head -c 7
 ```

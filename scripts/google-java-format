@@ -1,0 +1,3 @@
+#!/bin/bash
+# This is copied in my instructions in README.md to setup code formatting with Google Java Format
+java -jar /usr/local/bin/google-java-format.jar "$@"
