@@ -50,6 +50,10 @@ resource "aws_launch_template" "tournamaths_lt" {
               # TODO = get PostgreSQL 16 client if start having issues
               sudo yum install -y postgresql15
 
+              # Install Redis 6 client - even though we're using Redis 7, this is the easiest as comes available to Amazon Linux
+              # TODO = get Redis 7 client if start having issues
+              sudo yum install -y redis6
+
               #################### Download application and start it
               # Download Spring Boot application ZIP (containing a JAR) from S3
               aws s3 cp s3://tournamaths/tournamaths-deployment.zip /home/ec2-user/

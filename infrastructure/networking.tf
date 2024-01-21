@@ -60,6 +60,32 @@ resource "aws_db_subnet_group" "tournamaths_private_db_subnet_group" {
   subnet_ids = [aws_subnet.tournamaths_private_subnet_1a.id, aws_subnet.tournamaths_private_subnet_1b.id]
 }
 
+################ Private subnets for cache, with a subnet group that the cache will be restricted to.
+resource "aws_subnet" "tournamaths_private_subnet_2a" {
+  vpc_id            = aws_vpc.tournamaths_vpc.id
+  cidr_block        = "10.0.5.0/24" # A private IP address range
+  availability_zone = "${var.aws_region}a"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-2a"
+  }
+}
+
+resource "aws_subnet" "tournamaths_private_subnet_2b" {
+  vpc_id            = aws_vpc.tournamaths_vpc.id
+  cidr_block        = "10.0.6.0/24" # A private IP address range
+  availability_zone = "${var.aws_region}b"
+
+  tags = {
+    Name = "TournaMaths-Private-Subnet-2b"
+  }
+}
+
+resource "aws_elasticache_subnet_group" "tournamaths_private_elasticache_subnet_group" {
+  name       = "tournamaths-private-elasticache-subnet-group"
+  subnet_ids = [aws_subnet.tournamaths_private_subnet_2a.id, aws_subnet.tournamaths_private_subnet_2b.id]
+}
+
 ################ ACL for database private subnets - 2nd layer of security to block all traffic not coming into port 5432.
 
 # Define the Network ACL
@@ -120,6 +146,68 @@ resource "aws_network_acl_association" "tournamaths_db_acl_association_1a" {
 resource "aws_network_acl_association" "tournamaths_db_acl_association_1b" {
   network_acl_id = aws_network_acl.tournamaths_db_acl.id
   subnet_id      = aws_subnet.tournamaths_private_subnet_1b.id
+}
+
+################ ACL for cache private subnets - 2nd layer of security to block all traffic not coming into port 6379. NOTE this is quite similar to tournamaths_db_acl
+
+# Define the Network ACL
+resource "aws_network_acl" "tournamaths_elasticache_acl" {
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  # Inbound rule to allow Redis (port 6379) only from VPC
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 6379
+    to_port    = 6379
+  }
+
+  # Deny all other inbound traffic
+  ingress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0 # Port range must be 0 for "all" protocol
+  }
+
+  # Allow only outbound traffic to VPC
+  egress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = aws_vpc.tournamaths_vpc.cidr_block
+    from_port  = 0
+    to_port    = 65535 # Range is all ports for tcp
+  }
+
+  # Deny all other outbound traffic
+  egress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "deny"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0 # Port range must be 0 for "all" protocol
+  }
+
+  tags = {
+    Name = "TournaMaths-Elasticache-NACL"
+  }
+}
+
+# Associate the Network ACL with the private subnets for the cache
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_2a" {
+  network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_2a.id
+}
+
+resource "aws_network_acl_association" "tournamaths_elasticache_acl_association_2b" {
+  network_acl_id = aws_network_acl.tournamaths_elasticache_acl.id
+  subnet_id      = aws_subnet.tournamaths_private_subnet_2b.id
 }
 
 ################ Internet gateway so EC2 instances can access internet.
@@ -233,6 +321,31 @@ resource "aws_security_group" "tournamaths_rds_sg" {
 
   tags = {
     Name = "TournaMaths-RDS-SG"
+  }
+}
+
+resource "aws_security_group" "tournamaths_elasticache_sg" {
+  name   = "tournamath-elasticache-sg"
+  vpc_id = aws_vpc.tournamaths_vpc.id
+
+  ingress {
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tournamaths_ec2_sg.id]
+  }
+
+  # Don't really need to restrict traffic here, but leaving without actually means any outbound traffic is allowed - this feels clearer.
+  # Restricting to just VPC since cannot implement deny rule in security group.
+  egress {
+    from_port   = 0
+    to_port     = 65535 # Range is all ports for tcp
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.tournamaths_vpc.cidr_block]
+  }
+
+  tags = {
+    Name = "TournaMathsElastiCacheSG"
   }
 }
 

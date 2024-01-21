@@ -32,3 +32,9 @@ services:
       - POSTGRES_PASSWORD=password
     profiles:
       - dev
+  redis:
+    image: "redis:7.2.4" # NOTE on AWS, latest version (that we're currently using) is 7.1, but there aren't Docker images for that
+    ports:
+      - "6379:6379"
+    profiles:
+      - dev

@@ -1,5 +1,6 @@
 package com.tournamaths.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,18 +13,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
+
+import com.tournamaths.filter.IpAddressRateLimitingFilter;
 
 @Configuration
 @EnableWebSecurity // https://spring.io/guides/gs/securing-web/
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true) // https://docs.spring.io/spring-security/reference/servlet/authorization/method-security.html
 public class SecurityConfig {
-    // We can add lots of SecurityFilterChains in this method
+    @Autowired
+    private IpAddressRateLimitingFilter loginAndRegistrationRateLimitingFilter;
+
+    // We can add lots of SecurityFilterChains in this method (need to be careful though since the first SecurityFilterChain matching an endpoint is used to the exclusion of later ones)
     // https://medium.com/@2015-2-60-004/multiple-spring-security-configurations-form-based-token-based-authentication-c65ffbeabd07
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain mainFilterChain(HttpSecurity http) throws Exception {
         http
             // Enable CSRF protection with a cookie-based CSRF token repository
             // By default, HttpOnly flag is set to true, which means client-side scripts cannot read CSRF token:
@@ -46,6 +53,8 @@ public class SecurityConfig {
                 .cacheControl(Customizer.withDefaults())
                 .httpStrictTransportSecurity(Customizer.withDefaults())
             )
+            // Rate-limiting. We can allow the previous configurations to run before this, since broad DDOS protection provided by Web ACL at infrastructure level (see waf.tf)
+            .addFilterBefore(loginAndRegistrationRateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
             // Define authorization rules - e.g. could enable any endpoint starting with /public if configured here.
             // Here enable any authenticated request to access endpoints
             .authorizeHttpRequests(auth ->
