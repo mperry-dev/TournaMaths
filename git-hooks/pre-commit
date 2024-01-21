@@ -2,6 +2,16 @@
 
 # Run terraform fmt on all .tf files in the infrastructure directory
 terraform fmt infrastructure/*.tf
+terraform_fmt_exit=$?
 
-# Continue with the commit if terraform fmt succeeded
-exit $?
+# Run google-java-format on all .java files in src/main/java/tournamaths
+find src/main/java/tournamaths -name "*.java" -exec google-java-format -i {} \;
+google_java_format_exit=$?
+
+# Exit with an error code if either of the commands failed
+if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 ]; then
+  exit 1
+fi
+
+# Continue with the commit if both commands succeeded
+exit 0
