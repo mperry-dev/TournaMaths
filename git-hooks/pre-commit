@@ -2,6 +2,7 @@
 
 # List all Terraform files that have been changed in the current commit
 changed_tf_files=$(git diff --cached --name-only -- '*.tf')
+terraform_fmt_exit=0 # Initial value unless updated below is that no files to change
 
 # Run terraform fmt on the changed Terraform files, if any
 if [ -n "$changed_tf_files" ]; then
@@ -12,6 +13,8 @@ if [ -n "$changed_tf_files" ]; then
     echo "Doing Terraform linting."
     # Actually make the changes now, and list changed files
     terraform fmt $changed_tf_files
+  else
+    echo "No Terraform files changed."
   fi
 else
   echo "No Terraform files changed."
