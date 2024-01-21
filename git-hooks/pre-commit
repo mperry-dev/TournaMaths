@@ -1,5 +1,6 @@
 #!/bin/bash
 
+############################## Terraform ##############################
 # List all Terraform files that have been changed in the current commit
 changed_tf_files=$(git diff --cached --name-only -- '*.tf')
 terraform_fmt_exit=0 # Initial value unless updated below is that no files to change
@@ -20,6 +21,7 @@ else
   echo "No Terraform files changed."
 fi
 
+############################## Java ##############################
 # List all Java files that have been changed in the current commit
 changed_java_files=$(git diff --cached --name-only -- '*.java')
 
@@ -36,7 +38,9 @@ else
   google_java_format_exit=0
 fi
 
-# Exit with an error code if either of the commands failed
+############################## Set the exit code of this script (to determine whether commit goes through)  ##############################
+
+# Exit with an error code if either of the commands failed, so commit is rejected
 if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 ]; then
   exit 1
 fi
