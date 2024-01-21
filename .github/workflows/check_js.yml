@@ -17,12 +17,8 @@ jobs:
       with:
         node-version: 21 # Latest as of writing this
 
-    - name: Go into Node.js CI
-      run: npm ci
+    - name: Install Node.js dependencies
+      run: sudo npm install eslint eslint-plugin-es6 prettier --global
 
     - name: Run ESLint
-      uses: sibiraj-s/action-eslint@v3
-      with:
-        eslint-args: '--ignore-path=.gitignore --quiet'
-        extensions: 'js,jsx,ts,tsx'
-        annotations: true
+      run: eslint src/main/resources/static/js
