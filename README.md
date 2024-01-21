@@ -5,7 +5,8 @@
 - Java 21: https://ubuntuhandbook.org/index.php/2022/03/install-jdk-18-ubuntu/
 - Terraform: https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform
 - Docker: https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
-- Node (for ESLint): https://github.com/nodesource/distributions?tab=readme-ov-file#using-ubuntu
+
+Further instructions are below for extra setup of linters.
 
 ## Instructions to Build and Run Locally
 
@@ -52,7 +53,43 @@ There is also a Github CI job to lint the Java and check whether the maven build
 terraform fmt infrastructure/*.tf
 ```
 
-There is also a Github CI job to lint and print the plan for Terraform, and a pre-commit hook to lint the Terraform.
+There is also a Github CI job to lint and print the plan for Terraform, and a pre-commit hook to lint the Terraform. The pre-commit hook requires Google Java Format to be setup as above.
+
+You don't need to do anything beyond installing Terraform to be able to run Terraform linting.
+
+## Manual JavaScript Linting
+
+#### Setting up ESLint on Ubuntu (do this in the root diectory of repo)
+
+1. Install Node.js (for ESLint): https://github.com/nodesource/distributions?tab=readme-ov-file#using-ubuntu
+2. Install ESLint and Prettier (I've done this globally as not using Node.js much, but for others it may be best to do it non-globally): https://eslint.org/docs/latest/use/getting-started#global-install https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
+
+```
+sudo npm install eslint --global
+
+sudo cp .eslintrc.cjs ~/.eslintrc.cjs
+```
+
+Then add the following to `~/.bashrc`
+```
+export ESLINTRC=~/.eslintrc.cjs
+```
+
+Then run:
+```
+source ~/.bashrc
+```
+
+#### Regenerating Configuration File from the one in this repo (do this in the root directory of repo)
+
+```
+# Go through menu here to select configurations
+sudo npm init @eslint/config
+```
+
+#### Executing JavaScript Linting Manually
+
+
 
 ## Setting up Git Hooks (particularly pre-commit hooks)
 
