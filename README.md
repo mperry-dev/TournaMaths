@@ -38,6 +38,14 @@ NOTE if the database or other AWS components are replaced, this command will nee
 docker exec -it tournamaths_redis_1 redis-cli
 ```
 
+#### Useful commands to debug Local Development Redis Cache Connectivity
+
+```
+docker exec -it tournamaths_tournamaths-app-run_1 bash
+bash -c 'cat < /dev/tcp/redis/6379'
+(echo -en "PING\r\n"; cat < /dev/tcp/redis/6379) | head -c 7
+```
+
 ## Accessing Production Redis Cache via Shell from EC2 Serial Console
 
 ```
