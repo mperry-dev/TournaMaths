@@ -42,6 +42,7 @@ public class ProdRedisConfig {
 
         // Need to use RedisStaticMasterReplicaConfiguration, not RedisStandaloneConfiguration - see tip at:
         // https://docs.spring.io/spring-data/redis/reference/redis/connection-modes.html
+        // This doesn't support pub/sub with the Redis instance, but I don't need to use that.
         RedisStaticMasterReplicaConfiguration config = new RedisStaticMasterReplicaConfiguration(cacheNode.endpoint().address(), cacheNode.endpoint().port());
 
         return new LettuceConnectionFactory(config);
