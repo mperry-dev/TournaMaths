@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AnswerQuestionsController {
   @GetMapping("/answer_questions")
   public String home() {
-    return "answer_questions"; // This refers to 'answer_questions.html' in
-                               // 'src/main/resources/templates'
+    // This refers to 'answer_questions.html' in 'src/main/resources/templates'
+    return "answer_questions";
   }
 }

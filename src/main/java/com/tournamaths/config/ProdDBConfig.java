@@ -20,9 +20,8 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueReques
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
 @Configuration
-@Profile(
-    "prod") // only use this for production - locally rely on application-dev.properties and
-            // SpringBoot to generate Datasource for Autowiring
+// only use this for production - locally rely on application-dev.properties and SpringBoot to generate Datasource for Autowiring
+@Profile("prod")
 public class ProdDBConfig {
   // Loaded from application-prod.properties
   @Value("${aws.region}")
