@@ -19,7 +19,8 @@ import software.amazon.awssdk.services.elasticache.model.DescribeCacheClustersRe
 import software.amazon.awssdk.services.elasticache.model.ElastiCacheException;
 
 @Configuration
-// only use this for production - locally rely on application-dev.properties and SpringBoot to generate RedisTemplate for Autowiring
+// only use this for production - locally rely on application-dev.properties and SpringBoot to
+// generate RedisTemplate for Autowiring
 @Profile("prod")
 public class ProdRedisConfig {
   // Loaded from application-prod.properties
