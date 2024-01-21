@@ -38,10 +38,36 @@ else
   google_java_format_exit=0
 fi
 
+############################## JavaScript ##############################
+
+# List all JavaScript files that have been changed in the current commit
+changed_js_files=$(git diff --cached --name-only -- '*.js')
+
+eslint_exit=0 # Initial value
+prettier_exit=0 # Initial value
+
+# Run ESLint on the changed JavaScript files, if any
+if [ -n "$changed_js_files" ]; then
+  echo "Doing JavaScript linting."
+  eslint $changed_js_files
+  eslint_exit=$?
+else
+  echo "No JavaScript files changed."
+fi
+
+# Run Prettier on the changed JavaScript files, if any
+if [ -n "$changed_js_files" ]; then
+  echo "Formatting JavaScript files."
+  prettier --write $changed_js_files
+  prettier_exit=$?
+else
+  echo "No JavaScript files need formatting."
+fi
+
 ############################## Set the exit code of this script (to determine whether commit goes through)  ##############################
 
 # Exit with an error code if either of the commands failed, so commit is rejected
-if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 ]; then
+if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 || [ $eslint_exit -ne 0 || [ $prettier_exit -ne 0 ]; then
   exit 1
 fi
 
