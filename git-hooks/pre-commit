@@ -74,7 +74,7 @@ fi
 ############################## Set the exit code of this script (to determine whether commit goes through)  ##############################
 
 # Exit with an error code if either of the commands failed, so commit is rejected
-if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 || [ $eslint_exit -ne 0 || [ $prettier_exit -ne 0 ]; then
+if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0] || [ $eslint_exit -ne 0] || [ $prettier_exit -ne 0 ]; then
   exit 1
 fi
 
