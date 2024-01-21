@@ -50,6 +50,7 @@ public class IpAddressRateLimitingFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestUri = httpRequest.getRequestURI();
 
+        // NOTE - the request URI doesn't include query parameters, so using .equals here is correct
         if (Arrays.stream(endpoints).anyMatch(endpoint -> requestUri.equals(endpoint))){
             // Gets requests left in minute from cache for IP address, updating and returning maxRequests above if evicted.
             AtomicInteger requestsLeft = requestCountsRemainingPerIpAddress.get(clientIpAddress);
