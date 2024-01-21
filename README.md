@@ -51,6 +51,8 @@ There is also a Github CI job to lint and print the plan for Terraform.
 git config core.hooksPath git-hooks
 ```
 
+NOTE - you need to run this every time you make any updates to a Git hook file.
+
 ## Accessing Local Development Docker Database via Shell
 
 ```
