@@ -196,7 +196,7 @@ Currently have:
 ## Infrastructure Notes
 
 - Have RDS database, EC2 instances, Redis Elasticache, Application Load Balancer, IAM permissions, ACLs, security groups, Codedeploy application code deployment (rolling deployment), Web-Application-Firewall
-- Security groups and ACLs are used to lock-off resources from the internet
+- Security groups and ACLs are used to lock-off resources from the internet as much as possible
 - The database is protected by a "defense in depth" approach - it has security groups/ACLs protecting its communications, fully verified SSL encryption of its traffic, encryption of the database, username/password that is automatically managed by AWS
 - Have implemented session management using Redis (Elasticache). I generally prefer not to use caches too heavily as it can add complexity, however using a cache is appropriate for sessions and Springboot's integration of it makes it much simpler to be confident in correctness.
 
