@@ -41,8 +41,11 @@ docker exec -it tournamaths_redis_1 redis-cli
 #### Useful commands to debug Local Development Redis Cache Connectivity
 
 ```
+# Connect to application image
 docker exec -it tournamaths_tournamaths-app-run_1 bash
+# If no error (hangs), indicates TCP connection can be established to the Redis
 bash -c 'cat < /dev/tcp/redis/6379'
+# Should see "PING" as the result - this indicates that the Redis is receiving and processing commands
 (echo -en "PING\r\n"; cat < /dev/tcp/redis/6379) | head -c 7
 ```
 
