@@ -18,7 +18,9 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 
 ## Accessing Local Development Docker Database via Shell
 
-`PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev`
+```
+PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev
+```
 
 You can also docker exec onto the container and use `psql` to get in from there.
 
