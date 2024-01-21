@@ -37,13 +37,15 @@ sudo cp scripts/google-java-format /usr/local/bin/google-java-format
 find src/main/java/com/tournamaths -name "*.java" -exec google-java-format -i {} \;
 ```
 
+There is also a Github CI job to lint the Java and check whether the maven build works, and a pre-commit hook to lint the Java.
+
 ## Executing Terraform Linting Manually
 
 ```
 terraform fmt infrastructure/*.tf
 ```
 
-There is also a Github CI job to lint and print the plan for Terraform.
+There is also a Github CI job to lint and print the plan for Terraform, and a pre-commit hook to lint the Terraform.
 
 ## Setting up Git Hooks (particularly pre-commit hooks)
 
