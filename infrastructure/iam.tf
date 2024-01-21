@@ -135,6 +135,8 @@ resource "aws_iam_role_policy_attachment" "secrets_manager_policy_attach" {
 
 ################ Allow EC2 to describe DB
 resource "aws_iam_policy" "ec2_examining_db_policy" {
+  name = "ec2_examining_db_policy"
+
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -155,6 +157,8 @@ resource "aws_iam_role_policy_attachment" "ec2_examining_db_policy_attach" {
 ################ Allow EC2 to Describe Elasticache Instance
 
 resource "aws_iam_policy" "ec2_examining_elasticache_policy" {
+  name = "ec2_examining_elasticache_policy"
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
