@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  lint:
+  eslint:
     name: ESLint
     runs-on: ubuntu-latest
 
@@ -18,7 +18,26 @@ jobs:
         node-version: 21 # Latest as of writing this
 
     - name: Install Node.js dependencies
-      run: sudo npm install eslint eslint-plugin-es6 prettier --global
+      run: sudo npm install eslint eslint-plugin-es6 --global
 
     - name: Run ESLint
       run: eslint src/main/resources/static/js
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 21 # Latest as of writing this
+
+    - name: Install Node.js dependencies
+      run: sudo npm install prettier --global
+
+    - name: Run Prettier
+      run: prettier --check src/main/resources/static/js
