@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -28,23 +28,23 @@ public class ProdRedisConfig {
     private String region;
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(lettuceConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new JdkSerializationRedisSerializer());
         return template;
     }
 
     @Bean
-    public JedisConnectionFactory redisConnectionFactory() {
+    public LettuceConnectionFactory redisConnectionFactory() {
         CacheNode cacheNode = getCacheNode();
 
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
         config.setHostName(cacheNode.endpoint().address());
         config.setPort(cacheNode.endpoint().port());
 
-        return new JedisConnectionFactory(config);
+        return new LettuceConnectionFactory(config);
     }
 
     private CacheNode getCacheNode() {
