@@ -5,8 +5,8 @@
 terraform fmt -check -list=false infrastructure/*.tf
 terraform_fmt_exit=$?
 if [ $terraform_fmt_exit -ne 0 ]; then
-  echo "Had to do Terraform linting."
-  # Actually make the changes now
+  echo "Doing Terraform linting."
+  # Actually make the changes now, and list changed files
   terraform fmt infrastructure/*.tf
 else
   echo "No Terraform files changed."
@@ -17,10 +17,11 @@ changed_java_files=$(git diff --cached --name-only -- '*.java')
 
 # Run google-java-format on the changed Java files
 if [ -n "$changed_java_files" ]; then
+  echo "Doing Java linting."
   for file in $changed_java_files; do
+    echo "$file"  # List the file
     google-java-format -i "$file"
   done
-  echo "Had to do Java linting."
   google_java_format_exit=1
 else
   echo "No Java files changed."
