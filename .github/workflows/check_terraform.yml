@@ -1,0 +1,22 @@
+name: Check Terraform
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint Terraform
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: '5.8.0' # Specify the Terraform version
+
+    - name: Terraform Format Check
+      run: terraform fmt -check
