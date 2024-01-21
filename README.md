@@ -22,6 +22,12 @@ This allows you to use a debugger from VSCode, but it is much slower to run than
 terraform fmt infrastructure/*.tf
 ```
 
+## Setting up Git Hooks (particularly pre-commit hooks)
+
+```
+git config core.hooksPath git-hooks
+```
+
 ## Accessing Local Development Docker Database via Shell
 
 ```

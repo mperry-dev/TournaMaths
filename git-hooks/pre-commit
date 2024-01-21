@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Run terraform fmt on all .tf files in the infrastructure directory
+terraform fmt infrastructure/*.tf
+
+# Continue with the commit if terraform fmt succeeded
+exit $?
+
