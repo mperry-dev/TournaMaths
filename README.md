@@ -178,7 +178,7 @@ Click the "Run workflow" dropdown and select your branch to deploy the latest co
 ## Application Notes
 
 Currently have:
-- Registration/login pages, that implement good security practices - with session-based authentication stored in Redis Elasticache. I lock off or give access to the pages appropriately depending on their login status.
+- Registration/login pages, that implement good security practices - with session-based authentication stored in Redis Elasticache. I lock off or give access to all of the pages on the website appropriately depending on their login status.
     - There is more to do r.e. security best practices here
 - A page to create maths questions in an editor
 - A page that will be used later to display questions and run a "tournament" of answering as many questions as possible under a time limit
