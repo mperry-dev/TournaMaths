@@ -5,9 +5,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,10 +32,13 @@ public class IpAddressRateLimitingFilter implements Filter {
     // NOTE LoadingCache and AtomicInteger are thread-safe
     private LoadingCache<String, AtomicInteger> requestCountsRemainingPerIpAddress;
 
-    public IpAddressRateLimitingFilter(int maxRequests){
+    private String[] endpoints;
+
+    public IpAddressRateLimitingFilter(int maxRequests, String... endpoints){
         // We rate-limit to maxRequests requests per IP address per minute, per EC2 instance.
         // NOTE entries are evicted after 1-minute.
         requestCountsRemainingPerIpAddress = Caffeine.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build(key -> new AtomicInteger(maxRequests));
+        this.endpoints = endpoints;
     }
 
     @Override
@@ -41,13 +46,18 @@ public class IpAddressRateLimitingFilter implements Filter {
         // Get client IP address or any other client identifier
         String clientIpAddress = request.getRemoteAddr();
 
-        // Gets requests left in minute from cache for IP address, updating and returning maxRequests above if evicted.
-        AtomicInteger requestsLeft = requestCountsRemainingPerIpAddress.get(clientIpAddress);
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String requestUri = httpRequest.getRequestURI();
 
-        if (requestsLeft.getAndDecrement() <= 0){
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            httpServletResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            return;
+        if (Arrays.stream(endpoints).anyMatch(endpoint -> requestUri.equals(endpoint))){
+            // Gets requests left in minute from cache for IP address, updating and returning maxRequests above if evicted.
+            AtomicInteger requestsLeft = requestCountsRemainingPerIpAddress.get(clientIpAddress);
+
+            if (requestsLeft.getAndDecrement() <= 0){
+                HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+                httpServletResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
+                return;
+            }
         }
 
         chain.doFilter(request, response);
