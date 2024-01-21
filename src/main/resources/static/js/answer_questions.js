@@ -22,6 +22,7 @@ $(document).ready(function () {
   // Handle answer submission
   $("#submit-answer").click(function () {
     var userAnswer = $("#answer").val();
+    console.log(userAnswer); // Adding this to keep ESLint happy for now, TODO = remove
     // Add logic to check the answer and update the score
   });
 });
