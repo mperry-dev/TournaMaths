@@ -66,8 +66,6 @@ You don't need to do anything beyond installing Terraform to be able to run Terr
 
 ```
 sudo npm install eslint eslint-plugin-es6 --global
-
-sudo cp .eslintrc.cjs ~/.eslintrc.cjs
 ```
 
 #### Setting up Prettier (a formatter)
@@ -87,7 +85,7 @@ sudo npm install prettier --global
 sudo npm init @eslint/config
 ```
 
-#### Executing JavaScript Linting Manually
+#### Executing JavaScript Linting Manually (so this in the root directory of repo)
 
 ```
 # Linting
