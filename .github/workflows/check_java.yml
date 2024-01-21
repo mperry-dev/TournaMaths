@@ -12,16 +12,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Java
-      uses: actions/setup-java@v4
+    # This is Google's Java code formatter. Using it for checking since I can then run it locally and will be consistent.
+    # The formatter performs linting, sorts imports, removes unused imports, and other improvements, when run locally.
+    # In this Github Action, we print the diff of every incorrectly formatted file, and fail if there is any.
+    - name: Get diffs
+      uses: axel-op/googlejavaformat-action@v3
       with:
-        distribution: 'temurin'
-        java-version: 21
-
-    - uses: dbelyaev/action-checkstyle@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: github-pr-review
-        level: error
-        checkstyle_config: google_checks.xml
-        workdir: src/main/java
+        args: "--replace"
+        skip-commit: true
+    - name: Print diffs
+      run: git --no-pager diff --exit-code
