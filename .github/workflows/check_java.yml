@@ -24,3 +24,4 @@ jobs:
         reporter: github-pr-review
         level: error
         checkstyle_config: google_checks.xml
+        workdir: src/main/java
