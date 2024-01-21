@@ -16,7 +16,7 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
-## Executing Java Linting Manually
+## Manual Java Linting
 
 #### Setting up Google Java Format On Ubuntu
 
@@ -29,6 +29,12 @@ wget https://github.com/google/google-java-format/releases/download/v1.19.2/goog
 sudo mv google-java-format-1.19.2-all-deps.jar /usr/local/bin/google-java-format.jar
 
 sudo cp scripts/google-java-format /usr/local/bin/google-java-format
+```
+
+#### Executing Java Linting Manually
+
+```
+find src/main/java/com/tournamaths -name "*.java" -exec google-java-format -i {} \;
 ```
 
 ## Executing Terraform Linting Manually
