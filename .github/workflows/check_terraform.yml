@@ -19,3 +19,21 @@ jobs:
     - name: Terraform Format Check
       run: terraform fmt -diff -check
       working-directory: infrastructure
+
+  terraform-plan:
+    runs-on: ubuntu-latest
+    name: Print out Terraform changes
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # Use latest terraform version
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Plan
+      run: terraform plan
