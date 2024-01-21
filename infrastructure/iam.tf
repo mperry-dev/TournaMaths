@@ -7,7 +7,7 @@ resource "aws_iam_role" "codedeploy_role" {
     Statement = [
       {
         Action = "sts:AssumeRole",
-        Effect = "Allow",
+        Effect =          "Allow",
         Principal = {
           Service = "codedeploy.amazonaws.com"
         },
