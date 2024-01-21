@@ -70,16 +70,6 @@ sudo npm install eslint eslint-plugin-es6 --global
 sudo cp .eslintrc.cjs ~/.eslintrc.cjs
 ```
 
-Then add the following to `~/.bashrc`
-```
-export ESLINTRC=~/.eslintrc.cjs
-```
-
-Then run:
-```
-source ~/.bashrc
-```
-
 #### Setting up Prettier (a formatter)
 
 https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
