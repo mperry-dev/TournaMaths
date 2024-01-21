@@ -59,23 +59,13 @@ You don't need to do anything beyond installing Terraform to be able to run Terr
 
 ## Manual JavaScript Linting
 
-#### Setting up ESLint on Ubuntu (do this in the root diectory of repo)
+#### Setting up ESLint and Prettier on Ubuntu (do this in the root diectory of repo)
 
 1. Install Node.js (for ESLint): https://github.com/nodesource/distributions?tab=readme-ov-file#using-ubuntu
-2. Install ESLint (I've done this globally as not using Node.js much, but for others it may be best to do it non-globally): https://eslint.org/docs/latest/use/getting-started#global-install https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
+2. Install ESLint and Prettier (I've done this globally as not using Node.js much, but for others it may be best to do it non-globally): https://eslint.org/docs/latest/use/getting-started#global-install https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
 
 ```
-sudo npm install eslint eslint-plugin-es6 --global
-```
-
-#### Setting up Prettier (a formatter)
-
-https://www.freecodecamp.org/news/using-prettier-and-jslint/#how-to-implement-eslint-and-prettier
-
-Once done above:
-
-```
-sudo npm install prettier --global
+sudo npm install eslint eslint-plugin-es6 prettier --global
 ```
 
 #### Regenerating Configuration File from the one in this repo (do this in the root directory of repo)
@@ -85,7 +75,7 @@ sudo npm install prettier --global
 sudo npm init @eslint/config
 ```
 
-#### Executing JavaScript Linting Manually (so this in the root directory of repo)
+#### Executing JavaScript Linting/Formatting Manually (do this in the root directory of repo)
 
 ```
 # Linting
