@@ -1,13 +1,18 @@
 #!/bin/bash
 
-# Run terraform fmt on all .tf files in the infrastructure directory - giving error code if made changes, without making changes
-# Not bothering here to check which files changed as there aren't many Terraform files yet, so it's pretty quick
-terraform fmt -check -list=false infrastructure/*.tf
-terraform_fmt_exit=$?
-if [ $terraform_fmt_exit -ne 0 ]; then
-  echo "Doing Terraform linting."
-  # Actually make the changes now, and list changed files
-  terraform fmt infrastructure/*.tf
+# List all Terraform files that have been changed in the current commit
+changed_tf_files=$(git diff --cached --name-only -- '*.tf')
+
+# Run terraform fmt on the changed Terraform files, if any
+if [ -n "$changed_tf_files" ]; then
+  # Gives error code if found linting issue, without making changes
+  terraform fmt -check -list=false $changed_tf_files
+  terraform_fmt_exit=$?
+  if [ $terraform_fmt_exit -ne 0 ]; then
+    echo "Doing Terraform linting."
+    # Actually make the changes now, and list changed files
+    terraform fmt $changed_tf_files
+  fi
 else
   echo "No Terraform files changed."
 fi
@@ -15,7 +20,7 @@ fi
 # List all Java files that have been changed in the current commit
 changed_java_files=$(git diff --cached --name-only -- '*.java')
 
-# Run google-java-format on the changed Java files
+# Run google-java-format on the changed Java files, if any
 if [ -n "$changed_java_files" ]; then
   echo "Doing Java linting."
   for file in $changed_java_files; do
