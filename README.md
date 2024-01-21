@@ -16,7 +16,7 @@ Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension in
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
 
-## Accessing Local Development Docker Database
+## Accessing Local Development Docker Database via Shell
 
 `PGPASSWORD=password psql -h localhost -p 5432 -U admin_user -d dev`
 
@@ -31,6 +31,12 @@ psql "host=tournamath-db.cj4diopwsatb.us-east-1.rds.amazonaws.com dbname=tournam
 ```
 
 NOTE if the database or other AWS components are replaced, this command will need to be updated.
+
+## Accessing Local Development Redis Cache via Shell
+
+```
+docker exec -it tournamaths_redis_1 redis-cli
+```
 
 ## Accessing Production Redis Cache via Shell from EC2 Serial Console
 
