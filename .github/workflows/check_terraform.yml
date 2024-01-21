@@ -18,3 +18,4 @@ jobs:
 
     - name: Terraform Format Check
       run: terraform fmt -check
+      working-directory: infrastructure
