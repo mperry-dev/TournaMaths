@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 
+// TODO = re-implement this for IP Address rate limiting using Redis (better to be more consistent)
 public class IpAddressRateLimitingFilter implements Filter {
     /**
      * Filter to rate-limit by IP address.
