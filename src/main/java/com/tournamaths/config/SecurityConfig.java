@@ -48,13 +48,16 @@ public class SecurityConfig {
                                 XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
                     .contentSecurityPolicy(
                         cspc ->
-                            // Allow only a restricted list of scripts.
+                            // Allow only a restricted list of scripts and styles.
                             // upgrade-insecure-requests requires all resources to be loaded over
                             // HTTPS
                             cspc.policyDirectives(
                                 "script-src 'self'"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js;"
+                                    + " style-src 'self'"
+                                    + " https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css;"
                                     + " upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(
