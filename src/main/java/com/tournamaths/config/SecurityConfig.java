@@ -118,7 +118,6 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
-  // blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
   @Bean
   public AuthenticationManager authenticationManager(
       AuthenticationConfiguration authenticationConfiguration) throws Exception {
