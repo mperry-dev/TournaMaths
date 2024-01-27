@@ -196,6 +196,7 @@ Currently have:
 - Have a Content Security Policy (TODO = expand this)
 - Have rate limiting (TODO = expand this based on per-user rate limiting)
 - Have password hashing/salting
+- You can use https://www.srihash.org/ to get the Subresource Integrity hash (SRI) for a Javascript resource you include from external links
 
 ## Infrastructure Notes
 
