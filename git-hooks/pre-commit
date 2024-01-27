@@ -24,18 +24,36 @@ fi
 ############################## Java ##############################
 # List all Java files that have been changed in the current commit
 changed_java_files=$(git diff --cached --name-only -- '*.java')
+formatted_java_files=() # Files modified during linting
 
 # Run google-java-format on the changed Java files, if any
 if [ -n "$changed_java_files" ]; then
-  echo "Doing Java linting."
+  # Check if there's any files which are changed when running formatting
+  # Create a temporary file to store backups of files we lint
+  temp_file_backup=$(mktemp)
+
+  # Do the linting, store changed files
   for file in $changed_java_files; do
-    echo "$file"  # List the file
+    cat "$file" > "$temp_file_backup" # Backup this file
+
     google-java-format -i "$file"
+    if ! diff -q "$file" "$temp_file_backup" > /dev/null; then
+        # Linting made changes, so storing the filename in array
+        formatted_java_files+=("$file")
+    fi
   done
-  google_java_format_exit=1
+
+  if [ ${#formatted_java_files[@]} -ne 0 ]; then
+    # Print out the changed files. Saying doing Java linting is a bit of a fib, since formatting has already been done - doing it this way for consistency with other messages.
+    echo "Doing Java linting."
+    for file in "${formatted_java_files[@]}"; do
+      echo "$file"  # List the file
+    done
+  fi
+
+  rm -f "$temp_file_backup" # Remove temporary file
 else
   echo "No Java files changed."
-  google_java_format_exit=0
 fi
 
 ############################## JavaScript ##############################
@@ -79,7 +97,8 @@ fi
 ############################## Set the exit code of this script (to determine whether commit goes through)  ##############################
 
 # Exit with an error code if either of the commands failed, so commit is rejected
-if [ $terraform_fmt_exit -ne 0 ] || [ $google_java_format_exit -ne 0 ] || [ $eslint_exit -ne 0 ] || [ $prettier_exit -ne 0 ]; then
+# For Java, checking here that Java files changed
+if [ $terraform_fmt_exit -ne 0 ] || [ ${#formatted_java_files[@]} -ne 0 ] || [ $eslint_exit -ne 0 ] || [ $prettier_exit -ne 0 ]; then
   exit 1
 fi
 
