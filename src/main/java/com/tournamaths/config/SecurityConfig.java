@@ -51,6 +51,10 @@ public class SecurityConfig {
                             // Allow only a restricted list of scripts and styles.
                             // upgrade-insecure-requests requires all resources to be loaded over
                             // HTTPS.
+                            // frame-ancestors prevents clickjacking attacks.
+                            // We only allow images from our server.
+                            // We disallow object-src to prevent Flash/Java applets.
+                            // Restricting base-uri helps mitigate phishing or redirection attacks.
                             // As the CSP lists both URLs and hashes, it requires resources to match
                             // both 1 URL and 1 hash.
                             // For readability, I've listed each hash after its script URL.
@@ -65,7 +69,8 @@ public class SecurityConfig {
                                     + " 'sha384-bnKrovjvRzFUSqtvDhPloRir5qWWcx0KhrlfLaR4RXO9IUC+zJBuvclXv/fSdVyk'"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
                                     + " 'sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV';"
-                                    + " upgrade-insecure-requests")))
+                                    + " frame-ancestors 'self'; img-src 'self'; object-src 'none';"
+                                    + " base-uri 'self'; upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(
             headers ->
