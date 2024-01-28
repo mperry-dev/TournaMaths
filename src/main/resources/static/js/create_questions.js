@@ -1,6 +1,7 @@
 $(document).ready(function () {
   // Input box for constructing question
   let equationInput = $("#equation-input");
+  const nonce = $("#nonceHolder").data("nonce");
 
   // Render the equation as the user clicks buttons
   $(".symbol-button").click(function () {
@@ -21,7 +22,16 @@ $(document).ready(function () {
         throwOnError: false,
         displayMode: true,
       });
-      $(elementToRender).html(renderedEquation);
+      // Create a temporary element to hold the rendered equation
+      var tempDiv = $("<div>").html(renderedEquation);
+
+      // Apply the nonce to any inline styles in the temporary element
+      tempDiv.find("[style]").each(function () {
+        $(this).attr("nonce", nonce);
+      });
+
+      // Replace the inner HTML of the element with the processed content
+      $(elementToRender).html(tempDiv.html());
     } catch (e) {
       $(elementToRender).text("Error in rendering: " + e.message);
     }

@@ -1,6 +1,7 @@
 package com.tournamaths.controller;
 
 import com.tournamaths.entity.MathQuestion;
+import com.tournamaths.util.NonceBean;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -8,6 +9,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -45,6 +47,8 @@ public class CreateQuestionsController {
   // https://stackoverflow.com/questions/5640778/hibernate-sessionfactory-vs-jpa-entitymanagerfactory
   @PersistenceContext private EntityManager entityManager;
 
+  @Autowired private NonceBean nonceBean;
+
   @PostMapping("/create_questions")
   public String newQuestion(
       @RequestParam String identifier,
@@ -73,6 +77,8 @@ public class CreateQuestionsController {
     List<MathQuestion> questions = query.getResultList();
 
     model.addAttribute("questions", questions);
+    // Nonce is needed so CSP can trust dynamically-generated KaTeX
+    model.addAttribute("nonce", nonceBean.getNonce());
     return "create_questions";
   }
 }
