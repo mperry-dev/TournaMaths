@@ -148,7 +148,8 @@ public class SecurityConfig {
   public PasswordEncoder passwordEncoder() {
     // For salting and hashing passwords.
     // BCrypt stores prefix, cost factor, salt and hash in resultant string.
-    return new BCryptPasswordEncoder();
+    // Strength of 14 is significantly harder to crack than default of 10.
+    return new BCryptPasswordEncoder(14);
   }
 
   @Bean
