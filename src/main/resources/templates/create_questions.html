@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta id="nonceHolder" th:attr="data-nonce=${nonce}" />
 
     <title>TournaMaths Question Builder</title>
 
@@ -65,5 +66,5 @@
     </main>
     <footer th:replace="footer.html"></footer>
 </body>
-<script data-nonce="${nonce}" src="/js/create_questions.js"></script>
+<script src="/js/create_questions.js"></script>
 </html>
