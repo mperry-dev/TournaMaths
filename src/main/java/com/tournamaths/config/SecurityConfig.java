@@ -1,12 +1,13 @@
 package com.tournamaths.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import com.tournamaths.filter.IpAddressRateLimitingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 @Configuration
@@ -79,13 +81,21 @@ public class SecurityConfig {
                                     + " form-action 'self'; object-src 'none'; base-uri 'self';"
                                     + " upgrade-insecure-requests")))
         // Configure other headers for security
+        // See https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/headers.html
         .headers(
             headers ->
                 headers
-                    .frameOptions(Customizer.withDefaults())
-                    .contentTypeOptions(Customizer.withDefaults())
-                    .cacheControl(Customizer.withDefaults())
-                    .httpStrictTransportSecurity(Customizer.withDefaults()))
+                    .cacheControl(withDefaults())
+                    // This sets X-Content-Type-Options to nosniff
+                    .contentTypeOptions(withDefaults())
+                    .referrerPolicy(
+                        referrer -> referrer.policy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                    // HSTS - declares should only use HTTPS. 31536000 seconds = 1 year.
+                    .httpStrictTransportSecurity(
+                        hsts -> hsts.includeSubDomains(true).maxAgeInSeconds(31536000))
+                    .frameOptions(fo -> fo.sameOrigin()) // X-Frame-Options
+                    // Permissions Policy (previously Feature Policy)
+                    .permissionsPolicy(policy -> policy.policy("geolocation=(self)")))
         // Rate-limiting. We can allow the previous configurations to run before this, since broad
         // DDOS protection provided by Web ACL at infrastructure level (see waf.tf)
         .addFilterBefore(
