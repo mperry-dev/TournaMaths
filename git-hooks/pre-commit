@@ -22,8 +22,8 @@ else
 fi
 
 ############################## Java ##############################
-# List all Java files that have been changed in the current commit
-changed_java_files=$(git diff --cached --name-only -- '*.java')
+# List all Java files that have been changed in the current commit, that haven't been deleted.
+changed_java_files=$(git diff --cached --name-only -- '*.java' | xargs -I {} sh -c 'test -e {} && echo {}')
 formatted_java_files=() # Files modified during linting
 
 # Run google-java-format on the changed Java files, if any
