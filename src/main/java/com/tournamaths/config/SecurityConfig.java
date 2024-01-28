@@ -55,11 +55,13 @@ public class SecurityConfig {
                             // We only allow images from our server.
                             // We disallow object-src to prevent Flash/Java applets.
                             // Restricting base-uri helps mitigate phishing or redirection attacks.
+                            // connect-src restricts AJAX, Websocket and other similar connections.
+                            // form-action controls where forms can submit data.
                             // As the CSP lists both URLs and hashes, it requires resources to match
                             // both 1 URL and 1 hash.
                             // For readability, I've listed each hash after its script URL.
                             cspc.policyDirectives(
-                                "script-src 'self'"
+                                "default-src 'none'; script-src 'self'"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
                                     + " 'sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs'"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"
@@ -69,8 +71,9 @@ public class SecurityConfig {
                                     + " 'sha384-bnKrovjvRzFUSqtvDhPloRir5qWWcx0KhrlfLaR4RXO9IUC+zJBuvclXv/fSdVyk'"
                                     + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
                                     + " 'sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV';"
-                                    + " frame-ancestors 'self'; img-src 'self'; object-src 'none';"
-                                    + " base-uri 'self'; upgrade-insecure-requests")))
+                                    + " frame-ancestors 'self'; img-src 'self'; connect-src 'self';"
+                                    + " form-action 'self'; object-src 'none'; base-uri 'self';"
+                                    + " upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(
             headers ->
