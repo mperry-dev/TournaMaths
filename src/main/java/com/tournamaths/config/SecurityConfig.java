@@ -82,6 +82,7 @@ public class SecurityConfig {
                                     + " upgrade-insecure-requests")))
         // Configure other headers for security
         // See https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/headers.html
+        // NOTE CORS is disabled by default.
         .headers(
             headers ->
                 headers
