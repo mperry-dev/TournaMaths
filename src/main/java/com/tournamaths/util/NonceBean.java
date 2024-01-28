@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class NonceBean {
   /*
    * Proxied "singleton" bean containing a nonce which is recreated once-per-request, and can be autowired globally.
-   * using the proxy mode so that get a different object behind the proxy per-request (and thus a different nonce per-request).
+   * Using the proxy mode so that get a different object behind the proxy per-request (and thus a different nonce per-request).
    */
   private final String nonce;
 
