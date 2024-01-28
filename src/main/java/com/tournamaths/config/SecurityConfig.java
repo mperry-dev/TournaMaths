@@ -53,11 +53,15 @@ public class SecurityConfig {
                             // HTTPS
                             cspc.policyDirectives(
                                 "script-src 'self'"
-                                    + " https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js;"
+                                    // https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
+                                    + " 'sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs'"
+                                    // https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js
+                                    + " 'sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8';"
                                     + " style-src 'self'"
-                                    + " https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
-                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css;"
+                                    // https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css
+                                    + " 'sha384-bnKrovjvRzFUSqtvDhPloRir5qWWcx0KhrlfLaR4RXO9IUC+zJBuvclXv/fSdVyk'"
+                                    // https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css
+                                    + " 'sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV';"
                                     + " upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(
