@@ -21,16 +21,24 @@ $(document).ready(function () {
       // Create a temporary container for rendering
       var tempContainer = document.createElement("div");
 
-      // Render KaTeX directly into the temporary container
+      // Render KaTeX directly into the temporary container.
+      // throwOnError=true since handling by KaTeX when false gives CSP violation.
       katex.render(text, tempContainer, {
-        throwOnError: false,
+        throwOnError: true,
         displayMode: true,
       });
 
       // Move the processed content to the target element
       $(elementToRender).empty().append($(tempContainer).contents());
     } catch (e) {
-      $(elementToRender).text("Error in rendering: " + e.message);
+      // Create a new element for the error message
+      var errorMessage = $("<span>").text("Error in rendering: " + e.message);
+
+      // Apply red color style to the error message
+      errorMessage.css("color", "red");
+
+      // Append the styled error message to the element
+      $(elementToRender).empty().append(errorMessage);
     }
   }
 
