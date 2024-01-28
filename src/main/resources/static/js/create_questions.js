@@ -1,7 +1,6 @@
 $(document).ready(function () {
   // Input box for constructing question
   let equationInput = $("#equation-input");
-  const nonce = $("#nonceHolder").data("nonce");
 
   // Render the equation as the user clicks buttons
   $(".symbol-button").click(function () {
@@ -15,7 +14,8 @@ $(document).ready(function () {
     renderKaTeX($(this).val(), "#question-preview");
   });
 
-  // Method to render the KaTeX. We inject nonce to inline KaTeX styles so this doesn't violate CSP.
+  // Method to render the KaTeX.
+  // We use katex.render to render directly into a DOM element, avoiding CSP violations and increasing security.
   function renderKaTeX(text, elementToRender) {
     try {
       // Create a temporary container for rendering
@@ -26,13 +26,6 @@ $(document).ready(function () {
         throwOnError: false,
         displayMode: true,
       });
-
-      // Apply the nonce to any inline styles
-      $(tempContainer)
-        .find("[style]")
-        .each(function () {
-          $(this).attr("nonce", nonce);
-        });
 
       // Move the processed content to the target element
       $(elementToRender).empty().append($(tempContainer).contents());

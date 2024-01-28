@@ -1,6 +1,5 @@
 package com.tournamaths.config;
 
-import com.tournamaths.filter.CSPFilter;
 import com.tournamaths.filter.IpAddressRateLimitingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -25,7 +24,6 @@ import org.springframework.security.web.header.writers.XXssProtectionHeaderWrite
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
   @Autowired private IpAddressRateLimitingFilter loginAndRegistrationRateLimitingFilter;
-  @Autowired private CSPFilter cspFilter;
 
   // We can add lots of SecurityFilterChains in this method (need to be careful though since the
   // first SecurityFilterChain matching an endpoint is used to the exclusion of later ones)
@@ -43,9 +41,31 @@ public class SecurityConfig {
         // https://www.baeldung.com/spring-prevent-xss#making-an-application-xss-safewith-spring-security
         .headers(
             headers ->
-                headers.xssProtection(
-                    xss ->
-                        xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)))
+                headers
+                    .xssProtection(
+                        xss ->
+                            xss.headerValue(
+                                XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+                    .contentSecurityPolicy(
+                        cspc ->
+                            // Allow only a restricted list of scripts and styles.
+                            // upgrade-insecure-requests requires all resources to be loaded over
+                            // HTTPS.
+                            // As the CSP lists both URLs and hashes, it requires resources to match
+                            // both 1 URL and 1 hash.
+                            // For readability, I've listed each hash after its script URL.
+                            cspc.policyDirectives(
+                                "script-src 'self'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+                                    + " 'sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"
+                                    + " 'sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8';"
+                                    + " style-src 'self'"
+                                    + " https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+                                    + " 'sha384-bnKrovjvRzFUSqtvDhPloRir5qWWcx0KhrlfLaR4RXO9IUC+zJBuvclXv/fSdVyk'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
+                                    + " 'sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV';"
+                                    + " upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(
             headers ->
@@ -58,9 +78,6 @@ public class SecurityConfig {
         // DDOS protection provided by Web ACL at infrastructure level (see waf.tf)
         .addFilterBefore(
             loginAndRegistrationRateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
-        // CSP filter - doing it this way so nonce can be both added to the CSP policy, and injected
-        // into HTML templates through autowiring NonceBean.
-        .addFilterBefore(cspFilter, UsernamePasswordAuthenticationFilter.class)
         // Define authorization rules - e.g. could enable any endpoint starting with /public if
         // configured here.
         // Here enable any authenticated request to access endpoints
