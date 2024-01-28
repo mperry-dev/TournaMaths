@@ -58,7 +58,8 @@ public class SecurityConfig {
         // DDOS protection provided by Web ACL at infrastructure level (see waf.tf)
         .addFilterBefore(
             loginAndRegistrationRateLimitingFilter, UsernamePasswordAuthenticationFilter.class)
-        // CSP filter - doing it this way so nonce injected into request.
+        // CSP filter - doing it this way so nonce can be both added to the CSP policy, and injected
+        // into HTML templates through autowiring NonceBean.
         .addFilterBefore(cspFilter, UsernamePasswordAuthenticationFilter.class)
         // Define authorization rules - e.g. could enable any endpoint starting with /public if
         // configured here.
