@@ -48,11 +48,35 @@ public class SecurityConfig {
                                 XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
                     .contentSecurityPolicy(
                         cspc ->
-                            // Allow only a restricted list of scripts
+                            // Allow only a restricted list of scripts and styles.
+                            // upgrade-insecure-requests requires all resources to be loaded over
+                            // HTTPS.
+                            // frame-ancestors prevents clickjacking attacks.
+                            // We only allow images from our server.
+                            // We disallow object-src to prevent Flash/Java applets.
+                            // Restricting base-uri helps mitigate phishing or redirection attacks.
+                            // connect-src restricts AJAX, Websocket and other similar connections.
+                            // form-action controls where forms can submit data.
+                            // The font-src uses the cdnjs link as a prefix
+                            // http://www.w3.org/TR/CSP/#match-source-expression
+                            // As the CSP lists both URLs and hashes, it requires resources to match
+                            // both 1 URL and 1 hash.
+                            // For readability, I've listed each hash after its script URL.
                             cspc.policyDirectives(
-                                "script-src 'self'"
-                                    + " cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js;"
+                                "default-src 'none'; script-src 'self'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+                                    + " 'sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"
+                                    + " 'sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8';"
+                                    + " style-src 'self'"
+                                    + " https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+                                    + " 'sha384-bnKrovjvRzFUSqtvDhPloRir5qWWcx0KhrlfLaR4RXO9IUC+zJBuvclXv/fSdVyk'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css"
+                                    + " 'sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV';"
+                                    + " font-src 'self'"
+                                    + " https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/fonts/;"
+                                    + " frame-ancestors 'self'; img-src 'self'; connect-src 'self';"
+                                    + " form-action 'self'; object-src 'none'; base-uri 'self';"
                                     + " upgrade-insecure-requests")))
         // Configure other headers for security
         .headers(

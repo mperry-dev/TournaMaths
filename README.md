@@ -14,6 +14,8 @@ Further instructions are below for extra setup of linters.
 ./run-local.sh
 ```
 
+The local website is accessible at http://localhost:8080/
+
 ## Instructions to Build, Run and Debug Locally
 
 ```
@@ -23,6 +25,8 @@ Further instructions are below for extra setup of linters.
 Then open VSCode, with the `Extension Pack for Java` (by Microsoft) extension installed, and follow these instructions to run the debugger: https://code.visualstudio.com/docs/editor/debugging
 
 This allows you to use a debugger from VSCode, but it is much slower to run than just running the application.
+
+The local website is accessible at http://localhost:8080/
 
 ## Manual Java Linting
 
@@ -192,6 +196,7 @@ Currently have:
 - Have a Content Security Policy (TODO = expand this)
 - Have rate limiting (TODO = expand this based on per-user rate limiting)
 - Have password hashing/salting
+- You can use https://www.srihash.org/ to get the Subresource Integrity hash (SRI) for a Javascript resource you include from external links
 
 ## Infrastructure Notes
 
