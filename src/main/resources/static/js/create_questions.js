@@ -15,23 +15,27 @@ $(document).ready(function () {
     renderKaTeX($(this).val(), "#question-preview");
   });
 
-  // Method to render the KaTeX
+  // Method to render the KaTeX. We inject nonce to inline KaTeX styles so this doesn't violate CSP.
   function renderKaTeX(text, elementToRender) {
     try {
-      var renderedEquation = katex.renderToString(text, {
+      // Create a temporary container for rendering
+      var tempContainer = document.createElement("div");
+
+      // Render KaTeX directly into the temporary container
+      katex.render(text, tempContainer, {
         throwOnError: false,
         displayMode: true,
       });
-      // Create a temporary element to hold the rendered equation
-      var tempDiv = $("<div>").html(renderedEquation);
 
-      // Apply the nonce to any inline styles in the temporary element
-      tempDiv.find("[style]").each(function () {
-        $(this).attr("nonce", nonce);
-      });
+      // Apply the nonce to any inline styles
+      $(tempContainer)
+        .find("[style]")
+        .each(function () {
+          $(this).attr("nonce", nonce);
+        });
 
-      // Replace the inner HTML of the element with the processed content
-      $(elementToRender).html(tempDiv.html());
+      // Move the processed content to the target element
+      $(elementToRender).empty().append($(tempContainer).contents());
     } catch (e) {
       $(elementToRender).text("Error in rendering: " + e.message);
     }
